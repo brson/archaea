@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="47">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+io fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  check (y == 10);
+}
+
+io fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="1" date="2010-11-02 11:11:58 -0700" desc="First pass on splitting stratum and opacity off of effects. WIP.">
+// -*- rust -*-
+
+impure fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  check (y == 10);
+}
+
+impure fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="2" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// -*- rust -*-
+
+impure fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  check (y == 10);
+}
+
+impure fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="3" date="2011-04-19 13:35:49 -0700" desc="Remove effect system from src.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  check (y == 10);
+}
+
+fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="4" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="5" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  check (y == 10);
+}
+
+fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="6" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="7" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  y &lt;- p;
+  log "received";
+  log y;
+  assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="8" date="2011-05-27 11:59:19 -0700" desc="Change the syntax for RECV from "var &lt;- port" to "port |&gt; var".">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  p |&gt; y;
+  log "received";
+  log y;
+  assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  c &lt;| 10;
+}
+</code>
+<code num="9" date="2011-05-31 17:44:54 -0700" desc="This is the mega-ucontext commit. It replaces the task switching mechanism with a new one inspired by ucontext. It works under Linux, OS X and Windows, and is Valgrind clean on Linux and OS X (provided the runtime is built with gcc).">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  spawn child(chan(p));
+  let int y;
+  p |&gt; y;
+  log_err "received";
+  log_err y;
+  //assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  log_err "sending";
+  c &lt;| 10;
+  log_err "value sent"
+}
+</code>
+<code num="10" date="2011-06-15 18:16:17 -0700" desc="Fixed a problem where spawn arguments were getting lost again. Also, fixed up stack alignment, which closes #496">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  let task t = spawn child(chan(p));
+  let int y;
+  p |&gt; y;
+  log_err "received";
+  log_err y;
+  assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  log_err "sending";
+  c &lt;| 10;
+  log_err "value sent"
+}
+</code>
+<code num="11" date="2011-06-22 08:35:02 -0700" desc="test: Enable more tests">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  let task t = spawn child(chan(p));
+  let int y;
+  p |&gt; y;
+  log_err "received";
+  log_err y;
+  assert (y == 10);
+}
+
+fn child(chan[int] c) {
+  log_err "sending";
+  c &lt;| 10;
+  log_err "value sent"
+}
+</code>
+<code num="12" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+    let p: port[int] = port();
+    let t: task = spawn child(chan(p));
+    let y: int;
+    p |&gt; y;
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: chan[int]) { log_err "sending"; c &lt;| 10; log_err "value sent" }
+</code>
+<code num="13" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// -*- rust -*-
+
+fn main() {
+    let p: port[int] = port();
+    let t: task = spawn child(chan(p));
+    let y: int;
+    p |&gt; y;
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: chan[int]) { log_err "sending"; c &lt;| 10; log_err "value sent" }
+</code>
+<code num="14" date="2011-08-13 15:20:11 -0700" desc="Removed spawn and task from the parser. Updated all the tests except for the benchmarks.">
+// -*- rust -*-
+
+use std;
+import std::comm;
+import std::comm::_chan;
+import std::comm::send;
+import std::task;
+
+fn main() {
+    let p = comm::mk_port();
+    let t = task::_spawn(bind child(p.mk_chan()));
+    let y = p.recv();
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: _chan[int]) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="15" date="2011-08-10 09:27:22 -0700" desc="Port the tests to the typaram foo&lt;T&gt; syntax.">
+// -*- rust -*-
+
+use std;
+import std::comm;
+import std::comm::_chan;
+import std::comm::send;
+import std::task;
+
+fn main() {
+    let p = comm::mk_port();
+    let t = task::_spawn(bind child(p.mk_chan()));
+    let y = p.recv();
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: _chan&lt;int&gt;) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="16" date="2011-08-25 11:20:43 -0700" desc="Cleaning up task and comm exports, updating all the test cases.">
+// -*- rust -*-
+
+use std;
+import std::comm;
+import std::comm::chan;
+import std::comm::send;
+import std::comm::recv;
+import std::task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(bind child(chan(p)));
+    let y = recv(p);
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="17" date="2011-10-13 15:37:07 -0700" desc="Convert tests to use bare-fn spawn">
+// -*- rust -*-
+
+use std;
+import std::comm;
+import std::comm::chan;
+import std::comm::send;
+import std::comm::recv;
+import std::task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn2(chan(p), child);
+    let y = recv(p);
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn# child(c: chan&lt;int&gt;) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="18" date="2011-10-13 21:23:07 -0700" desc="Drop the 2 from the spawn*2 functions">
+// -*- rust -*-
+
+use std;
+import std::comm;
+import std::comm::chan;
+import std::comm::send;
+import std::comm::recv;
+import std::task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(chan(p), child);
+    let y = recv(p);
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn# child(c: chan&lt;int&gt;) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="19" date="2011-10-20 20:34:04 -0700" desc="Remove temporary fn# syntax">
+// -*- rust -*-
+
+use std;
+import std::comm;
+import std::comm::chan;
+import std::comm::send;
+import std::comm::recv;
+import std::task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(chan(p), child);
+    let y = recv(p);
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="20" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(chan(p), child);
+    let y = recv(p);
+    log_err "received";
+    log_err y;
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    log_err "sending";
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="21" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(chan(p), child);
+    let y = recv(p);
+    #error("received");
+    log_full(core::error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    #error("sending");
+    send(c, 10);
+    log_err "value sent"
+}
+</code>
+<code num="22" date="2011-12-22 16:13:40 -0800" desc="Merge all 3 log syntaxes, tidy up residual misuses.">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(chan(p), child);
+    let y = recv(p);
+    #error("received");
+    log_full(core::error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    #error("sending");
+    send(c, 10);
+    #error("value sent");
+}
+</code>
+<code num="23" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let t = task::spawn(chan(p), child);
+    let y = recv(p);
+    #error("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    #error("sending");
+    send(c, 10);
+    #error("value sent");
+}
+</code>
+<code num="24" date="2012-01-04 21:14:53 -0800" desc="port over the tests to use the new API">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let ch = comm::chan(p);
+    let t = task::spawn {|| child(ch); };
+    let y = recv(p);
+    #error("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    #error("sending");
+    send(c, 10);
+    #error("value sent");
+}
+</code>
+<code num="25" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let ch = comm::chan(p);
+    let t = task::spawn({|| child(ch); });
+    let y = recv(p);
+    #error("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    #error("sending");
+    send(c, 10);
+    #error("value sent");
+}
+</code>
+<code num="26" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let ch = comm::chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    #error("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    #error("sending");
+    send(c, 10);
+    #error("value sent");
+}
+</code>
+<code num="27" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let ch = comm::chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!{"received"};
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: chan&lt;int&gt;) {
+    error!{"sending"};
+    send(c, 10);
+    error!{"value sent"};
+}
+</code>
+<code num="28" date="2012-08-15 14:10:46 -0700" desc="Convert more core types to camel case">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::Chan;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let ch = comm::chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!{"received"};
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!{"sending"};
+    send(c, 10);
+    error!{"value sent"};
+}
+</code>
+<code num="29" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::Chan;
+import comm::chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::port();
+    let ch = comm::chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!("sending");
+    send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="30" date="2012-08-27 14:22:25 -0700" desc="Camel case various core constructors">
+// -*- rust -*-
+
+use std;
+import comm;
+import comm::Chan;
+import comm::send;
+import comm::recv;
+import task;
+
+fn main() {
+    let p = comm::Port();
+    let ch = comm::Chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!("sending");
+    send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="31" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// -*- rust -*-
+
+use std;
+use comm::Chan;
+use comm::send;
+use comm::recv;
+
+fn main() {
+    let p = comm::Port();
+    let ch = comm::Chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!("sending");
+    send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="32" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+
+extern mod std;
+use comm::Chan;
+use comm::send;
+use comm::recv;
+
+fn main() {
+    let p = comm::Port();
+    let ch = comm::Chan(p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!("sending");
+    send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="33" date="2012-10-03 14:38:01 -0700" desc="De-mode comm::Chan">
+// -*- rust -*-
+
+extern mod std;
+use comm::Chan;
+use comm::send;
+use comm::recv;
+
+fn main() {
+    let p = comm::Port();
+    let ch = comm::Chan(&amp;p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!("sending");
+    send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="34" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+use comm::Chan;
+use comm::send;
+use comm::recv;
+
+fn main() {
+    let p = comm::Port();
+    let ch = comm::Chan(&amp;p);
+    let t = task::spawn(|| child(ch) );
+    let y = recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: Chan&lt;int&gt;) {
+    error!("sending");
+    send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="35" date="2012-12-13 13:05:22 -0800" desc="librustc: Make `use` statements crate-relative by default. r=brson">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn main() {
+    let p = comm::Port();
+    let ch = core::comm::Chan(&amp;p);
+    let t = task::spawn(|| child(ch) );
+    let y = core::comm::recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: core::comm::Chan&lt;int&gt;) {
+    error!("sending");
+    core::comm::send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="36" date="2012-12-13 14:18:47 -0800" desc="Rename core::comm to core::oldcomm">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn main() {
+    let p = oldcomm::Port();
+    let ch = core::oldcomm::Chan(&amp;p);
+    let t = task::spawn(|| child(ch) );
+    let y = core::oldcomm::recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: core::oldcomm::Chan&lt;int&gt;) {
+    error!("sending");
+    core::oldcomm::send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="37" date="2013-01-07 18:54:28 -0800" desc="test: Fix check-fast for resolve changes. rs=bustage">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn main() {
+    let p = oldcomm::Port();
+    let ch = ::core::oldcomm::Chan(&amp;p);
+    let t = task::spawn(|| child(ch) );
+    let y = ::core::oldcomm::recv(p);
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: ::core::oldcomm::Chan&lt;int&gt;) {
+    error!("sending");
+    ::core::oldcomm::send(c, 10);
+    error!("value sent");
+}
+</code>
+<code num="38" date="2013-01-28 23:54:39 -0800" desc="Remove oldcomm from the test suite">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::pipes::*;
+
+fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="39" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::pipes::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="40" date="2013-02-02 03:10:12 -0800" desc="core: Extract comm from pipes. #4742">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::comm::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    log(error, y);
+    assert (y == 10);
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="41" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::comm::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    log(error, y);
+    fail_unless!((y == 10));
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="42" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::comm::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    error!(y);
+    fail_unless!((y == 10));
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="43" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::comm::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    error!(y);
+    assert!((y == 10));
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="44" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use core::comm::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    error!(y);
+    assert_eq!(y, 10);
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="45" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::comm::*;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    error!(y);
+    assert_eq!(y, 10);
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+<code num="46" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::comm::*;
+use std::task;
+
+pub fn main() {
+    let (p, ch) = stream();
+    let t = task::spawn(|| child(&amp;ch) );
+    let y = p.recv();
+    error!("received");
+    error!(y);
+    assert_eq!(y, 10);
+}
+
+fn child(c: &amp;Chan&lt;int&gt;) {
+    error!("sending");
+    c.send(10);
+    error!("value sent");
+}
+</code>
+</revisions>

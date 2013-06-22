@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="18">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn f(int x) -&gt; int {
+  // log "in f:";
+  log x;
+  if (x == 1) {
+    // log "bottoming out";
+    ret 1;
+  } else {
+    // log "recurring";
+    let int y = x * f(x-1);
+    // log "returned";
+    log y;
+    ret y;
+  }
+}
+fn main () {
+  check (f(5) == 120);
+  // log "all done";
+}
+</code>
+<code num="1" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+fn f(int x) -&gt; int {
+  // log "in f:";
+  log x;
+  if (x == 1) {
+    // log "bottoming out";
+    ret 1;
+  } else {
+    // log "recurring";
+    let int y = x * f(x-1);
+    // log "returned";
+    log y;
+    ret y;
+  }
+}
+fn main () {
+  assert (f(5) == 120);
+  // log "all done";
+}
+</code>
+<code num="2" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+fn f(int x) -&gt; int {
+  // log "in f:";
+  log x;
+  if (x == 1) {
+    // log "bottoming out";
+    ret 1;
+  } else {
+    // log "recurring";
+    let int y = x * f(x-1);
+    // log "returned";
+    log y;
+    ret y;
+  }
+}
+fn main () {
+  check (f(5) == 120);
+  // log "all done";
+}
+</code>
+<code num="3" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+fn f(int x) -&gt; int {
+  // log "in f:";
+  log x;
+  if (x == 1) {
+    // log "bottoming out";
+    ret 1;
+  } else {
+    // log "recurring";
+    let int y = x * f(x-1);
+    // log "returned";
+    log y;
+    ret y;
+  }
+}
+fn main () {
+  assert (f(5) == 120);
+  // log "all done";
+}
+</code>
+<code num="4" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+fn f(int x) -&gt; int {
+    // log "in f:";
+
+    log x;
+    if (x == 1) {
+        // log "bottoming out";
+
+        ret 1;
+    } else {
+        // log "recurring";
+
+        let int y = x * f(x - 1);
+        // log "returned";
+
+        log y;
+        ret y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // log "all done";
+
+}
+</code>
+<code num="5" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // log "in f:";
+
+    log x;
+    if x == 1 {
+        // log "bottoming out";
+
+        ret 1;
+    } else {
+        // log "recurring";
+
+        let y: int = x * f(x - 1);
+        // log "returned";
+
+        log y;
+        ret y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // log "all done";
+
+}
+</code>
+<code num="6" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // log "in f:";
+
+    log x;
+    if x == 1 {
+        // log "bottoming out";
+
+        ret 1;
+    } else {
+        // log "recurring";
+
+        let y: int = x * f(x - 1);
+        // log "returned";
+
+        log y;
+        ret y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // log "all done";
+
+}
+</code>
+<code num="7" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // #debug("in f:");
+
+    log_full(core::debug, x);
+    if x == 1 {
+        // #debug("bottoming out");
+
+        ret 1;
+    } else {
+        // #debug("recurring");
+
+        let y: int = x * f(x - 1);
+        // #debug("returned");
+
+        log_full(core::debug, y);
+        ret y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // #debug("all done");
+
+}
+</code>
+<code num="8" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // #debug("in f:");
+
+    log(debug, x);
+    if x == 1 {
+        // #debug("bottoming out");
+
+        ret 1;
+    } else {
+        // #debug("recurring");
+
+        let y: int = x * f(x - 1);
+        // #debug("returned");
+
+        log(debug, y);
+        ret y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // #debug("all done");
+
+}
+</code>
+<code num="9" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!{"in f:"};
+
+    log(debug, x);
+    if x == 1 {
+        // debug!{"bottoming out"};
+
+        ret 1;
+    } else {
+        // debug!{"recurring"};
+
+        let y: int = x * f(x - 1);
+        // debug!{"returned"};
+
+        log(debug, y);
+        ret y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // debug!{"all done"};
+
+}
+</code>
+<code num="10" date="2012-08-01 17:30:05 -0700" desc="Convert ret to return">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!{"in f:"};
+
+    log(debug, x);
+    if x == 1 {
+        // debug!{"bottoming out"};
+
+        return 1;
+    } else {
+        // debug!{"recurring"};
+
+        let y: int = x * f(x - 1);
+        // debug!{"returned"};
+
+        log(debug, y);
+        return y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // debug!{"all done"};
+
+}
+</code>
+<code num="11" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    log(debug, x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        log(debug, y);
+        return y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // debug!("all done");
+
+}
+</code>
+<code num="12" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    log(debug, x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        log(debug, y);
+        return y;
+    }
+}
+
+fn main() {
+    assert (f(5) == 120);
+    // debug!("all done");
+
+}
+</code>
+<code num="13" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    log(debug, x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        log(debug, y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert (f(5) == 120);
+    // debug!("all done");
+
+}
+</code>
+<code num="14" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    log(debug, x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        log(debug, y);
+        return y;
+    }
+}
+
+pub fn main() {
+    fail_unless!((f(5) == 120));
+    // debug!("all done");
+
+}
+</code>
+<code num="15" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    debug!(x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        debug!(y);
+        return y;
+    }
+}
+
+pub fn main() {
+    fail_unless!((f(5) == 120));
+    // debug!("all done");
+
+}
+</code>
+<code num="16" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    debug!(x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        debug!(y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert!((f(5) == 120));
+    // debug!("all done");
+
+}
+</code>
+<code num="17" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // debug!("in f:");
+
+    debug!(x);
+    if x == 1 {
+        // debug!("bottoming out");
+
+        return 1;
+    } else {
+        // debug!("recurring");
+
+        let y: int = x * f(x - 1);
+        // debug!("returned");
+
+        debug!(y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // debug!("all done");
+
+}
+</code>
+</revisions>

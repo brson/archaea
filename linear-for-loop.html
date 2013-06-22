@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="30">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn main() {
+  auto x = vec(1,2,3);
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  check (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      check (c == u8('h'));
+    }
+    if (i == 1) {
+      check (c == u8('e'));
+    }
+    if (i == 2) {
+      check (c == u8('l'));
+    }
+    if (i == 3) {
+      check (c == u8('l'));
+    }
+    if (i == 4) {
+      check (c == u8('o'));
+    }
+    // ...
+    if (i == 12) {
+      check (c == u8(0));
+    }
+    i += 1;
+    log i;
+    log c;
+  }
+  check(i == 12);
+}
+</code>
+<code num="1" date="2010-07-26 15:20:13 -0700" desc="Move the test suite to the "as" form for casts. XFAIL a few tests for LLVM.">
+fn main() {
+  auto x = vec(1,2,3);
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  check (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      check (c == ('h' as u8));
+    }
+    if (i == 1) {
+      check (c == ('e' as u8));
+    }
+    if (i == 2) {
+      check (c == ('l' as u8));
+    }
+    if (i == 3) {
+      check (c == ('l' as u8));
+    }
+    if (i == 4) {
+      check (c == ('o' as u8));
+    }
+    // ...
+    if (i == 12) {
+      check (c == (0 as u8));
+    }
+    i += 1;
+    log i;
+    log c;
+  }
+  check(i == 12);
+}
+</code>
+<code num="2" date="2010-09-22 14:48:13 -0700" desc="Fix linear for loops on strings to not hit trailing null.">
+fn main() {
+  auto x = vec(1,2,3);
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  check (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      check (c == ('h' as u8));
+    }
+    if (i == 1) {
+      check (c == ('e' as u8));
+    }
+    if (i == 2) {
+      check (c == ('l' as u8));
+    }
+    if (i == 3) {
+      check (c == ('l' as u8));
+    }
+    if (i == 4) {
+      check (c == ('o' as u8));
+    }
+    // ...
+    i += 1;
+    log i;
+    log c;
+  }
+  check(i == 11);
+}
+</code>
+<code num="3" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+fn main() {
+  auto x = vec(1,2,3);
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  assert (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      assert (c == ('h' as u8));
+    }
+    if (i == 1) {
+      assert (c == ('e' as u8));
+    }
+    if (i == 2) {
+      assert (c == ('l' as u8));
+    }
+    if (i == 3) {
+      assert (c == ('l' as u8));
+    }
+    if (i == 4) {
+      assert (c == ('o' as u8));
+    }
+    // ...
+    i += 1;
+    log i;
+    log c;
+  }
+  assert (i == 11);
+}
+</code>
+<code num="4" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+fn main() {
+  auto x = vec(1,2,3);
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  check (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      check (c == ('h' as u8));
+    }
+    if (i == 1) {
+      check (c == ('e' as u8));
+    }
+    if (i == 2) {
+      check (c == ('l' as u8));
+    }
+    if (i == 3) {
+      check (c == ('l' as u8));
+    }
+    if (i == 4) {
+      check (c == ('o' as u8));
+    }
+    // ...
+    i += 1;
+    log i;
+    log c;
+  }
+  check(i == 11);
+}
+</code>
+<code num="5" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+fn main() {
+  auto x = vec(1,2,3);
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  assert (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      assert (c == ('h' as u8));
+    }
+    if (i == 1) {
+      assert (c == ('e' as u8));
+    }
+    if (i == 2) {
+      assert (c == ('l' as u8));
+    }
+    if (i == 3) {
+      assert (c == ('l' as u8));
+    }
+    if (i == 4) {
+      assert (c == ('o' as u8));
+    }
+    // ...
+    i += 1;
+    log i;
+    log c;
+  }
+  assert (i == 11);
+}
+</code>
+<code num="6" date="2011-05-16 18:21:22 -0700" desc="Rewrite everything to use [] instead of vec() in value position.">
+fn main() {
+  auto x = [1,2,3];
+  auto y = 0;
+  for (int i in x) {
+    log i;
+    y += i;
+  }
+  log y;
+  assert (y == 6);
+
+  auto s = "hello there";
+  let int i = 0;
+  for (u8 c in s) {
+    if (i == 0) {
+      assert (c == ('h' as u8));
+    }
+    if (i == 1) {
+      assert (c == ('e' as u8));
+    }
+    if (i == 2) {
+      assert (c == ('l' as u8));
+    }
+    if (i == 3) {
+      assert (c == ('l' as u8));
+    }
+    if (i == 4) {
+      assert (c == ('o' as u8));
+    }
+    // ...
+    i += 1;
+    log i;
+    log c;
+  }
+  assert (i == 11);
+}
+</code>
+<code num="7" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+fn main() {
+    auto x = [1, 2, 3];
+    auto y = 0;
+    for (int i in x) { log i; y += i; }
+    log y;
+    assert (y == 6);
+    auto s = "hello there";
+    let int i = 0;
+    for (u8 c in s) {
+        if (i == 0) { assert (c == 'h' as u8); }
+        if (i == 1) { assert (c == 'e' as u8); }
+        if (i == 2) { assert (c == 'l' as u8); }
+        if (i == 3) { assert (c == 'l' as u8); }
+        if (i == 4) { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log i;
+        log c;
+    }
+    assert (i == 11);
+}
+</code>
+<code num="8" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+fn main() {
+    let x = [1, 2, 3];
+    let y = 0;
+    for i: int  in x { log i; y += i; }
+    log y;
+    assert (y == 6);
+    let s = "hello there";
+    let i: int = 0;
+    for c: u8  in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log i;
+        log c;
+    }
+    assert (i == 11);
+}
+</code>
+<code num="9" date="2011-08-12 15:42:39 -0700" desc="Convert most working tests to ivecs">
+fn main() {
+    let x = ~[1, 2, 3];
+    let y = 0;
+    for i: int  in x { log i; y += i; }
+    log y;
+    assert (y == 6);
+    let s = "hello there";
+    let i: int = 0;
+    for c: u8  in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log i;
+        log c;
+    }
+    assert (i == 11);
+}
+</code>
+<code num="10" date="2011-08-15 21:54:52 -0700" desc="The wonky for...in... whitespace was bothering me.  Sorry!">
+fn main() {
+    let x = ~[1, 2, 3];
+    let y = 0;
+    for i: int in x { log i; y += i; }
+    log y;
+    assert (y == 6);
+    let s = "hello there";
+    let i: int = 0;
+    for c: u8 in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log i;
+        log c;
+    }
+    assert (i == 11);
+}
+</code>
+<code num="11" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+fn main() {
+    let x = [1, 2, 3];
+    let y = 0;
+    for i: int in x { log i; y += i; }
+    log y;
+    assert (y == 6);
+    let s = "hello there";
+    let i: int = 0;
+    for c: u8 in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log i;
+        log c;
+    }
+    assert (i == 11);
+}
+</code>
+<code num="12" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+fn main() {
+    let x = [1, 2, 3];
+    let y = 0;
+    for i: int in x { log_full(core::debug, i); y += i; }
+    log_full(core::debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let i: int = 0;
+    for c: u8 in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log_full(core::debug, i);
+        log_full(core::debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="13" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+fn main() {
+    let x = [1, 2, 3];
+    let y = 0;
+    for i: int in x { log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let i: int = 0;
+    for c: u8 in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="14" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+fn main() {
+    let x = [1, 2, 3];
+    let mut y = 0;
+    for i: int in x { log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let mut i: int = 0;
+    for c: u8 in s {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="15" date="2012-04-06 20:01:43 +0200" desc="Convert old-style for loops to new-style">
+fn main() {
+    let x = [1, 2, 3];
+    let mut y = 0;
+    for x.each {|i| log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let mut i: int = 0;
+    for str::each(s) {|c|
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="16" date="2012-06-25 20:00:46 -0700" desc="Make vectors uglier ([]/~). Sorry. Should be temporary. Closes #2725.">
+fn main() {
+    let x = [1, 2, 3]/~;
+    let mut y = 0;
+    for x.each {|i| log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let mut i: int = 0;
+    for str::each(s) {|c|
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="17" date="2012-06-29 16:26:56 -0700" desc="Switch the compiler over to using ~[] notation instead of []/~. Closes #2759.">
+fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each {|i| log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let mut i: int = 0;
+    for str::each(s) {|c|
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="18" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = "hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="19" date="2012-07-13 22:57:48 -0700" desc="Move the world over to using the new style string literals and types. Closes #2907.">
+fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { log(debug, i); y += i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="20" date="2012-09-19 16:55:01 -0700" desc="demode the each() method on vec and other iterables.">
+fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { log(debug, *i); y += *i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="21" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { log(debug, *i); y += *i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="22" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { log(debug, *i); y += *i; }
+    log(debug, y);
+    assert (y == 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert (c == 'h' as u8); }
+        if i == 1 { assert (c == 'e' as u8); }
+        if i == 2 { assert (c == 'l' as u8); }
+        if i == 3 { assert (c == 'l' as u8); }
+        if i == 4 { assert (c == 'o' as u8); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    assert (i == 11);
+}
+</code>
+<code num="23" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { log(debug, *i); y += *i; }
+    log(debug, y);
+    fail_unless!((y == 6));
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { fail_unless!((c == 'h' as u8)); }
+        if i == 1 { fail_unless!((c == 'e' as u8)); }
+        if i == 2 { fail_unless!((c == 'l' as u8)); }
+        if i == 3 { fail_unless!((c == 'l' as u8)); }
+        if i == 4 { fail_unless!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        log(debug, i);
+        log(debug, c);
+    }
+    fail_unless!((i == 11));
+}
+</code>
+<code num="24" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { debug!(*i); y += *i; }
+    debug!(y);
+    fail_unless!((y == 6));
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { fail_unless!((c == 'h' as u8)); }
+        if i == 1 { fail_unless!((c == 'e' as u8)); }
+        if i == 2 { fail_unless!((c == 'l' as u8)); }
+        if i == 3 { fail_unless!((c == 'l' as u8)); }
+        if i == 4 { fail_unless!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    fail_unless!((i == 11));
+}
+</code>
+<code num="25" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { debug!(*i); y += *i; }
+    debug!(y);
+    assert!((y == 6));
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    assert!((i == 11));
+}
+</code>
+<code num="26" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { debug!(*i); y += *i; }
+    debug!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="27" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::str;
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { debug!(*i); y += *i; }
+    debug!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for str::each(s) |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="28" date="2013-06-09 00:38:58 +1000" desc="std: replace the str::each* fns/methods with byte iterators">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::iterator::IteratorUtil;
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { debug!(*i); y += *i; }
+    debug!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for s.bytes_iter().advance |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="29" date="2013-06-11 23:54:05 -0400" desc="add IteratorUtil to the prelude">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.each |i| { debug!(*i); y += *i; }
+    debug!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for s.bytes_iter().advance |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+</revisions>

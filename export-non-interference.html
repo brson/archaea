@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="11">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+export foo;
+
+type list_cell[T] = tag(cons(@list_cell[T]));
+
+fn main() {
+}
+</code>
+<code num="1" date="2010-09-09 15:59:29 -0700" desc="Switch tags to purely nominal, removing TY_iso and TY_idx. Seems to mostly work, possibly a little bumpy. Changes a lot.">
+export foo;
+
+tag list_cell[T] {
+  cons(@list_cell[T]);
+}
+
+fn main() {
+}
+</code>
+<code num="2" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+export foo;
+
+tag list_cell[T] { cons(@list_cell[T]); }
+
+fn main() { }
+</code>
+<code num="3" date="2011-06-29 09:13:48 -0700" desc="Make tests a little more friendly to combine.">
+export foo;
+export main;
+
+tag list_cell[T] { cons(@list_cell[T]); }
+
+fn main() { }
+</code>
+<code num="4" date="2011-08-10 09:27:22 -0700" desc="Port the tests to the typaram foo&lt;T&gt; syntax.">
+export foo;
+export main;
+
+tag list_cell[T] { cons(@list_cell&lt;T&gt;); }
+
+fn main() { }
+</code>
+<code num="5" date="2011-08-12 06:37:25 -0700" desc="Port the tests to the decl foo&lt;T&gt; syntax.">
+export foo;
+export main;
+
+tag list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;); }
+
+fn main() { }
+</code>
+<code num="6" date="2012-01-19 16:10:31 -0800" desc="test: "tag" -&gt; "enum" in run-pass and run-fail">
+export foo;
+export main;
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;); }
+
+fn main() { }
+</code>
+<code num="7" date="2012-01-19 18:31:08 -0800" desc="rustc: Make the pretty printer output commas after enum variants. Update all tests accordingly.">
+export foo;
+export main;
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), }
+
+fn main() { }
+</code>
+<code num="8" date="2012-03-28 13:42:33 -0700" desc="Detect and report types which could never be instantiated.">
+export foo;
+export main;
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), nil }
+
+fn main() { }
+</code>
+<code num="9" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+export foo;
+export main;
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), nil }
+
+fn main() { }
+</code>
+<code num="10" date="2013-01-30 15:56:40 -0800" desc="test: Remove export from the tests, language, and libraries. rs=deexporting">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), nil }
+
+pub fn main() { }
+</code>
+</revisions>

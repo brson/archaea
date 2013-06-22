@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="21">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// This checks that preemption works.
+
+io fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+io fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  i &lt;- alive;
+  log "main got alive signal";
+  while (i &lt; 1000) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="1" date="2010-07-22 15:05:35 -0700" desc="Beat up on the preempt test a bit more, as it keeps hanging under valgrind.">
+// This checks that preemption works.
+
+io fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+io fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  i &lt;- alive;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="2" date="2010-11-02 11:11:58 -0700" desc="First pass on splitting stratum and opacity off of effects. WIP.">
+// This checks that preemption works.
+
+impure fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+impure fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  i &lt;- alive;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="3" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// This checks that preemption works.
+
+impure fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+impure fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  i &lt;- alive;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="4" date="2011-04-19 13:35:49 -0700" desc="Remove effect system from src.">
+// xfail-stage0
+// This checks that preemption works.
+
+fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  i &lt;- alive;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="5" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// This checks that preemption works.
+
+fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  i &lt;- alive;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="6" date="2011-05-27 11:59:19 -0700" desc="Change the syntax for RECV from "var &lt;- port" to "port |&gt; var".">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// This checks that preemption works.
+
+fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  alive |&gt; i;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="7" date="2011-07-20 19:37:09 -0700" desc="Add xfail-stage3 directives to tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// This checks that preemption works.
+
+fn starve_main(chan[int] alive) {
+  log "signalling main";
+  alive &lt;| 1;
+  log "starving main";
+  let int i = 0;
+  while (true) {
+    i += 1;
+  }
+}
+
+fn main() {
+  let port[int] alive = port();
+  log "main started";
+  let task s = spawn starve_main(chan(alive));
+  let int i;
+  log "main waiting for alive signal";
+  alive |&gt; i;
+  log "main got alive signal";
+  while (i &lt; 50) {
+    log "main iterated";
+    i += 1;
+  }
+  log "main completed";
+}
+</code>
+<code num="8" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// This checks that preemption works.
+
+fn starve_main(alive: chan[int]) {
+    log "signalling main";
+    alive &lt;| 1;
+    log "starving main";
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port[int] = port();
+    log "main started";
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    log "main waiting for alive signal";
+    alive |&gt; i;
+    log "main got alive signal";
+    while i &lt; 50 { log "main iterated"; i += 1; }
+    log "main completed";
+}
+</code>
+<code num="9" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// This checks that preemption works.
+
+fn starve_main(alive: chan[int]) {
+    log "signalling main";
+    alive &lt;| 1;
+    log "starving main";
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port[int] = port();
+    log "main started";
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    log "main waiting for alive signal";
+    alive |&gt; i;
+    log "main got alive signal";
+    while i &lt; 50 { log "main iterated"; i += 1; }
+    log "main completed";
+}
+</code>
+<code num="10" date="2011-08-10 09:27:22 -0700" desc="Port the tests to the typaram foo&lt;T&gt; syntax.">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    log "signalling main";
+    alive &lt;| 1;
+    log "starving main";
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    log "main started";
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    log "main waiting for alive signal";
+    alive |&gt; i;
+    log "main got alive signal";
+    while i &lt; 50 { log "main iterated"; i += 1; }
+    log "main completed";
+}
+</code>
+<code num="11" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    log "signalling main";
+    alive &lt;| 1;
+    log "starving main";
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    log "main started";
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    log "main waiting for alive signal";
+    alive |&gt; i;
+    log "main got alive signal";
+    while i &lt; 50 { log "main iterated"; i += 1; }
+    log "main completed";
+}
+</code>
+<code num="12" date="2011-08-31 14:24:08 +0200" desc="Revert "Replace xfail-stageN with simply xfail-test"">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    log "signalling main";
+    alive &lt;| 1;
+    log "starving main";
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    log "main started";
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    log "main waiting for alive signal";
+    alive |&gt; i;
+    log "main got alive signal";
+    while i &lt; 50 { log "main iterated"; i += 1; }
+    log "main completed";
+}
+</code>
+<code num="13" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    log "signalling main";
+    alive &lt;| 1;
+    log "starving main";
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    log "main started";
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    log "main waiting for alive signal";
+    alive |&gt; i;
+    log "main got alive signal";
+    while i &lt; 50 { log "main iterated"; i += 1; }
+    log "main completed";
+}
+</code>
+<code num="14" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    #debug("signalling main");
+    alive &lt;| 1;
+    #debug("starving main");
+    let i: int = 0;
+    while true { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    #debug("main started");
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    #debug("main waiting for alive signal");
+    alive |&gt; i;
+    #debug("main got alive signal");
+    while i &lt; 50 { #debug("main iterated"); i += 1; }
+    #debug("main completed");
+}
+</code>
+<code num="15" date="2012-03-09 16:11:56 -0800" desc="Add an infinite loop construct">
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    #debug("signalling main");
+    alive &lt;| 1;
+    #debug("starving main");
+    let i: int = 0;
+    loop { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    #debug("main started");
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    #debug("main waiting for alive signal");
+    alive |&gt; i;
+    #debug("main got alive signal");
+    while i &lt; 50 { #debug("main iterated"); i += 1; }
+    #debug("main completed");
+}
+</code>
+<code num="16" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    debug!{"signalling main"};
+    alive &lt;| 1;
+    debug!{"starving main"};
+    let i: int = 0;
+    loop { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    debug!{"main started"};
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    debug!{"main waiting for alive signal"};
+    alive |&gt; i;
+    debug!{"main got alive signal"};
+    while i &lt; 50 { debug!{"main iterated"}; i += 1; }
+    debug!{"main completed"};
+}
+</code>
+<code num="17" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    debug!("signalling main");
+    alive &lt;| 1;
+    debug!("starving main");
+    let i: int = 0;
+    loop { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    debug!("main started");
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    debug!("main waiting for alive signal");
+    alive |&gt; i;
+    debug!("main got alive signal");
+    while i &lt; 50 { debug!("main iterated"); i += 1; }
+    debug!("main completed");
+}
+</code>
+<code num="18" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    debug!("signalling main");
+    alive &lt;| 1;
+    debug!("starving main");
+    let i: int = 0;
+    loop { i += 1; }
+}
+
+fn main() {
+    let alive: port&lt;int&gt; = port();
+    debug!("main started");
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    debug!("main waiting for alive signal");
+    alive |&gt; i;
+    debug!("main got alive signal");
+    while i &lt; 50 { debug!("main iterated"); i += 1; }
+    debug!("main completed");
+}
+</code>
+<code num="19" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    debug!("signalling main");
+    alive &lt;| 1;
+    debug!("starving main");
+    let i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let alive: port&lt;int&gt; = port();
+    debug!("main started");
+    let s: task = spawn starve_main(chan(alive));
+    let i: int;
+    debug!("main waiting for alive signal");
+    alive |&gt; i;
+    debug!("main got alive signal");
+    while i &lt; 50 { debug!("main iterated"); i += 1; }
+    debug!("main completed");
+}
+</code>
+<code num="20" date="2013-04-18 15:13:24 -0700" desc="This test case now parses">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// This checks that preemption works.
+
+fn starve_main(alive: chan&lt;int&gt;) {
+    debug!("signalling main");
+    alive.recv(1);
+    debug!("starving main");
+    let i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let alive: port&lt;int&gt; = port();
+    debug!("main started");
+    let s: task = do task::spawn {
+        starve_main(chan(alive));
+    };
+    let i: int;
+    debug!("main waiting for alive signal");
+    alive.send(i);
+    debug!("main got alive signal");
+    while i &lt; 50 { debug!("main iterated"); i += 1; }
+    debug!("main completed");
+}
+</code>
+</revisions>

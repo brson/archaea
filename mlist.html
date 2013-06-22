@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="14">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+type mlist = tag(cons(int,mutable @mlist), nil());
+
+fn main() {
+  cons(10, cons(11, cons(12, nil())));
+}
+</code>
+<code num="1" date="2010-07-01 23:50:58 -0700" desc="Box arguments that are supposed to be boxed.">
+// -*- rust -*-
+
+type mlist = tag(cons(int,mutable @mlist), nil());
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil())));
+}
+</code>
+<code num="2" date="2010-09-09 15:59:29 -0700" desc="Switch tags to purely nominal, removing TY_iso and TY_idx. Seems to mostly work, possibly a little bumpy. Changes a lot.">
+// -*- rust -*-
+
+tag mlist {
+  cons(int,mutable @mlist);
+  nil();
+}
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil())));
+}
+</code>
+<code num="3" date="2011-01-21 15:56:42 -0800" desc="Un-XFAIL 7 tests that have begun working on rustc lately. Fix one bug in mlist.rs.">
+// -*- rust -*-
+
+tag mlist {
+  cons(int,mutable @mlist);
+  nil;
+}
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil)));
+}
+</code>
+<code num="4" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-boot
+// xfail-stage0
+// -*- rust -*-
+
+tag mlist {
+  cons(int,mutable @mlist);
+  nil;
+}
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil)));
+}
+</code>
+<code num="5" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-boot
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+tag mlist {
+  cons(int,mutable @mlist);
+  nil;
+}
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil)));
+}
+</code>
+<code num="6" date="2011-05-14 21:05:22 -0400" desc="Remove xfail-boot lines from tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+tag mlist {
+  cons(int,mutable @mlist);
+  nil;
+}
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil)));
+}
+</code>
+<code num="7" date="2011-05-23 23:25:29 +0200" desc="Un-xfail test/run-pass/mlist">
+// -*- rust -*-
+
+tag mlist {
+  cons(int,mutable @mlist);
+  nil;
+}
+
+fn main() {
+  cons(10, @cons(11, @cons(12, @nil)));
+}
+</code>
+<code num="8" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+tag mlist { cons(int, @mlist); nil; }
+
+fn main() { cons(10, @cons(11, @cons(12, @nil))); }
+</code>
+<code num="9" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+tag mlist { cons(int, @mlist); nil; }
+
+fn main() { cons(10, @cons(11, @cons(12, @nil))); }
+</code>
+<code num="10" date="2012-01-19 16:10:31 -0800" desc="test: "tag" -&gt; "enum" in run-pass and run-fail">
+// -*- rust -*-
+enum mlist { cons(int, @mlist); nil; }
+
+fn main() { cons(10, @cons(11, @cons(12, @nil))); }
+</code>
+<code num="11" date="2012-01-19 18:31:08 -0800" desc="rustc: Make the pretty printer output commas after enum variants. Update all tests accordingly.">
+// -*- rust -*-
+enum mlist { cons(int, @mlist), nil, }
+
+fn main() { cons(10, @cons(11, @cons(12, @nil))); }
+</code>
+<code num="12" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+enum mlist { cons(int, @mlist), nil, }
+
+fn main() { cons(10, @cons(11, @cons(12, @nil))); }
+</code>
+<code num="13" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+enum mlist { cons(int, @mlist), nil, }
+
+pub fn main() { cons(10, @cons(11, @cons(12, @nil))); }
+</code>
+</revisions>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="11">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+type foo[T] = tup(T);
+type bar[T] = foo[T];
+fn takebar[T](bar[T] b) {}
+fn main() {}
+</code>
+<code num="1" date="2011-02-09 13:19:20 -0800" desc="Fix bug in test and un-XFAIL 4 tests now passing on rustc.">
+type foo[T] = tup(T);
+type bar[T] = foo[T];
+fn takebar[T](&amp;bar[T] b) {}
+fn main() {}
+</code>
+<code num="2" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+type foo[T] = tup(T);
+
+type bar[T] = foo[T];
+
+fn takebar[T](&amp;bar[T] b) { }
+
+fn main() { }
+</code>
+<code num="3" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+type foo[T] = rec(T a);
+
+type bar[T] = foo[T];
+
+fn takebar[T](&amp;bar[T] b) { }
+
+fn main() { }
+</code>
+<code num="4" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+type foo[T] = {a: T};
+
+type bar[T] = foo[T];
+
+fn takebar[T](b: &amp;bar[T]) { }
+
+fn main() { }
+</code>
+<code num="5" date="2011-08-10 09:27:22 -0700" desc="Port the tests to the typaram foo&lt;T&gt; syntax.">
+type foo[T] = {a: T};
+
+type bar[T] = foo&lt;T&gt;;
+
+fn takebar[T](b: &amp;bar&lt;T&gt;) { }
+
+fn main() { }
+</code>
+<code num="6" date="2011-08-12 06:37:25 -0700" desc="Port the tests to the decl foo&lt;T&gt; syntax.">
+type foo&lt;T&gt; = {a: T};
+
+type bar&lt;T&gt; = foo&lt;T&gt;;
+
+fn takebar&lt;T&gt;(b: &amp;bar&lt;T&gt;) { }
+
+fn main() { }
+</code>
+<code num="7" date="2011-09-12 11:27:30 +0200" desc="Reformat for new mode syntax, step 1">
+type foo&lt;T&gt; = {a: T};
+
+type bar&lt;T&gt; = foo&lt;T&gt;;
+
+fn takebar&lt;T&gt;(b: bar&lt;T&gt;) { }
+
+fn main() { }
+</code>
+<code num="8" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+type foo&lt;T&gt; = {a: T};
+
+type bar&lt;T&gt; = foo&lt;T&gt;;
+
+fn takebar&lt;T&gt;(b: bar&lt;T&gt;) { }
+
+fn main() { }
+</code>
+<code num="9" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+type foo&lt;T&gt; = {a: T};
+
+type bar&lt;T&gt; = foo&lt;T&gt;;
+
+fn takebar&lt;T&gt;(b: bar&lt;T&gt;) { }
+
+pub fn main() { }
+</code>
+<code num="10" date="2013-03-06 19:09:17 -0800" desc="test: Fix tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+struct Foo&lt;T&gt; {
+    a: T
+}
+
+type Bar&lt;T&gt; = Foo&lt;T&gt;;
+
+fn takebar&lt;T&gt;(b: Bar&lt;T&gt;) { }
+
+pub fn main() { }
+</code>
+</revisions>

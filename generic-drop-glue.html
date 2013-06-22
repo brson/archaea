@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="16">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn f[T](T t) {
+  log "dropping";
+}
+
+fn main() {
+  type r = rec(@int x, @int y);
+  auto x = rec(x=@10, y=@12);
+  f[r](x);
+}
+</code>
+<code num="1" date="2010-10-28 15:02:00 -0700" desc="rustboot: Emit an error instead of asserting in trans when a T is passed by value">
+fn f[T](&amp;T t) {
+  log "dropping";
+}
+
+fn main() {
+  type r = rec(@int x, @int y);
+  auto x = rec(x=@10, y=@12);
+  f[r](x);
+}
+</code>
+<code num="2" date="2011-01-18 17:20:13 -0800" desc="Change generic-drop-glue.rs to be meaningful again, and un-XFAIL on rustc.">
+fn f[T](&amp;T t) {
+  let T t1 = t;
+}
+
+fn main() {
+  auto x = rec(x=@10, y=@12);
+  f(x);
+}
+</code>
+<code num="3" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+fn f[T](&amp;T t) { let T t1 = t; }
+
+fn main() { auto x = rec(x=@10, y=@12); f(x); }
+</code>
+<code num="4" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+fn f[T](t: &amp;T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="5" date="2011-08-12 06:37:25 -0700" desc="Port the tests to the decl foo&lt;T&gt; syntax.">
+fn f&lt;T&gt;(t: &amp;T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="6" date="2011-09-12 11:27:30 +0200" desc="Reformat for new mode syntax, step 1">
+fn f&lt;T&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="7" date="2011-09-26 21:57:42 -0700" desc="Enforce copy restrictions on let initializers">
+fn f&lt;@T&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="8" date="2011-10-25 15:56:55 +0200" desc="Update our code to new type parameter kind syntax">
+fn f&lt;T&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="9" date="2011-11-18 12:39:20 +0100" desc="Update stdlib, compiler, and tests to new kind system">
+fn f&lt;copy T&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="10" date="2012-01-05 15:35:37 +0100" desc="Switch to new param kind bound syntax">
+fn f&lt;T: copy&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="11" date="2012-09-07 14:52:28 -0700" desc="Convert all kind bounds to camel case. Remove send, owned keywords.">
+fn f&lt;T: Copy&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="12" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn f&lt;T: Copy&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = {x: @10, y: @12}; f(x); }
+</code>
+<code num="13" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { x: @int, y: @int }
+
+fn f&lt;T: Copy&gt;(t: T) { let t1: T = t; }
+
+fn main() { let x = Pair {x: @10, y: @12}; f(x); }
+</code>
+<code num="14" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { x: @int, y: @int }
+
+fn f&lt;T: Copy&gt;(t: T) { let t1: T = t; }
+
+pub fn main() { let x = Pair {x: @10, y: @12}; f(x); }
+</code>
+<code num="15" date="2013-02-20 17:07:17 -0800" desc="librustc: Separate most trait bounds with '+'. rs=plussing">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { x: @int, y: @int }
+
+fn f&lt;T:Copy&gt;(t: T) { let t1: T = t; }
+
+pub fn main() { let x = Pair {x: @10, y: @12}; f(x); }
+</code>
+</revisions>

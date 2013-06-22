@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="31">
+<code num="0" date="2010-07-16 12:24:28 +0800" desc="Support nested for-each loops. Closes #79.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[int] a = vec(-1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    check (a.(0) == 0);
+    check (a.(1) == 1);
+    check (a.(2) == 10);
+    check (a.(3) == 11);
+}
+</code>
+<code num="1" date="2010-07-23 15:29:17 -0700" desc="Improve mutability checking. Closes #118.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[mutable int] a = vec[mutable](-1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    check (a.(0) == 0);
+    check (a.(1) == 1);
+    check (a.(2) == 10);
+    check (a.(3) == 11);
+}
+</code>
+<code num="2" date="2010-11-02 15:24:46 -0700" desc="Split out stratum-checking pass, implement more-strict (overly aggressive) impure-effect checking.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+impure fn main() {
+    let vec[mutable int] a = vec[mutable](-1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    check (a.(0) == 0);
+    check (a.(1) == 1);
+    check (a.(2) == 10);
+    check (a.(3) == 11);
+}
+</code>
+<code num="3" date="2010-12-13 09:25:19 -0800" desc="Syntax tweak: move 'mutable' from pseudo-ty-param on vec ctor to low-precedence prefix inside paren.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+impure fn main() {
+    let vec[mutable int] a = vec(mutable -1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    check (a.(0) == 0);
+    check (a.(1) == 1);
+    check (a.(2) == 10);
+    check (a.(3) == 11);
+}
+</code>
+<code num="4" date="2011-04-19 13:35:49 -0700" desc="Remove effect system from src.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[mutable int] a = vec(mutable -1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    check (a.(0) == 0);
+    check (a.(1) == 1);
+    check (a.(2) == 10);
+    check (a.(3) == 11);
+}
+</code>
+<code num="5" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[mutable int] a = vec(mutable -1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="6" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[mutable int] a = vec(mutable -1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    check (a.(0) == 0);
+    check (a.(1) == 1);
+    check (a.(2) == 10);
+    check (a.(3) == 11);
+}
+</code>
+<code num="7" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[mutable int] a = vec(mutable -1, -1, -1, -1);
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="8" date="2011-05-16 18:21:22 -0700" desc="Rewrite everything to use [] instead of vec() in value position.">
+// -*- rust -*-
+
+iter two() -&gt; int {
+    put 0;
+    put 1;
+}
+
+fn main() {
+    let vec[mutable int] a = [mutable -1, -1, -1, -1];
+    let int p = 0;
+
+    for each (int i in two()) {
+        for each (int j in two()) {
+            a.(p) = 10 * i + j;
+            p += 1;
+        }
+    }
+
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="9" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+iter two() -&gt; int { put 0; put 1; }
+
+fn main() {
+    let vec[mutable int] a = [mutable -1, -1, -1, -1];
+    let int p = 0;
+    for each (int i in two()) {
+        for each (int j in two()) { a.(p) = 10 * i + j; p += 1; }
+    }
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="10" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+iter two() -&gt; int { put 0; put 1; }
+
+fn main() {
+    let a: vec[mutable int] = [mutable -1, -1, -1, -1];
+    let p: int = 0;
+    for each i: int  in two() {
+        for each j: int  in two() { a.(p) = 10 * i + j; p += 1; }
+    }
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="11" date="2011-08-12 15:42:39 -0700" desc="Convert most working tests to ivecs">
+// -*- rust -*-
+iter two() -&gt; int { put 0; put 1; }
+
+fn main() {
+    let a: [mutable int] = ~[mutable -1, -1, -1, -1];
+    let p: int = 0;
+    for each i: int  in two() {
+        for each j: int  in two() { a.(p) = 10 * i + j; p += 1; }
+    }
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="12" date="2011-08-15 21:54:52 -0700" desc="The wonky for...in... whitespace was bothering me.  Sorry!">
+// -*- rust -*-
+iter two() -&gt; int { put 0; put 1; }
+
+fn main() {
+    let a: [mutable int] = ~[mutable -1, -1, -1, -1];
+    let p: int = 0;
+    for each i: int in two() {
+        for each j: int in two() { a.(p) = 10 * i + j; p += 1; }
+    }
+    assert (a.(0) == 0);
+    assert (a.(1) == 1);
+    assert (a.(2) == 10);
+    assert (a.(3) == 11);
+}
+</code>
+<code num="13" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+iter two() -&gt; int { put 0; put 1; }
+
+fn main() {
+    let a: [mutable int] = [mutable -1, -1, -1, -1];
+    let p: int = 0;
+    for each i: int in two() {
+        for each j: int in two() { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="14" date="2011-10-21 13:14:28 +0200" desc="Remove remaining uses of iter and for-each">
+// -*- rust -*-
+fn two(it: block(int)) { it(0); it(1); }
+
+fn main() {
+    let a: [mutable int] = [mutable -1, -1, -1, -1];
+    let p: int = 0;
+    two {|i|
+        two {|j| a[p] = 10 * i + j; p += 1; };
+    };
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="15" date="2012-01-23 14:59:00 -0800" desc="s/block()/fn()/g">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: [mutable int] = [mutable -1, -1, -1, -1];
+    let p: int = 0;
+    two {|i|
+        two {|j| a[p] = 10 * i + j; p += 1; };
+    };
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="16" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: [mutable int] = [mutable -1, -1, -1, -1];
+    let mut p: int = 0;
+    two {|i|
+        two {|j| a[p] = 10 * i + j; p += 1; };
+    };
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="17" date="2012-03-26 18:35:18 -0700" desc="Bulk-edit mutable -&gt; mut.">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: [mut int] = [mut -1, -1, -1, -1];
+    let mut p: int = 0;
+    two {|i|
+        two {|j| a[p] = 10 * i + j; p += 1; };
+    };
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="18" date="2012-06-25 20:00:46 -0700" desc="Make vectors uglier ([]/~). Sorry. Should be temporary. Closes #2725.">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: [mut int]/~ = [mut -1, -1, -1, -1]/~;
+    let mut p: int = 0;
+    two {|i|
+        two {|j| a[p] = 10 * i + j; p += 1; };
+    };
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="19" date="2012-06-29 16:26:56 -0700" desc="Switch the compiler over to using ~[] notation instead of []/~. Closes #2759.">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: ~[mut int] = ~[mut -1, -1, -1, -1];
+    let mut p: int = 0;
+    two {|i|
+        two {|j| a[p] = 10 * i + j; p += 1; };
+    };
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="20" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: ~[mut int] = ~[mut -1, -1, -1, -1];
+    let mut p: int = 0;
+    do two {|i|
+        do two {|j| a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="21" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: ~[mut int] = ~[mut -1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="22" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let a: ~[mut int] = ~[mut -1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="23" date="2013-01-29 21:11:43 -0500" desc="RIMOV, round 3">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let mut a: ~[mut int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="24" date="2013-01-29 21:13:14 -0500" desc="RIMOV, round 4">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+fn main() {
+    let mut a: ~[int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="25" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+pub fn main() {
+    let a: ~[mut int] = ~[mut -1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="26" date="2013-02-04 11:07:36 -0800" desc="Merge remote-tracking branch 'bstrie/rimov' into incoming">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+pub fn main() {
+    let mut a: ~[int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert (a[0] == 0);
+    assert (a[1] == 1);
+    assert (a[2] == 10);
+    assert (a[3] == 11);
+}
+</code>
+<code num="27" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: fn(int)) { it(0); it(1); }
+
+pub fn main() {
+    let mut a: ~[int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    fail_unless!((a[0] == 0));
+    fail_unless!((a[1] == 1));
+    fail_unless!((a[2] == 10));
+    fail_unless!((a[3] == 11));
+}
+</code>
+<code num="28" date="2013-03-07 14:38:38 -0800" desc="librustc: Replace all uses of `fn()` with `&amp;fn()`. rs=defun">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: &amp;fn(int)) { it(0); it(1); }
+
+pub fn main() {
+    let mut a: ~[int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    fail_unless!((a[0] == 0));
+    fail_unless!((a[1] == 1));
+    fail_unless!((a[2] == 10));
+    fail_unless!((a[3] == 11));
+}
+</code>
+<code num="29" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: &amp;fn(int)) { it(0); it(1); }
+
+pub fn main() {
+    let mut a: ~[int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert!((a[0] == 0));
+    assert!((a[1] == 1));
+    assert!((a[2] == 10));
+    assert!((a[3] == 11));
+}
+</code>
+<code num="30" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn two(it: &amp;fn(int)) { it(0); it(1); }
+
+pub fn main() {
+    let mut a: ~[int] = ~[-1, -1, -1, -1];
+    let mut p: int = 0;
+    do two |i| {
+        do two |j| { a[p] = 10 * i + j; p += 1; }
+    }
+    assert_eq!(a[0], 0);
+    assert_eq!(a[1], 1);
+    assert_eq!(a[2], 10);
+    assert_eq!(a[3], 11);
+}
+</code>
+</revisions>

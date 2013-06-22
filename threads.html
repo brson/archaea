@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="34">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn main() {
+  let port[int] p = port();
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="1" date="2010-09-07 18:01:35 -0700" desc="Small updates to test cases.">
+// -*- rust -*-
+
+fn main() {
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread "child" child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="2" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread "child" child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="3" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread "child" child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="4" date="2011-07-20 19:37:09 -0700" desc="Add xfail-stage3 directives to tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+
+// -*- rust -*-
+
+fn main() {
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread "child" child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="5" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+./src/test/run-pass/threads.rs:11:17:11:24: [1;31merror:[0m expecting (, found "child"
+./src/test/run-pass/threads.rs:11     spawn thread "child" child(i);
+                                                   ^~~~~~~
+rt: ---
+rt: f00e:main:main:                   upcall fail 'explicit failure', src/comp/syntax/parse/parser.rs:112
+rt: f00e:main:                        domain main @0x999804c root task failed
+</code>
+<code num="6" date="2011-07-27 14:48:34 +0200" desc="Fix damage done by the pretty-printer">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+
+// -*- rust -*-
+
+fn main() {
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread "child" child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="7" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+
+// -*- rust -*-
+
+fn main() {
+  let int i = 10;
+  while (i &gt; 0) {
+    spawn thread "child" child(i);
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(int x) {
+  log x;
+}
+</code>
+<code num="8" date="2011-08-12 18:34:19 -0700" desc="Porting a bunch of tests over.">
+// -*- rust -*-
+
+use std;
+import std::task;
+
+fn main() {
+  let i = 10;
+  while (i &gt; 0) {
+    task::_spawn(bind child(i));
+    i = i - 1;
+  }
+  log "main thread exiting";
+}
+
+fn child(x : int) {
+  log x;
+}
+</code>
+<code num="9" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+
+use std;
+import std::task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::_spawn(bind child(i)); i = i - 1; }
+    log "main thread exiting";
+}
+
+fn child(x: int) { log x; }
+</code>
+<code num="10" date="2011-08-25 11:20:43 -0700" desc="Cleaning up task and comm exports, updating all the test cases.">
+// -*- rust -*-
+
+use std;
+import std::task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn(bind child(i)); i = i - 1; }
+    log "main thread exiting";
+}
+
+fn child(x: int) { log x; }
+</code>
+<code num="11" date="2011-10-13 15:37:07 -0700" desc="Convert tests to use bare-fn spawn">
+// -*- rust -*-
+
+use std;
+import std::task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn2(copy i, child); i = i - 1; }
+    log "main thread exiting";
+}
+
+fn# child(&amp;&amp;x: int) { log x; }
+</code>
+<code num="12" date="2011-10-13 21:23:07 -0700" desc="Drop the 2 from the spawn*2 functions">
+// -*- rust -*-
+
+use std;
+import std::task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn(copy i, child); i = i - 1; }
+    log "main thread exiting";
+}
+
+fn# child(&amp;&amp;x: int) { log x; }
+</code>
+<code num="13" date="2011-10-20 20:34:04 -0700" desc="Remove temporary fn# syntax">
+// -*- rust -*-
+
+use std;
+import std::task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn(copy i, child); i = i - 1; }
+    log "main thread exiting";
+}
+
+fn child(&amp;&amp;x: int) { log x; }
+</code>
+<code num="14" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn(copy i, child); i = i - 1; }
+    log "main thread exiting";
+}
+
+fn child(&amp;&amp;x: int) { log x; }
+</code>
+<code num="15" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn(copy i, child); i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log_full(core::debug, x); }
+</code>
+<code num="16" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn(copy i, child); i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="17" date="2012-01-04 21:14:53 -0800" desc="port over the tests to use the new API">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let i = 10;
+    while i &gt; 0 { task::spawn {|| child(i); }; i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="18" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn {|| child(i); }; i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="19" date="2012-05-07 11:31:57 -0700" desc="make it illegal to implicitly capture mutable variables">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn {|copy i| child(i); }; i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="20" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({|copy i| child(i); }); i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="21" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn(|copy i| child(i) ); i = i - 1; }
+    #debug("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="22" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn(|copy i| child(i) ); i = i - 1; }
+    debug!{"main thread exiting"};
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="23" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// -*- rust -*-
+
+use std;
+import task;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn(|copy i| child(i) ); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="24" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// -*- rust -*-
+
+use std;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn(|copy i| child(i) ); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="25" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+
+extern mod std;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn(|copy i| child(i) ); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="26" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn(|copy i| child(i) ); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="27" date="2013-01-10 10:59:58 -0800" desc="Finalize moves-based-on-type implementation.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="28" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { log(debug, x); }
+</code>
+<code num="29" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { debug!(x); }
+</code>
+<code num="30" date="2013-05-03 19:25:04 -0400" desc="add gitattributes and fix whitespace issues">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(&amp;&amp;x: int) { debug!(x); }
+</code>
+<code num="31" date="2013-05-07 21:33:31 -0700" desc="test: Fix tests.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(x: int) { debug!(x); }
+</code>
+<code num="32" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod extra;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(x: int) { debug!(x); }
+</code>
+<code num="33" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    debug!("main thread exiting");
+}
+
+fn child(x: int) { debug!(x); }
+</code>
+</revisions>

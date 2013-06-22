@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="32">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+type pair = rec(int head, mutable @mlist tail);
+type mlist = tag(cons(@pair), nil());
+
+fn main() {
+  let @pair p = rec(head=10, tail=mutable nil());
+  let @mlist cycle = cons(p);
+  //p.tail = cycle;
+}
+</code>
+<code num="1" date="2010-06-24 18:25:10 -0700" desc="Fix bad output-slot logic in tag constructors.">
+// -*- rust -*-
+
+type cell = tup(mutable @list);
+type list = tag(link(@cell), nil());
+
+fn main() {
+  let @cell first = tup(@nil());
+  let @cell second = tup(@link(first));
+  first._0 = link(second);
+}
+</code>
+<code num="2" date="2010-06-25 23:57:30 -0700" desc="Add callable gc method exposed to user code, use it in mlist-cycle.rs test (still not quite working; some memory corruption in the recursive tag constructors, not the GC)">
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+type list = tag(link(@cell), nil());
+
+fn main() {
+  let @cell first = tup(@nil());
+  let @cell second = tup(@link(first));
+  first._0 = link(second);
+  std.sys.rustrt.gc();
+  let @cell third = tup(@nil());
+}
+</code>
+<code num="3" date="2010-07-13 14:27:23 -0700" desc="Fix the next typo in mlist-cycle.rs; still doesn't work.">
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+type list = tag(link(@cell), nil());
+
+fn main() {
+  let @cell first = tup(@nil());
+  let @cell second = tup(@link(first));
+  first._0 = @link(second);
+  std.sys.rustrt.gc();
+  let @cell third = tup(@nil());
+}
+</code>
+<code num="4" date="2010-07-22 17:05:45 -0700" desc="A certain incomplete quantity of wrestling with "INIT" statements that don't actually initialize. Should probably rename them to MAKE. Anyway, WIP, but two steps forward (and one back). More later.">
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+type list = tag(link(@cell), nil());
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std.sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="5" date="2010-09-09 15:59:29 -0700" desc="Switch tags to purely nominal, removing TY_iso and TY_idx. Seems to mostly work, possibly a little bumpy. Changes a lot.">
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+tag list {
+  link(@cell);
+  nil();
+}
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std.sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="6" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-boot
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+tag list {
+  link(@cell);
+  nil();
+}
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std.sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="7" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-boot
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+tag list {
+  link(@cell);
+  nil();
+}
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std.sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="8" date="2011-05-06 22:13:13 +0200" desc="Rename std modules to be camelcased">
+// xfail-boot
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+tag list {
+  link(@cell);
+  nil();
+}
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std.Sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="9" date="2011-05-12 17:24:54 +0200" desc="Downcase std modules again, move to :: for module dereferencing">
+// xfail-boot
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+tag list {
+  link(@cell);
+  nil();
+}
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std::sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="10" date="2011-05-14 21:05:22 -0400" desc="Remove xfail-boot lines from tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+use std;
+
+type cell = tup(mutable @list);
+tag list {
+  link(@cell);
+  nil();
+}
+
+fn main() {
+  let @cell first = @tup(mutable @nil());
+  let @cell second = @tup(mutable @link(first));
+  first._0 = @link(second);
+  std::sys.rustrt.gc();
+  let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="11" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+use std;
+
+type cell = tup(mutable @list);
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let @cell first = @tup(mutable @nil());
+    let @cell second = @tup(mutable @link(first));
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="12" date="2011-07-20 19:37:09 -0700" desc="Add xfail-stage3 directives to tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+use std;
+
+type cell = tup(mutable @list);
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let @cell first = @tup(mutable @nil());
+    let @cell second = @tup(mutable @link(first));
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let @cell third = @tup(mutable @nil());
+}
+</code>
+<code num="13" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+use std;
+
+type cell = rec(mutable @list c);
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let @cell first = @rec(mutable c=@nil());
+    let @cell second = @rec(mutable c=@link(first));
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let @cell third = @rec(mutable c=@nil());
+}
+</code>
+<code num="14" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="15" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="16" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+// xfail-test
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="17" date="2011-08-31 14:24:08 +0200" desc="Revert "Replace xfail-stageN with simply xfail-test"">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="18" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+// xfail-test
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    std::sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="19" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// xfail-test
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+tag list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="20" date="2012-01-19 16:10:31 -0800" desc="test: "tag" -&gt; "enum" in run-pass and run-fail">
+// xfail-test
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+enum list { link(@cell); nil; }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="21" date="2012-01-19 18:31:08 -0800" desc="rustc: Make the pretty printer output commas after enum variants. Update all tests accordingly.">
+// xfail-test
+// -*- rust -*-
+use std;
+
+type cell = {mutable c: @list};
+
+enum list { link(@cell), nil, }
+
+fn main() {
+    let first: @cell = @{mutable c: @nil()};
+    let second: @cell = @{mutable c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mutable c: @nil()};
+}
+</code>
+<code num="22" date="2012-03-26 18:35:18 -0700" desc="Bulk-edit mutable -&gt; mut.">
+// xfail-test
+// -*- rust -*-
+use std;
+
+type cell = {mut c: @list};
+
+enum list { link(@cell), nil, }
+
+fn main() {
+    let first: @cell = @{mut c: @nil()};
+    let second: @cell = @{mut c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mut c: @nil()};
+}
+</code>
+<code num="23" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type cell = {mut c: @list};
+
+enum list { link(@cell), nil, }
+
+fn main() {
+    let first: @cell = @{mut c: @nil()};
+    let second: @cell = @{mut c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mut c: @nil()};
+}
+</code>
+<code num="24" date="2012-09-18 11:26:07 -0700" desc="rustc: Change all non-keyword uses of "link"">
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type Cell = {mut c: @List};
+
+enum List { Link(@Cell), Nil, }
+
+fn main() {
+    let first: @Cell = @{mut c: @Nil()};
+    let second: @Cell = @{mut c: @Link(first)};
+    first._0 = @Link(second);
+    sys.rustrt.gc();
+    let third: @Cell = @{mut c: @Nil()};
+}
+</code>
+<code num="25" date="2012-09-18 11:46:39 -0700" desc="Revert "rustc: Change all non-keyword uses of "link""">
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type cell = {mut c: @list};
+
+enum list { link(@cell), nil, }
+
+fn main() {
+    let first: @cell = @{mut c: @nil()};
+    let second: @cell = @{mut c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mut c: @nil()};
+}
+</code>
+<code num="26" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type cell = {mut c: @list};
+
+enum list { link(@cell), nil, }
+
+fn main() {
+    let first: @cell = @{mut c: @nil()};
+    let second: @cell = @{mut c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mut c: @nil()};
+}
+</code>
+<code num="27" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type cell = {mut c: @list};
+
+enum list { link(@cell), nil, }
+
+pub fn main() {
+    let first: @cell = @{mut c: @nil()};
+    let second: @cell = @{mut c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mut c: @nil()};
+}
+</code>
+<code num="28" date="2013-02-14 11:47:00 -0800" desc="librustc: Replace `impl Type : Trait` with `impl Trait for Type`. rs=implflipping">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type cell = {mut c: @list};
+
+enum list { link(@cell), nil, }
+
+pub fn main() {
+    let first: @cell = @{mut c: @nil()};
+    let second: @cell = @{mut c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @{mut c: @nil()};
+}
+</code>
+<code num="29" date="2013-02-22 16:08:16 -0800" desc="test: De-mut the test suite. rs=demuting">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// -*- rust -*-
+extern mod std;
+
+type cell = {c: @list};
+
+enum list { link(@mut cell), nil, }
+
+pub fn main() {
+    let first: @cell = @mut {c: @nil()};
+    let second: @cell = @mut {c: @link(first)};
+    first._0 = @link(second);
+    sys.rustrt.gc();
+    let third: @cell = @mut {c: @nil()};
+}
+</code>
+<code num="30" date="2013-04-18 15:05:39 -0700" desc="this test still doesn't pass, but at least it parses...">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// -*- rust -*-
+extern mod core;
+use core::gc;
+use core::gc::rustrt;
+
+struct cell {c: @list}
+
+enum list { link(@mut cell), nil, }
+
+pub fn main() {
+    let first: @cell = @mut cell{c: @nil()};
+    let second: @cell = @mut cell{c: @link(first)};
+    first._0 = @link(second);
+    rustrt::gc();
+    let third: @cell = @mut cell{c: @nil()};
+}
+</code>
+<code num="31" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// -*- rust -*-
+extern mod std;
+use std::gc;
+use std::gc::rustrt;
+
+struct cell {c: @list}
+
+enum list { link(@mut cell), nil, }
+
+pub fn main() {
+    let first: @cell = @mut cell{c: @nil()};
+    let second: @cell = @mut cell{c: @link(first)};
+    first._0 = @link(second);
+    rustrt::gc();
+    let third: @cell = @mut cell{c: @nil()};
+}
+</code>
+</revisions>

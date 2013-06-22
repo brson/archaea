@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="27">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  check (int(yen) == 0xa5);
+  check (int(c_cedilla) == 0xe7);
+  check (int(thorn) == 0xfe);
+  check (int(y_diaeresis) == 0xff);
+  check (int(pi) == 0x3a0);
+
+  check (int(pi) == int('\u03a0'));
+  check (int('\x0a') == int('\n'));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  check (int(oo) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      check(ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="1" date="2010-07-26 15:20:13 -0700" desc="Move the test suite to the "as" form for casts. XFAIL a few tests for LLVM.">
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  check ((yen as int) == 0xa5);
+  check ((c_cedilla as int) == 0xe7);
+  check ((thorn as int) == 0xfe);
+  check ((y_diaeresis as int) == 0xff);
+  check ((pi as int) == 0x3a0);
+
+  check ((pi as int) == ('\u03a0' as int));
+  check (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  check ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      check(ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="2" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  check ((yen as int) == 0xa5);
+  check ((c_cedilla as int) == 0xe7);
+  check ((thorn as int) == 0xfe);
+  check ((y_diaeresis as int) == 0xff);
+  check ((pi as int) == 0x3a0);
+
+  check ((pi as int) == ('\u03a0' as int));
+  check (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  check ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      check(ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="3" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// xfail-stage0
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  assert ((yen as int) == 0xa5);
+  assert ((c_cedilla as int) == 0xe7);
+  assert ((thorn as int) == 0xfe);
+  assert ((y_diaeresis as int) == 0xff);
+  assert ((pi as int) == 0x3a0);
+
+  assert ((pi as int) == ('\u03a0' as int));
+  assert (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  assert ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      assert (ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="4" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// xfail-stage0
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  check ((yen as int) == 0xa5);
+  check ((c_cedilla as int) == 0xe7);
+  check ((thorn as int) == 0xfe);
+  check ((y_diaeresis as int) == 0xff);
+  check ((pi as int) == 0x3a0);
+
+  check ((pi as int) == ('\u03a0' as int));
+  check (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  check ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      check(ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="5" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// xfail-stage0
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  assert ((yen as int) == 0xa5);
+  assert ((c_cedilla as int) == 0xe7);
+  assert ((thorn as int) == 0xfe);
+  assert ((y_diaeresis as int) == 0xff);
+  assert ((pi as int) == 0x3a0);
+
+  assert ((pi as int) == ('\u03a0' as int));
+  assert (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  assert ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      assert (ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="6" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  assert ((yen as int) == 0xa5);
+  assert ((c_cedilla as int) == 0xe7);
+  assert ((thorn as int) == 0xfe);
+  assert ((y_diaeresis as int) == 0xff);
+  assert ((pi as int) == 0x3a0);
+
+  assert ((pi as int) == ('\u03a0' as int));
+  assert (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  assert ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      assert (ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="7" date="2011-05-23 22:22:08 -0400" desc="test: Un-xfail some working tests">
+// xfail-stage0
+
+fn main() {
+  let char yen = '¥';         // 0xa5
+  let char c_cedilla = 'ç';   // 0xe7
+  let char thorn = 'þ';       // 0xfe
+  let char y_diaeresis = 'ÿ'; // 0xff
+  let char pi = 'Π';          // 0x3a0
+
+  assert ((yen as int) == 0xa5);
+  assert ((c_cedilla as int) == 0xe7);
+  assert ((thorn as int) == 0xfe);
+  assert ((y_diaeresis as int) == 0xff);
+  assert ((pi as int) == 0x3a0);
+
+  assert ((pi as int) == ('\u03a0' as int));
+  assert (('\x0a' as int) == ('\n' as int));
+
+  let str bhutan = "འབྲུག་ཡུལ།";
+  let str japan = "日本";
+  let str uzbekistan = "Ўзбекистон";
+  let str austria = "Österreich";
+
+  let str bhutan_e =
+    "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+  let str japan_e = "\u65e5\u672c";
+  let str uzbekistan_e =
+    "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+  let str austria_e = "\u00d6sterreich";
+
+  let char oo = 'Ö';
+  assert ((oo as int) == 0xd6);
+
+  fn check_str_eq(str a, str b) {
+    let int i = 0;
+    for (u8 ab in a) {
+      log i;
+      log ab;
+      let u8 bb = b.(i);
+      log bb;
+      assert (ab == bb);
+      i += 1;
+    }
+  }
+
+  check_str_eq(bhutan, bhutan_e);
+  check_str_eq(japan, japan_e);
+  check_str_eq(uzbekistan, uzbekistan_e);
+  check_str_eq(austria, austria_e);
+}
+</code>
+<code num="8" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let i: int = 0;
+        for ab: u8  in a {
+            log i;
+            log ab;
+            let bb: u8 = b.(i);
+            log bb;
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="9" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let i: int = 0;
+        for ab: u8  in a {
+            log i;
+            log ab;
+            let bb: u8 = b.(i);
+            log bb;
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="10" date="2011-08-15 21:54:52 -0700" desc="The wonky for...in... whitespace was bothering me.  Sorry!">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let i: int = 0;
+        for ab: u8 in a {
+            log i;
+            log ab;
+            let bb: u8 = b.(i);
+            log bb;
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="11" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let i: int = 0;
+        for ab: u8 in a {
+            log i;
+            log ab;
+            let bb: u8 = b[i];
+            log bb;
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="12" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let i: int = 0;
+        for ab: u8 in a {
+            log_full(core::debug, i);
+            log_full(core::debug, ab);
+            let bb: u8 = b[i];
+            log_full(core::debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="13" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let i: int = 0;
+        for ab: u8 in a {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="14" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let mut i: int = 0;
+        for ab: u8 in a {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="15" date="2012-04-06 20:01:43 +0200" desc="Convert old-style for loops to new-style">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let mut i: int = 0;
+        for str::each(a) {|ab|
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="16" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: str = "འབྲུག་ཡུལ།";
+    let japan: str = "日本";
+    let uzbekistan: str = "Ўзбекистон";
+    let austria: str = "Österreich";
+
+    let bhutan_e: str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: str = "\u65e5\u672c";
+    let uzbekistan_e: str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: str = "\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: str, b: str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="17" date="2012-07-13 22:57:48 -0700" desc="Move the world over to using the new style string literals and types. Closes #2907.">
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="18" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="19" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert (yen as int == 0xa5);
+    assert (c_cedilla as int == 0xe7);
+    assert (thorn as int == 0xfe);
+    assert (y_diaeresis as int == 0xff);
+    assert (pi as int == 0x3a0);
+
+    assert (pi as int == '\u03a0' as int);
+    assert ('\x0a' as int == '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert (oo as int == 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            assert (ab == bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="20" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    fail_unless!((yen as int == 0xa5));
+    fail_unless!((c_cedilla as int == 0xe7));
+    fail_unless!((thorn as int == 0xfe));
+    fail_unless!((y_diaeresis as int == 0xff));
+    fail_unless!((pi as int == 0x3a0));
+
+    fail_unless!((pi as int == '\u03a0' as int));
+    fail_unless!(('\x0a' as int == '\n' as int));
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    fail_unless!((oo as int == 0xd6));
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            log(debug, i);
+            log(debug, ab);
+            let bb: u8 = b[i];
+            log(debug, bb);
+            fail_unless!((ab == bb));
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="21" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    fail_unless!((yen as int == 0xa5));
+    fail_unless!((c_cedilla as int == 0xe7));
+    fail_unless!((thorn as int == 0xfe));
+    fail_unless!((y_diaeresis as int == 0xff));
+    fail_unless!((pi as int == 0x3a0));
+
+    fail_unless!((pi as int == '\u03a0' as int));
+    fail_unless!(('\x0a' as int == '\n' as int));
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    fail_unless!((oo as int == 0xd6));
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            debug!(i);
+            debug!(ab);
+            let bb: u8 = b[i];
+            debug!(bb);
+            fail_unless!((ab == bb));
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="22" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert!((yen as int == 0xa5));
+    assert!((c_cedilla as int == 0xe7));
+    assert!((thorn as int == 0xfe));
+    assert!((y_diaeresis as int == 0xff));
+    assert!((pi as int == 0x3a0));
+
+    assert!((pi as int == '\u03a0' as int));
+    assert!(('\x0a' as int == '\n' as int));
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert!((oo as int == 0xd6));
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            debug!(i);
+            debug!(ab);
+            let bb: u8 = b[i];
+            debug!(bb);
+            assert!((ab == bb));
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="23" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            debug!(i);
+            debug!(ab);
+            let bb: u8 = b[i];
+            debug!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="24" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::str;
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for str::each(a) |ab| {
+            debug!(i);
+            debug!(ab);
+            let bb: u8 = b[i];
+            debug!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="25" date="2013-06-09 00:38:58 +1000" desc="std: replace the str::each* fns/methods with byte iterators">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::iterator::IteratorUtil;
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for a.bytes_iter().advance |ab| {
+            debug!(i);
+            debug!(ab);
+            let bb: u8 = b[i];
+            debug!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="26" date="2013-06-11 23:54:05 -0400" desc="add IteratorUtil to the prelude">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for a.bytes_iter().advance |ab| {
+            debug!(i);
+            debug!(ab);
+            let bb: u8 = b[i];
+            debug!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+</revisions>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="16">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+type point = rec(int x, int y);
+type rect = tup(point, point);
+
+fn f(rect r, int x1, int y1, int x2, int y2) {
+  check (r._0.x == x1);
+  check (r._0.y == y1);
+  check (r._1.x == x2);
+  check (r._1.y == y2);
+}
+
+fn main() {
+  let rect r = tup( rec(x=10, y=20),
+                    rec(x=11, y=22) );
+  check (r._0.x == 10);
+  check (r._0.y == 20);
+  check (r._1.x == 11);
+  check (r._1.y == 22);
+  let rect r2 = r;
+  let int x = r2._0.x;
+  check (x == 10);
+  f(r, 10, 20, 11, 22);
+  f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="1" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+type point = rec(int x, int y);
+type rect = tup(point, point);
+
+fn f(rect r, int x1, int y1, int x2, int y2) {
+  assert (r._0.x == x1);
+  assert (r._0.y == y1);
+  assert (r._1.x == x2);
+  assert (r._1.y == y2);
+}
+
+fn main() {
+  let rect r = tup( rec(x=10, y=20),
+                    rec(x=11, y=22) );
+  assert (r._0.x == 10);
+  assert (r._0.y == 20);
+  assert (r._1.x == 11);
+  assert (r._1.y == 22);
+  let rect r2 = r;
+  let int x = r2._0.x;
+  assert (x == 10);
+  f(r, 10, 20, 11, 22);
+  f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="2" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+type point = rec(int x, int y);
+type rect = tup(point, point);
+
+fn f(rect r, int x1, int y1, int x2, int y2) {
+  check (r._0.x == x1);
+  check (r._0.y == y1);
+  check (r._1.x == x2);
+  check (r._1.y == y2);
+}
+
+fn main() {
+  let rect r = tup( rec(x=10, y=20),
+                    rec(x=11, y=22) );
+  check (r._0.x == 10);
+  check (r._0.y == 20);
+  check (r._1.x == 11);
+  check (r._1.y == 22);
+  let rect r2 = r;
+  let int x = r2._0.x;
+  check (x == 10);
+  f(r, 10, 20, 11, 22);
+  f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="3" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+type point = rec(int x, int y);
+type rect = tup(point, point);
+
+fn f(rect r, int x1, int y1, int x2, int y2) {
+  assert (r._0.x == x1);
+  assert (r._0.y == y1);
+  assert (r._1.x == x2);
+  assert (r._1.y == y2);
+}
+
+fn main() {
+  let rect r = tup( rec(x=10, y=20),
+                    rec(x=11, y=22) );
+  assert (r._0.x == 10);
+  assert (r._0.y == 20);
+  assert (r._1.x == 11);
+  assert (r._1.y == 22);
+  let rect r2 = r;
+  let int x = r2._0.x;
+  assert (x == 10);
+  f(r, 10, 20, 11, 22);
+  f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="4" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+type point = rec(int x, int y);
+
+type rect = tup(point, point);
+
+fn f(rect r, int x1, int y1, int x2, int y2) {
+    assert (r._0.x == x1);
+    assert (r._0.y == y1);
+    assert (r._1.x == x2);
+    assert (r._1.y == y2);
+}
+
+fn main() {
+    let rect r = tup(rec(x=10, y=20), rec(x=11, y=22));
+    assert (r._0.x == 10);
+    assert (r._0.y == 20);
+    assert (r._1.x == 11);
+    assert (r._1.y == 22);
+    let rect r2 = r;
+    let int x = r2._0.x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="5" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+
+</code>
+<code num="6" date="2011-08-15 13:39:45 +0200" desc="Re-add some deleted tuple tests">
+// -*- rust -*-
+type point = {x: int, y: int};
+
+type rect = (point, point);
+
+fn fst(r: &amp;rect) -&gt; point {
+    let (fst, _) = r;
+    ret fst;
+}
+fn snd(r: &amp;rect) -&gt; point {
+    let (_, snd) = r;
+    ret snd;
+}
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+fn main() {
+    let r: rect = ({x: 10, y: 20}, {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="7" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+type point = {x: int, y: int};
+
+type rect = (point, point);
+
+fn fst(r: &amp;rect) -&gt; point { let (fst, _) = r; ret fst; }
+fn snd(r: &amp;rect) -&gt; point { let (_, snd) = r; ret snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+fn main() {
+    let r: rect = ({x: 10, y: 20}, {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="8" date="2011-09-12 11:27:30 +0200" desc="Reformat for new mode syntax, step 1">
+// -*- rust -*-
+type point = {x: int, y: int};
+
+type rect = (point, point);
+
+fn fst(r: rect) -&gt; point { let (fst, _) = r; ret fst; }
+fn snd(r: rect) -&gt; point { let (_, snd) = r; ret snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+fn main() {
+    let r: rect = ({x: 10, y: 20}, {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="9" date="2012-08-01 17:30:05 -0700" desc="Convert ret to return">
+// -*- rust -*-
+type point = {x: int, y: int};
+
+type rect = (point, point);
+
+fn fst(r: rect) -&gt; point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+fn main() {
+    let r: rect = ({x: 10, y: 20}, {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="10" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+type point = {x: int, y: int};
+
+type rect = (point, point);
+
+fn fst(r: rect) -&gt; point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+fn main() {
+    let r: rect = ({x: 10, y: 20}, {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="11" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+struct Point {x: int, y: int}
+
+type rect = (Point, Point);
+
+fn fst(r: rect) -&gt; Point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; Point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+fn main() {
+    let r: rect = (Point {x: 10, y: 20}, Point {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="12" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+struct Point {x: int, y: int}
+
+type rect = (Point, Point);
+
+fn fst(r: rect) -&gt; Point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; Point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert (fst(r).x == x1);
+    assert (fst(r).y == y1);
+    assert (snd(r).x == x2);
+    assert (snd(r).y == y2);
+}
+
+pub fn main() {
+    let r: rect = (Point {x: 10, y: 20}, Point {x: 11, y: 22});
+    assert (fst(r).x == 10);
+    assert (fst(r).y == 20);
+    assert (snd(r).x == 11);
+    assert (snd(r).y == 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert (x == 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="13" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+struct Point {x: int, y: int}
+
+type rect = (Point, Point);
+
+fn fst(r: rect) -&gt; Point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; Point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    fail_unless!((fst(r).x == x1));
+    fail_unless!((fst(r).y == y1));
+    fail_unless!((snd(r).x == x2));
+    fail_unless!((snd(r).y == y2));
+}
+
+pub fn main() {
+    let r: rect = (Point {x: 10, y: 20}, Point {x: 11, y: 22});
+    fail_unless!((fst(r).x == 10));
+    fail_unless!((fst(r).y == 20));
+    fail_unless!((snd(r).x == 11));
+    fail_unless!((snd(r).y == 22));
+    let r2 = r;
+    let x: int = fst(r2).x;
+    fail_unless!((x == 10));
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="14" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+struct Point {x: int, y: int}
+
+type rect = (Point, Point);
+
+fn fst(r: rect) -&gt; Point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; Point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert!((fst(r).x == x1));
+    assert!((fst(r).y == y1));
+    assert!((snd(r).x == x2));
+    assert!((snd(r).y == y2));
+}
+
+pub fn main() {
+    let r: rect = (Point {x: 10, y: 20}, Point {x: 11, y: 22});
+    assert!((fst(r).x == 10));
+    assert!((fst(r).y == 20));
+    assert!((snd(r).x == 11));
+    assert!((snd(r).y == 22));
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert!((x == 10));
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+<code num="15" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+struct Point {x: int, y: int}
+
+type rect = (Point, Point);
+
+fn fst(r: rect) -&gt; Point { let (fst, _) = r; return fst; }
+fn snd(r: rect) -&gt; Point { let (_, snd) = r; return snd; }
+
+fn f(r: rect, x1: int, y1: int, x2: int, y2: int) {
+    assert_eq!(fst(r).x, x1);
+    assert_eq!(fst(r).y, y1);
+    assert_eq!(snd(r).x, x2);
+    assert_eq!(snd(r).y, y2);
+}
+
+pub fn main() {
+    let r: rect = (Point {x: 10, y: 20}, Point {x: 11, y: 22});
+    assert_eq!(fst(r).x, 10);
+    assert_eq!(fst(r).y, 20);
+    assert_eq!(snd(r).x, 11);
+    assert_eq!(snd(r).y, 22);
+    let r2 = r;
+    let x: int = fst(r2).x;
+    assert_eq!(x, 10);
+    f(r, 10, 20, 11, 22);
+    f(r2, 10, 20, 11, 22);
+}
+</code>
+</revisions>

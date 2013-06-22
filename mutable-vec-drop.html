@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="19">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn main() {
+  // This just tests whether the vec leaks its members.
+  let vec[mutable @tup(int,int)] pvec = vec(tup(1,2),tup(3,4),tup(5,6));
+}
+</code>
+<code num="1" date="2010-07-23 12:32:12 -0700" desc="Modify testcase to match new syntax and un-XFAIL mutable-vec-drop.rs.">
+fn main() {
+  // This just tests whether the vec leaks its members.
+
+  let vec[mutable @tup(int,int)] pvec =
+    // FIXME: vec constructor syntax is slated to change.
+    vec[mutable](@tup(1,2), @tup(3,4), @tup(5,6));
+}
+</code>
+<code num="2" date="2010-12-13 09:25:19 -0800" desc="Syntax tweak: move 'mutable' from pseudo-ty-param on vec ctor to low-precedence prefix inside paren.">
+fn main() {
+  // This just tests whether the vec leaks its members.
+
+  let vec[mutable @tup(int,int)] pvec =
+    vec(mutable @tup(1,2), @tup(3,4), @tup(5,6));
+}
+</code>
+<code num="3" date="2011-05-16 18:21:22 -0700" desc="Rewrite everything to use [] instead of vec() in value position.">
+fn main() {
+  // This just tests whether the vec leaks its members.
+
+  let vec[mutable @tup(int,int)] pvec =
+    [mutable @tup(1,2), @tup(3,4), @tup(5,6)];
+}
+</code>
+<code num="4" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let vec[mutable @tup(int, int)] pvec =
+        [mutable @tup(1, 2), @tup(3, 4), @tup(5, 6)];
+}
+</code>
+<code num="5" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let vec[mutable @rec(int a, int b)] pvec =
+        [mutable @rec(a=1, b=2), @rec(a=3, b=4), @rec(a=5, b=6)];
+}
+</code>
+<code num="6" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: vec[mutable @{a: int, b: int}] =
+        [mutable @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="7" date="2011-08-12 15:42:39 -0700" desc="Convert most working tests to ivecs">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: [mutable @{a: int, b: int}] =
+        ~[mutable @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="8" date="2011-08-10 09:27:22 -0700" desc="Port the tests to the typaram foo&lt;T&gt; syntax.">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: [mutable @{a: int, b: int}] =
+        ~[mutable @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="9" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: [mutable @{a: int, b: int}] =
+        [mutable @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="10" date="2012-03-26 18:35:18 -0700" desc="Bulk-edit mutable -&gt; mut.">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: [mut @{a: int, b: int}] =
+        [mut @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="11" date="2012-06-25 20:00:46 -0700" desc="Make vectors uglier ([]/~). Sorry. Should be temporary. Closes #2725.">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: [mut @{a: int, b: int}]/~ =
+        [mut @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}]/~;
+}
+</code>
+<code num="12" date="2012-06-29 16:26:56 -0700" desc="Switch the compiler over to using ~[] notation instead of []/~. Closes #2759.">
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: ~[mut @{a: int, b: int}] =
+        ~[mut @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="13" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: ~[mut @{a: int, b: int}] =
+        ~[mut @{a: 1, b: 2}, @{a: 3, b: 4}, @{a: 5, b: 6}];
+}
+</code>
+<code num="14" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { a: int, b: int}
+
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: ~[mut @Pair] =
+        ~[mut @Pair{a: 1, b: 2}, @Pair{a: 3, b: 4}, @Pair{a: 5, b: 6}];
+}
+</code>
+<code num="15" date="2013-01-29 21:11:43 -0500" desc="RIMOV, round 3">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { a: int, b: int}
+
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let mut pvec: ~[@Pair] =
+        ~[mut @Pair{a: 1, b: 2}, @Pair{a: 3, b: 4}, @Pair{a: 5, b: 6}];
+}
+</code>
+<code num="16" date="2013-01-29 22:19:41 -0500" desc="RIMOV, round 10">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { a: int, b: int}
+
+fn main() {
+    // This just tests whether the vec leaks its members.
+    let mut pvec: ~[@Pair] =
+        ~[@Pair{a: 1, b: 2}, @Pair{a: 3, b: 4}, @Pair{a: 5, b: 6}];
+}
+</code>
+<code num="17" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { a: int, b: int}
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+    let pvec: ~[mut @Pair] =
+        ~[mut @Pair{a: 1, b: 2}, @Pair{a: 3, b: 4}, @Pair{a: 5, b: 6}];
+}
+</code>
+<code num="18" date="2013-02-04 11:07:36 -0800" desc="Merge remote-tracking branch 'bstrie/rimov' into incoming">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Pair { a: int, b: int}
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+    let mut pvec: ~[@Pair] =
+        ~[@Pair{a: 1, b: 2}, @Pair{a: 3, b: 4}, @Pair{a: 5, b: 6}];
+}
+</code>
+</revisions>

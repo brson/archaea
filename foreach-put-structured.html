@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="22">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+iter pairs() -&gt; tup(int,int) {
+  let int i = 0;
+  let int j = 0;
+  while (i &lt; 10) {
+    put tup(i, j);
+    i += 1;
+    j += i;
+  }
+}
+
+fn main() {
+  let int i = 10;
+  let int j = 0;
+  for each (tup(int,int) p in pairs()) {
+      log p._0;
+      log p._1;
+      check (p._0 + 10 == i);
+      i += 1;
+      j = p._1;
+    }
+  check(j == 45);
+}
+</code>
+<code num="1" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+iter pairs() -&gt; tup(int,int) {
+  let int i = 0;
+  let int j = 0;
+  while (i &lt; 10) {
+    put tup(i, j);
+    i += 1;
+    j += i;
+  }
+}
+
+fn main() {
+  let int i = 10;
+  let int j = 0;
+  for each (tup(int,int) p in pairs()) {
+      log p._0;
+      log p._1;
+      assert (p._0 + 10 == i);
+      i += 1;
+      j = p._1;
+    }
+  assert (j == 45);
+}
+</code>
+<code num="2" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+iter pairs() -&gt; tup(int,int) {
+  let int i = 0;
+  let int j = 0;
+  while (i &lt; 10) {
+    put tup(i, j);
+    i += 1;
+    j += i;
+  }
+}
+
+fn main() {
+  let int i = 10;
+  let int j = 0;
+  for each (tup(int,int) p in pairs()) {
+      log p._0;
+      log p._1;
+      check (p._0 + 10 == i);
+      i += 1;
+      j = p._1;
+    }
+  check(j == 45);
+}
+</code>
+<code num="3" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+iter pairs() -&gt; tup(int,int) {
+  let int i = 0;
+  let int j = 0;
+  while (i &lt; 10) {
+    put tup(i, j);
+    i += 1;
+    j += i;
+  }
+}
+
+fn main() {
+  let int i = 10;
+  let int j = 0;
+  for each (tup(int,int) p in pairs()) {
+      log p._0;
+      log p._1;
+      assert (p._0 + 10 == i);
+      i += 1;
+      j = p._1;
+    }
+  assert (j == 45);
+}
+</code>
+<code num="4" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+iter pairs() -&gt; tup(int, int) {
+    let int i = 0;
+    let int j = 0;
+    while (i &lt; 10) { put tup(i, j); i += 1; j += i; }
+}
+
+fn main() {
+    let int i = 10;
+    let int j = 0;
+    for each (tup(int, int) p in pairs()) {
+        log p._0;
+        log p._1;
+        assert (p._0 + 10 == i);
+        i += 1;
+        j = p._1;
+    }
+    assert (j == 45);
+}
+</code>
+<code num="5" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+iter pairs() -&gt; rec(int _0, int _1) {
+    let int i = 0;
+    let int j = 0;
+    while (i &lt; 10) { put rec(_0=i, _1=j); i += 1; j += i; }
+}
+
+fn main() {
+    let int i = 10;
+    let int j = 0;
+    for each (rec(int _0, int _1) p in pairs()) {
+        log p._0;
+        log p._1;
+        assert (p._0 + 10 == i);
+        i += 1;
+        j = p._1;
+    }
+    assert (j == 45);
+}
+</code>
+<code num="6" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+iter pairs() -&gt; {_0: int, _1: int} {
+    let i: int = 0;
+    let j: int = 0;
+    while i &lt; 10 { put {_0: i, _1: j}; i += 1; j += i; }
+}
+
+fn main() {
+    let i: int = 10;
+    let j: int = 0;
+    for each p: {_0: int, _1: int}  in pairs() {
+        log p._0;
+        log p._1;
+        assert (p._0 + 10 == i);
+        i += 1;
+        j = p._1;
+    }
+    assert (j == 45);
+}
+</code>
+<code num="7" date="2011-08-15 21:54:52 -0700" desc="The wonky for...in... whitespace was bothering me.  Sorry!">
+iter pairs() -&gt; {_0: int, _1: int} {
+    let i: int = 0;
+    let j: int = 0;
+    while i &lt; 10 { put {_0: i, _1: j}; i += 1; j += i; }
+}
+
+fn main() {
+    let i: int = 10;
+    let j: int = 0;
+    for each p: {_0: int, _1: int} in pairs() {
+        log p._0;
+        log p._1;
+        assert (p._0 + 10 == i);
+        i += 1;
+        j = p._1;
+    }
+    assert (j == 45);
+}
+</code>
+<code num="8" date="2011-10-21 13:14:28 +0200" desc="Remove remaining uses of iter and for-each">
+fn pairs(it: block((int, int))) {
+    let i: int = 0;
+    let j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let i: int = 10;
+    let j: int = 0;
+    pairs() {|p|
+        let (_0, _1) = p;
+        log _0;
+        log _1;
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="9" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+fn pairs(it: block((int, int))) {
+    let i: int = 0;
+    let j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let i: int = 10;
+    let j: int = 0;
+    pairs() {|p|
+        let (_0, _1) = p;
+        log_full(core::debug, _0);
+        log_full(core::debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="10" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+fn pairs(it: block((int, int))) {
+    let i: int = 0;
+    let j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let i: int = 10;
+    let j: int = 0;
+    pairs() {|p|
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="11" date="2012-01-23 14:59:00 -0800" desc="s/block()/fn()/g">
+fn pairs(it: fn((int, int))) {
+    let i: int = 0;
+    let j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let i: int = 10;
+    let j: int = 0;
+    pairs() {|p|
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="12" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+fn pairs(it: fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    pairs() {|p|
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="13" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+fn pairs(it: fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() {|p|
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="14" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+fn pairs(it: fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="15" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="16" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        assert (_0 + 10 == i);
+        i += 1;
+        j = _1;
+    };
+    assert (j == 45);
+}
+</code>
+<code num="17" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        fail_unless!((_0 + 10 == i));
+        i += 1;
+        j = _1;
+    };
+    fail_unless!((j == 45));
+}
+</code>
+<code num="18" date="2013-03-07 14:38:38 -0800" desc="librustc: Replace all uses of `fn()` with `&amp;fn()`. rs=defun">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        log(debug, _0);
+        log(debug, _1);
+        fail_unless!((_0 + 10 == i));
+        i += 1;
+        j = _1;
+    };
+    fail_unless!((j == 45));
+}
+</code>
+<code num="19" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        debug!(_0);
+        debug!(_1);
+        fail_unless!((_0 + 10 == i));
+        i += 1;
+        j = _1;
+    };
+    fail_unless!((j == 45));
+}
+</code>
+<code num="20" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        debug!(_0);
+        debug!(_1);
+        assert!((_0 + 10 == i));
+        i += 1;
+        j = _1;
+    };
+    assert!((j == 45));
+}
+</code>
+<code num="21" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        debug!(_0);
+        debug!(_1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    };
+    assert_eq!(j, 45);
+}
+</code>
+</revisions>

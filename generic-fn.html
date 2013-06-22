@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="28">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn id[T](T x) -&gt; T {
+   ret x;
+}
+
+type triple = tup(int,int,int);
+
+fn main() {
+   auto x = 62;
+   auto y = 63;
+   auto a = 'a';
+   auto b = 'b';
+
+   let triple p = tup(65, 66, 67);
+   let triple q = tup(68, 69, 70);
+
+   y = id[int](x);
+   log y;
+   check (x == y);
+
+   b = id[char](a);
+   log b;
+   check (a == b);
+
+   q = id[triple](p);
+   x = p._2;
+   y = q._2;
+   log y;
+   check (x == y);
+
+}
+</code>
+<code num="1" date="2010-10-28 15:02:00 -0700" desc="rustboot: Emit an error instead of asserting in trans when a T is passed by value">
+// -*- rust -*-
+
+fn id[T](&amp;T x) -&gt; T {
+   ret x;
+}
+
+type triple = tup(int,int,int);
+
+fn main() {
+   auto x = 62;
+   auto y = 63;
+   auto a = 'a';
+   auto b = 'b';
+
+   let triple p = tup(65, 66, 67);
+   let triple q = tup(68, 69, 70);
+
+   y = id[int](x);
+   log y;
+   check (x == y);
+
+   b = id[char](a);
+   log b;
+   check (a == b);
+
+   q = id[triple](p);
+   x = p._2;
+   y = q._2;
+   log y;
+   check (x == y);
+
+}
+</code>
+<code num="2" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+fn id[T](&amp;T x) -&gt; T {
+   ret x;
+}
+
+type triple = tup(int,int,int);
+
+fn main() {
+   auto x = 62;
+   auto y = 63;
+   auto a = 'a';
+   auto b = 'b';
+
+   let triple p = tup(65, 66, 67);
+   let triple q = tup(68, 69, 70);
+
+   y = id[int](x);
+   log y;
+   assert (x == y);
+
+   b = id[char](a);
+   log b;
+   assert (a == b);
+
+   q = id[triple](p);
+   x = p._2;
+   y = q._2;
+   log y;
+   assert (x == y);
+
+}
+</code>
+<code num="3" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+fn id[T](&amp;T x) -&gt; T {
+   ret x;
+}
+
+type triple = tup(int,int,int);
+
+fn main() {
+   auto x = 62;
+   auto y = 63;
+   auto a = 'a';
+   auto b = 'b';
+
+   let triple p = tup(65, 66, 67);
+   let triple q = tup(68, 69, 70);
+
+   y = id[int](x);
+   log y;
+   check (x == y);
+
+   b = id[char](a);
+   log b;
+   check (a == b);
+
+   q = id[triple](p);
+   x = p._2;
+   y = q._2;
+   log y;
+   check (x == y);
+
+}
+</code>
+<code num="4" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+fn id[T](&amp;T x) -&gt; T {
+   ret x;
+}
+
+type triple = tup(int,int,int);
+
+fn main() {
+   auto x = 62;
+   auto y = 63;
+   auto a = 'a';
+   auto b = 'b';
+
+   let triple p = tup(65, 66, 67);
+   let triple q = tup(68, 69, 70);
+
+   y = id[int](x);
+   log y;
+   assert (x == y);
+
+   b = id[char](a);
+   log b;
+   assert (a == b);
+
+   q = id[triple](p);
+   x = p._2;
+   y = q._2;
+   log y;
+   assert (x == y);
+
+}
+</code>
+<code num="5" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+fn id[T](&amp;T x) -&gt; T { ret x; }
+
+type triple = tup(int, int, int);
+
+fn main() {
+    auto x = 62;
+    auto y = 63;
+    auto a = 'a';
+    auto b = 'b';
+    let triple p = tup(65, 66, 67);
+    let triple q = tup(68, 69, 70);
+    y = id[int](x);
+    log y;
+    assert (x == y);
+    b = id[char](a);
+    log b;
+    assert (a == b);
+    q = id[triple](p);
+    x = p._2;
+    y = q._2;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="6" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+// -*- rust -*-
+fn id[T](&amp;T x) -&gt; T { ret x; }
+
+type triple = rec(int x, int y, int z);
+
+fn main() {
+    auto x = 62;
+    auto y = 63;
+    auto a = 'a';
+    auto b = 'b';
+    let triple p = rec(x=65, y=66, z=67);
+    let triple q = rec(x=68, y=69, z=70);
+    y = id[int](x);
+    log y;
+    assert (x == y);
+    b = id[char](a);
+    log b;
+    assert (a == b);
+    q = id[triple](p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="7" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+fn id[T](x: &amp;T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id[int](x);
+    log y;
+    assert (x == y);
+    b = id[char](a);
+    log b;
+    assert (a == b);
+    q = id[triple](p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="8" date="2011-08-12 06:37:25 -0700" desc="Port the tests to the decl foo&lt;T&gt; syntax.">
+// -*- rust -*-
+fn id&lt;T&gt;(x: &amp;T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id[int](x);
+    log y;
+    assert (x == y);
+    b = id[char](a);
+    log b;
+    assert (a == b);
+    q = id[triple](p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="9" date="2011-08-13 00:10:18 -0700" desc="Port the tests to the expr foo::&lt;T&gt; syntax.">
+// -*- rust -*-
+fn id&lt;T&gt;(x: &amp;T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log y;
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log b;
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="10" date="2011-08-23 15:58:53 -0700" desc="Add kind-checking for assign-op, copy, ret, be, fail exprs. Fix caught kinding-violations in rustc and libstd.">
+// -*- rust -*-
+fn id&lt;@T&gt;(x: &amp;T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log y;
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log b;
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="11" date="2011-09-12 11:27:30 +0200" desc="Reformat for new mode syntax, step 1">
+// -*- rust -*-
+fn id&lt;@T&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log y;
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log b;
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="12" date="2011-10-25 15:56:55 +0200" desc="Update our code to new type parameter kind syntax">
+// -*- rust -*-
+fn id&lt;T&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log y;
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log b;
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="13" date="2011-11-18 12:39:20 +0100" desc="Update stdlib, compiler, and tests to new kind system">
+// -*- rust -*-
+fn id&lt;copy T&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log y;
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log b;
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log y;
+    assert (x == y);
+}
+</code>
+<code num="14" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+fn id&lt;copy T&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log_full(core::debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log_full(core::debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log_full(core::debug, y);
+    assert (x == y);
+}
+</code>
+<code num="15" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+fn id&lt;copy T&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="16" date="2012-01-05 15:35:37 +0100" desc="Switch to new param kind bound syntax">
+// -*- rust -*-
+fn id&lt;T: copy&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let x = 62;
+    let y = 63;
+    let a = 'a';
+    let b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="17" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+fn id&lt;T: copy&gt;(x: T) -&gt; T { ret x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let mut q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="18" date="2012-08-01 17:30:05 -0700" desc="Convert ret to return">
+// -*- rust -*-
+fn id&lt;T: copy&gt;(x: T) -&gt; T { return x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let mut q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="19" date="2012-09-07 14:52:28 -0700" desc="Convert all kind bounds to camel case. Remove send, owned keywords.">
+// -*- rust -*-
+fn id&lt;T: Copy&gt;(x: T) -&gt; T { return x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let mut q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="20" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T: Copy&gt;(x: T) -&gt; T { return x; }
+
+type triple = {x: int, y: int, z: int};
+
+fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: triple = {x: 65, y: 66, z: 67};
+    let mut q: triple = {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="21" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T: Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="22" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T: Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="23" date="2013-02-20 17:07:17 -0800" desc="librustc: Separate most trait bounds with '+'. rs=plussing">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T:Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    assert (x == y);
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    assert (a == b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    assert (x == y);
+}
+</code>
+<code num="24" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T:Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    log(debug, y);
+    fail_unless!((x == y));
+    b = id::&lt;char&gt;(a);
+    log(debug, b);
+    fail_unless!((a == b));
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    log(debug, y);
+    fail_unless!((x == y));
+}
+</code>
+<code num="25" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T:Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    debug!(y);
+    fail_unless!((x == y));
+    b = id::&lt;char&gt;(a);
+    debug!(b);
+    fail_unless!((a == b));
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    debug!(y);
+    fail_unless!((x == y));
+}
+</code>
+<code num="26" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T:Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    debug!(y);
+    assert!((x == y));
+    b = id::&lt;char&gt;(a);
+    debug!(b);
+    assert!((a == b));
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    debug!(y);
+    assert!((x == y));
+}
+</code>
+<code num="27" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T:Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    debug!(y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    debug!(b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    debug!(y);
+    assert_eq!(x, y);
+}
+</code>
+</revisions>

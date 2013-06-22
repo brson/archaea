@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="22">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn main() {
+  let int a = 1;
+  let int b = 2;
+  a ^= b;
+  b ^= a;
+  a = a ^ b;
+  log a;
+  log b;
+  check (b == 1);
+  check (a == 2);
+
+  check (~(0xf0) &amp; 0xff == 0xf);
+  check (0xf0 | 0xf == 0xff);
+  check (0xf &lt;&lt; 4 == 0xf0);
+  check (0xf0 &gt;&gt; 4 == 0xf);
+  check (-16 &gt;&gt;&gt; 2 == -4);
+  check (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+</code>
+<code num="1" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+fn main() {
+  let int a = 1;
+  let int b = 2;
+  a ^= b;
+  b ^= a;
+  a = a ^ b;
+  log a;
+  log b;
+  assert (b == 1);
+  assert (a == 2);
+
+  assert (~(0xf0) &amp; 0xff == 0xf);
+  assert (0xf0 | 0xf == 0xff);
+  assert (0xf &lt;&lt; 4 == 0xf0);
+  assert (0xf0 &gt;&gt; 4 == 0xf);
+  assert (-16 &gt;&gt;&gt; 2 == -4);
+  assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+</code>
+<code num="2" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+fn main() {
+  let int a = 1;
+  let int b = 2;
+  a ^= b;
+  b ^= a;
+  a = a ^ b;
+  log a;
+  log b;
+  check (b == 1);
+  check (a == 2);
+
+  check (~(0xf0) &amp; 0xff == 0xf);
+  check (0xf0 | 0xf == 0xff);
+  check (0xf &lt;&lt; 4 == 0xf0);
+  check (0xf0 &gt;&gt; 4 == 0xf);
+  check (-16 &gt;&gt;&gt; 2 == -4);
+  check (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+</code>
+<code num="3" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+fn main() {
+  let int a = 1;
+  let int b = 2;
+  a ^= b;
+  b ^= a;
+  a = a ^ b;
+  log a;
+  log b;
+  assert (b == 1);
+  assert (a == 2);
+
+  assert (~(0xf0) &amp; 0xff == 0xf);
+  assert (0xf0 | 0xf == 0xff);
+  assert (0xf &lt;&lt; 4 == 0xf0);
+  assert (0xf0 &gt;&gt; 4 == 0xf);
+  assert (-16 &gt;&gt;&gt; 2 == -4);
+  assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+</code>
+<code num="4" date="2011-06-10 11:34:07 -0700" desc="test: Change bitwise.rs to use ! instead of ~. Should put out burning tinderbox.">
+// -*- rust -*-
+
+fn main() {
+  let int a = 1;
+  let int b = 2;
+  a ^= b;
+  b ^= a;
+  a = a ^ b;
+  log a;
+  log b;
+  assert (b == 1);
+  assert (a == 2);
+
+  assert (!(0xf0) &amp; 0xff == 0xf);
+  assert (0xf0 | 0xf == 0xff);
+  assert (0xf &lt;&lt; 4 == 0xf0);
+  assert (0xf0 &gt;&gt; 4 == 0xf);
+  assert (-16 &gt;&gt;&gt; 2 == -4);
+  assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+</code>
+<code num="5" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+fn main() {
+    let int a = 1;
+    let int b = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log a;
+    log b;
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+</code>
+<code num="6" date="2011-06-24 14:19:58 -0700" desc="Fail typechecking for bad binop/type combinations">
+// -*- rust -*-
+fn main() {
+    let int a = 1;
+    let int b = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log a;
+    log b;
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+</code>
+<code num="7" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+fn main() {
+    let a: int = 1;
+    let b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log a;
+    log b;
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+</code>
+<code num="8" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+fn main() {
+    let a: int = 1;
+    let b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log a;
+    log b;
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+</code>
+<code num="9" date="2011-11-15 17:01:06 -0800" desc="Make run-pass/bitwise 64-bit compatible">
+// -*- rust -*-
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    // FIXME (974) Can't lex this as a single integer
+    assert (-1000 &gt;&gt; 3 == 23058430 * 1000000000 * 100
+            + 92 * 100000000 + 13693827);
+}
+
+fn general() {
+    let a: int = 1;
+    let b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log a;
+    log b;
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="10" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    // FIXME (974) Can't lex this as a single integer
+    assert (-1000 &gt;&gt; 3 == 23058430 * 1000000000 * 100
+            + 92 * 100000000 + 13693827);
+}
+
+fn general() {
+    let a: int = 1;
+    let b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log_full(core::debug, a);
+    log_full(core::debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="11" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    // FIXME (974) Can't lex this as a single integer
+    assert (-1000 &gt;&gt; 3 == 23058430 * 1000000000 * 100
+            + 92 * 100000000 + 13693827);
+}
+
+fn general() {
+    let a: int = 1;
+    let b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="12" date="2012-02-05 16:50:54 -0800" desc="test: Resolve some FIXMEs">
+// -*- rust -*-
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 2305843009213693827);
+}
+
+fn general() {
+    let a: int = 1;
+    let b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="13" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 536870787);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert (-1000 &gt;&gt; 3 == 2305843009213693827);
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="14" date="2012-05-22 14:59:15 -0700" desc="Get rid of the &gt;&gt;&gt; operator and make &gt;&gt; logical or arithmetic depending on the signedness. Closes #2417.">
+// -*- rust -*-
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 as uint &gt;&gt; 3u == 536870787u);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert (-1000 as uint &gt;&gt; 3u == 2305843009213693827u);
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="15" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 as uint &gt;&gt; 3u == 536870787u);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert (-1000 as uint &gt;&gt; 3u == 2305843009213693827u);
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+fn main() {
+    general();
+    target();
+}
+</code>
+<code num="16" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert (-1000 as uint &gt;&gt; 3u == 536870787u);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert (-1000 as uint &gt;&gt; 3u == 2305843009213693827u);
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    assert (b == 1);
+    assert (a == 2);
+    assert (!0xf0 &amp; 0xff == 0xf);
+    assert (0xf0 | 0xf == 0xff);
+    assert (0xf &lt;&lt; 4 == 0xf0);
+    assert (0xf0 &gt;&gt; 4 == 0xf);
+    assert (-16 &gt;&gt; 2 == -4);
+    assert (0b1010_1010 | 0b0101_0101 == 0xff);
+}
+
+pub fn main() {
+    general();
+    target();
+}
+</code>
+<code num="17" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    fail_unless!((-1000 as uint &gt;&gt; 3u == 536870787u));
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    fail_unless!((-1000 as uint &gt;&gt; 3u == 2305843009213693827u));
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    log(debug, a);
+    log(debug, b);
+    fail_unless!((b == 1));
+    fail_unless!((a == 2));
+    fail_unless!((!0xf0 &amp; 0xff == 0xf));
+    fail_unless!((0xf0 | 0xf == 0xff));
+    fail_unless!((0xf &lt;&lt; 4 == 0xf0));
+    fail_unless!((0xf0 &gt;&gt; 4 == 0xf));
+    fail_unless!((-16 &gt;&gt; 2 == -4));
+    fail_unless!((0b1010_1010 | 0b0101_0101 == 0xff));
+}
+
+pub fn main() {
+    general();
+    target();
+}
+</code>
+<code num="18" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    fail_unless!((-1000 as uint &gt;&gt; 3u == 536870787u));
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    fail_unless!((-1000 as uint &gt;&gt; 3u == 2305843009213693827u));
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    debug!(a);
+    debug!(b);
+    fail_unless!((b == 1));
+    fail_unless!((a == 2));
+    fail_unless!((!0xf0 &amp; 0xff == 0xf));
+    fail_unless!((0xf0 | 0xf == 0xff));
+    fail_unless!((0xf &lt;&lt; 4 == 0xf0));
+    fail_unless!((0xf0 &gt;&gt; 4 == 0xf));
+    fail_unless!((-16 &gt;&gt; 2 == -4));
+    fail_unless!((0b1010_1010 | 0b0101_0101 == 0xff));
+}
+
+pub fn main() {
+    general();
+    target();
+}
+</code>
+<code num="19" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+fn target() {
+    assert!((-1000 as uint &gt;&gt; 3u == 536870787u));
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert!((-1000 as uint &gt;&gt; 3u == 2305843009213693827u));
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    debug!(a);
+    debug!(b);
+    assert!((b == 1));
+    assert!((a == 2));
+    assert!((!0xf0 &amp; 0xff == 0xf));
+    assert!((0xf0 | 0xf == 0xff));
+    assert!((0xf &lt;&lt; 4 == 0xf0));
+    assert!((0xf0 &gt;&gt; 4 == 0xf));
+    assert!((-16 &gt;&gt; 2 == -4));
+    assert!((0b1010_1010 | 0b0101_0101 == 0xff));
+}
+
+pub fn main() {
+    general();
+    target();
+}
+</code>
+<code num="20" date="2013-04-23 11:31:54 +0900" desc="test: fix for missing ARM support">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+#[cfg(target_arch = "arm")]
+fn target() {
+    assert!((-1000 as uint &gt;&gt; 3u == 536870787u));
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert!((-1000 as uint &gt;&gt; 3u == 2305843009213693827u));
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    debug!(a);
+    debug!(b);
+    assert!((b == 1));
+    assert!((a == 2));
+    assert!((!0xf0 &amp; 0xff == 0xf));
+    assert!((0xf0 | 0xf == 0xff));
+    assert!((0xf &lt;&lt; 4 == 0xf0));
+    assert!((0xf0 &gt;&gt; 4 == 0xf));
+    assert!((-16 &gt;&gt; 2 == -4));
+    assert!((0b1010_1010 | 0b0101_0101 == 0xff));
+}
+
+pub fn main() {
+    general();
+    target();
+}
+</code>
+<code num="21" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+#[cfg(target_arch = "x86")]
+#[cfg(target_arch = "arm")]
+fn target() {
+    assert_eq!(-1000 as uint &gt;&gt; 3u, 536870787u);
+}
+
+#[cfg(target_arch = "x86_64")]
+fn target() {
+    assert_eq!(-1000 as uint &gt;&gt; 3u, 2305843009213693827u);
+}
+
+fn general() {
+    let mut a: int = 1;
+    let mut b: int = 2;
+    a ^= b;
+    b ^= a;
+    a = a ^ b;
+    debug!(a);
+    debug!(b);
+    assert_eq!(b, 1);
+    assert_eq!(a, 2);
+    assert_eq!(!0xf0 &amp; 0xff, 0xf);
+    assert_eq!(0xf0 | 0xf, 0xff);
+    assert_eq!(0xf &lt;&lt; 4, 0xf0);
+    assert_eq!(0xf0 &gt;&gt; 4, 0xf);
+    assert_eq!(-16 &gt;&gt; 2, -4);
+    assert_eq!(0b1010_1010 | 0b0101_0101, 0xff);
+}
+
+pub fn main() {
+    general();
+    target();
+}
+</code>
+</revisions>

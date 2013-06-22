@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="12">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+type list[T] = tag(cons(@T, @list[T]), nil());
+
+fn main() {
+  let list[int] a = cons[int](10, cons[int](12, cons[int](13, nil[int]())));
+}
+</code>
+<code num="1" date="2010-09-09 15:59:29 -0700" desc="Switch tags to purely nominal, removing TY_iso and TY_idx. Seems to mostly work, possibly a little bumpy. Changes a lot.">
+tag list[T] {
+  cons(@T, @list[T]);
+  nil();
+}
+
+fn main() {
+  let list[int] a = cons[int](10, cons[int](12, cons[int](13, nil[int]())));
+}
+</code>
+<code num="2" date="2011-03-07 15:12:41 -0800" desc="Modernize test/run-pass/generic-recursive-tag.rs. Un-XFAIL it in rustboot.">
+tag list[T] {
+  cons(@T, @list[T]);
+  nil;
+}
+
+fn main() {
+  let list[int] a = cons[int](@10, @cons[int](@12, @cons[int](@13,
+                                                              @nil[int])));
+}
+</code>
+<code num="3" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+tag list[T] { cons(@T, @list[T]); nil; }
+
+fn main() {
+    let list[int] a =
+        cons[int](@10, @cons[int](@12, @cons[int](@13, @nil[int])));
+}
+</code>
+<code num="4" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+tag list[T] { cons(@T, @list[T]); nil; }
+
+fn main() {
+    let a: list[int] =
+        cons[int](@10, @cons[int](@12, @cons[int](@13, @nil[int])));
+}
+</code>
+<code num="5" date="2011-08-10 09:27:22 -0700" desc="Port the tests to the typaram foo&lt;T&gt; syntax.">
+tag list[T] { cons(@T, @list&lt;T&gt;); nil; }
+
+fn main() {
+    let a: list&lt;int&gt; =
+        cons[int](@10, @cons[int](@12, @cons[int](@13, @nil[int])));
+}
+</code>
+<code num="6" date="2011-08-12 06:37:25 -0700" desc="Port the tests to the decl foo&lt;T&gt; syntax.">
+tag list&lt;T&gt; { cons(@T, @list&lt;T&gt;); nil; }
+
+fn main() {
+    let a: list&lt;int&gt; =
+        cons[int](@10, @cons[int](@12, @cons[int](@13, @nil[int])));
+}
+</code>
+<code num="7" date="2011-08-13 00:10:18 -0700" desc="Port the tests to the expr foo::&lt;T&gt; syntax.">
+tag list&lt;T&gt; { cons(@T, @list&lt;T&gt;); nil; }
+
+fn main() {
+    let a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="8" date="2012-01-19 16:10:31 -0800" desc="test: "tag" -&gt; "enum" in run-pass and run-fail">
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;); nil; }
+
+fn main() {
+    let a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="9" date="2012-01-19 18:31:08 -0800" desc="rustc: Make the pretty printer output commas after enum variants. Update all tests accordingly.">
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+fn main() {
+    let a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="10" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+fn main() {
+    let a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="11" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+pub fn main() {
+    let a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+</revisions>

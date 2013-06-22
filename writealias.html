@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="23">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(mutable &amp;point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, z=mutable 12);
+  f(x);
+  check (x.z == 13);
+}
+</code>
+<code num="1" date="2010-06-30 02:30:17 -0700" desc="rewrite 'mutable &amp;' as '&amp; mutable', corresponding to grammar shift.">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, z=mutable 12);
+  f(x);
+  check (x.z == 13);
+}
+</code>
+<code num="2" date="2010-07-15 15:20:04 -0700" desc="Make mutability no longer a type constructor">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, mutable z=12);
+  f(x);
+  check (x.z == 13);
+}
+</code>
+<code num="3" date="2010-11-02 15:24:46 -0700" desc="Split out stratum-checking pass, implement more-strict (overly aggressive) impure-effect checking.">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+impure fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+impure fn main() {
+  let point x = rec(x=10, y=11, mutable z=12);
+  f(x);
+  check (x.z == 13);
+}
+</code>
+<code num="4" date="2011-04-19 13:35:49 -0700" desc="Remove effect system from src.">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, mutable z=12);
+  f(x);
+  check (x.z == 13);
+}
+</code>
+<code num="5" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, mutable z=12);
+  f(x);
+  assert (x.z == 13);
+}
+</code>
+<code num="6" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, mutable z=12);
+  f(x);
+  check (x.z == 13);
+}
+</code>
+<code num="7" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp; mutable point p) {
+  p.z = 13;
+}
+
+fn main() {
+  let point x = rec(x=10, y=11, mutable z=12);
+  f(x);
+  assert (x.z == 13);
+}
+</code>
+<code num="8" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+type point = rec(int x, int y, mutable int z);
+
+fn f(&amp;mutable point p) { p.z = 13; }
+
+fn main() {
+    let point x = rec(x=10, y=11, mutable z=12);
+    f(x);
+    assert (x.z == 13);
+}
+</code>
+<code num="9" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+type point = {x: int, y: int, mutable z: int};
+
+fn f(p: &amp;mutable point) { p.z = 13; }
+
+fn main() {
+    let x: point = {x: 10, y: 11, mutable z: 12};
+    f(x);
+    assert (x.z == 13);
+}
+</code>
+<code num="10" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+type point = {x: int, y: int, mutable z: int};
+
+fn f(p: &amp;mutable point) { p.z = 13; }
+
+fn main() {
+    let x: point = {x: 10, y: 11, mutable z: 12};
+    f(x);
+    assert (x.z == 13);
+}
+</code>
+<code num="11" date="2011-09-12 12:39:38 +0200" desc="Pretty-print for new arg-mode syntax">
+// -*- rust -*-
+type point = {x: int, y: int, mutable z: int};
+
+fn f(&amp;p: point) { p.z = 13; }
+
+fn main() {
+    let x: point = {x: 10, y: 11, mutable z: 12};
+    f(x);
+    assert (x.z == 13);
+}
+</code>
+<code num="12" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+type point = {x: int, y: int, mutable z: int};
+
+fn f(&amp;p: point) { p.z = 13; }
+
+fn main() {
+    let mut x: point = {x: 10, y: 11, mutable z: 12};
+    f(x);
+    assert (x.z == 13);
+}
+</code>
+<code num="13" date="2012-03-26 18:35:18 -0700" desc="Bulk-edit mutable -&gt; mut.">
+// -*- rust -*-
+type point = {x: int, y: int, mut z: int};
+
+fn f(&amp;p: point) { p.z = 13; }
+
+fn main() {
+    let mut x: point = {x: 10, y: 11, mut z: 12};
+    f(x);
+    assert (x.z == 13);
+}
+</code>
+<code num="14" date="2012-10-05 22:07:53 -0700" desc="Remove by-mutable-ref mode from the compiler">
+// -*- rust -*-
+type point = {x: int, y: int, mut z: int};
+
+fn f(p: &amp;mut point) { p.z = 13; }
+
+fn main() {
+    let mut x: point = {x: 10, y: 11, mut z: 12};
+    f(&amp;mut x);
+    assert (x.z == 13);
+}
+</code>
+<code num="15" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type point = {x: int, y: int, mut z: int};
+
+fn f(p: &amp;mut point) { p.z = 13; }
+
+fn main() {
+    let mut x: point = {x: 10, y: 11, mut z: 12};
+    f(&amp;mut x);
+    assert (x.z == 13);
+}
+</code>
+<code num="16" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, mut z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+fn main() {
+    let mut x: Point = Point {x: 10, y: 11, mut z: 12};
+    f(&amp;mut x);
+    assert (x.z == 13);
+}
+</code>
+<code num="17" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, mut z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let mut x: Point = Point {x: 10, y: 11, mut z: 12};
+    f(&amp;mut x);
+    assert (x.z == 13);
+}
+</code>
+<code num="18" date="2013-02-22 16:08:16 -0800" desc="test: De-mut the test suite. rs=demuting">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let mut x: Point = Point {x: 10, y: 11, z: 12};
+    f(&amp;mut x);
+    assert (x.z == 13);
+}
+</code>
+<code num="19" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let mut x: Point = Point {x: 10, y: 11, z: 12};
+    f(&amp;mut x);
+    fail_unless!((x.z == 13));
+}
+</code>
+<code num="20" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let mut x: Point = Point {x: 10, y: 11, z: 12};
+    f(&amp;mut x);
+    assert!((x.z == 13));
+}
+</code>
+<code num="21" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let mut x: Point = Point {x: 10, y: 11, z: 12};
+    f(&amp;mut x);
+    assert_eq!(x.z, 13);
+}
+</code>
+<code num="22" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::unstable;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(unstable::sync::exclusive(true));
+        match x {
+            Some(ref z) if z.with(|b| *b) =&gt; {
+                do z.with |b| { assert!(*b); }
+            },
+            _ =&gt; fail!()
+        }
+    }
+}
+</code>
+</revisions>

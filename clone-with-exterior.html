@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="27">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn f(@rec(int a, int b) x) {
+  check (x.a == 10);
+  check (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="1" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-boot
+// xfail-stage0
+fn f(@rec(int a, int b) x) {
+  check (x.a == 10);
+  check (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="2" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// xfail-boot
+// xfail-stage0
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="3" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// xfail-boot
+// xfail-stage0
+fn f(@rec(int a, int b) x) {
+  check (x.a == 10);
+  check (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="4" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// xfail-boot
+// xfail-stage0
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="5" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-boot
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="6" date="2011-05-14 21:05:22 -0400" desc="Remove xfail-boot lines from tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="7" date="2011-07-20 19:37:09 -0700" desc="Add xfail-stage3 directives to tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="8" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+./src/test/run-pass/clone-with-exterior.rs:12:28:12:29: [1;31merror:[0m expecting (, found f
+./src/test/run-pass/clone-with-exterior.rs:12   let task p = spawn thread f(z);
+                                                                          ^
+rt: ---
+rt: f00e:main:main:                   upcall fail 'explicit failure', src/comp/syntax/parse/parser.rs:112
+rt: f00e:main:                        domain main @0x8f2504c root task failed
+</code>
+<code num="9" date="2011-07-27 14:48:34 +0200" desc="Fix damage done by the pretty-printer">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="10" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+fn f(@rec(int a, int b) x) {
+  assert (x.a == 10);
+  assert (x.b == 12);
+}
+
+fn main() {
+  let @rec(int a, int b) z = rec(a=10, b=12);
+  let task p = spawn thread f(z);
+  join p;
+}
+</code>
+<code num="11" date="2011-08-13 15:20:11 -0700" desc="Removed spawn and task from the parser. Updated all the tests except for the benchmarks.">
+//xfail-stage0
+//xfail-stage1
+//xfail-stage2
+//xfail-stage3
+
+use std;
+import std::task;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="12" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+//xfail-stage0
+//xfail-test
+
+use std;
+import std::task;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="13" date="2011-08-31 14:24:08 +0200" desc="Revert "Replace xfail-stageN with simply xfail-test"">
+//xfail-stage0
+//xfail-stage1
+//xfail-stage2
+//xfail-stage3
+
+use std;
+import std::task;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="14" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+//xfail-test
+
+use std;
+import std::task;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="15" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+//xfail-test
+
+use std;
+import task;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="16" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+//xfail-test
+
+use std;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="17" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+//xfail-test
+
+extern mod std;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="18" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//xfail-test
+
+extern mod std;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="19" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//xfail-test
+
+extern mod std;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+pub fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="20" date="2013-02-14 11:47:00 -0800" desc="librustc: Replace `impl Type : Trait` with `impl Trait for Type`. rs=implflipping">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//xfail-test
+
+extern mod std;
+
+fn f(x : @{a:int, b:int}) {
+    assert (x.a == 10);
+    assert (x.b == 12);
+}
+
+pub fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="21" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//xfail-test
+
+extern mod std;
+
+fn f(x : @{a:int, b:int}) {
+    fail_unless!((x.a == 10));
+    fail_unless!((x.b == 12));
+}
+
+pub fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="22" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+//xfail-test
+
+extern mod std;
+
+fn f(x : @{a:int, b:int}) {
+    assert!((x.a == 10));
+    assert!((x.b == 12));
+}
+
+pub fn main() {
+    let z : @{a:int, b:int} = @{ a : 10, b : 12};
+    let p = task::_spawn(bind f(z));
+    task::join_id(p);
+}
+</code>
+<code num="23" date="2013-04-28 14:50:04 -0400" desc="Update old xfailing spawn/bind/join test">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+use core::task::spawn;
+
+struct Pair {
+    a: int,
+    b: int
+}
+
+pub fn main() {
+    let z = ~Pair { a : 10, b : 12};
+    
+    let f: ~fn() = || {
+        assert!((z.a == 10));
+        assert!((z.b == 12));
+    };
+
+    spawn(f);
+}
+</code>
+<code num="24" date="2013-05-03 19:25:04 -0400" desc="add gitattributes and fix whitespace issues">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+use core::task::spawn;
+
+struct Pair {
+    a: int,
+    b: int
+}
+
+pub fn main() {
+    let z = ~Pair { a : 10, b : 12};
+
+    let f: ~fn() = || {
+        assert!((z.a == 10));
+        assert!((z.b == 12));
+    };
+
+    spawn(f);
+}
+</code>
+<code num="25" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+use core::task::spawn;
+
+struct Pair {
+    a: int,
+    b: int
+}
+
+pub fn main() {
+    let z = ~Pair { a : 10, b : 12};
+
+    let f: ~fn() = || {
+        assert_eq!(z.a, 10);
+        assert_eq!(z.b, 12);
+    };
+
+    spawn(f);
+}
+</code>
+<code num="26" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+use std::task::spawn;
+
+struct Pair {
+    a: int,
+    b: int
+}
+
+pub fn main() {
+    let z = ~Pair { a : 10, b : 12};
+
+    let f: ~fn() = || {
+        assert_eq!(z.a, 10);
+        assert_eq!(z.b, 12);
+    };
+
+    spawn(f);
+}
+</code>
+</revisions>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="28">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn g[X](X x) -&gt; X {
+  ret x;
+}
+
+fn f[T](T t) -&gt; tup(T,T) {
+  type pair = tup(T,T);
+  let pair x = tup(t,t);
+  ret g[pair](x);
+}
+
+fn main() {
+  auto b = f[int](10);
+  log b._0;
+  log b._1;
+  check (b._0 == 10);
+  check (b._1 == 10);
+}
+</code>
+<code num="1" date="2010-10-28 15:02:00 -0700" desc="rustboot: Emit an error instead of asserting in trans when a T is passed by value">
+fn g[X](&amp;X x) -&gt; X {
+  ret x;
+}
+
+fn f[T](&amp;T t) -&gt; tup(T,T) {
+  type pair = tup(T,T);
+  let pair x = tup(t,t);
+  ret g[pair](x);
+}
+
+fn main() {
+  auto b = f[int](10);
+  log b._0;
+  log b._1;
+  check (b._0 == 10);
+  check (b._1 == 10);
+}
+</code>
+<code num="2" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+fn g[X](&amp;X x) -&gt; X {
+  ret x;
+}
+
+fn f[T](&amp;T t) -&gt; tup(T,T) {
+  type pair = tup(T,T);
+  let pair x = tup(t,t);
+  ret g[pair](x);
+}
+
+fn main() {
+  auto b = f[int](10);
+  log b._0;
+  log b._1;
+  assert (b._0 == 10);
+  assert (b._1 == 10);
+}
+</code>
+<code num="3" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+fn g[X](&amp;X x) -&gt; X {
+  ret x;
+}
+
+fn f[T](&amp;T t) -&gt; tup(T,T) {
+  type pair = tup(T,T);
+  let pair x = tup(t,t);
+  ret g[pair](x);
+}
+
+fn main() {
+  auto b = f[int](10);
+  log b._0;
+  log b._1;
+  check (b._0 == 10);
+  check (b._1 == 10);
+}
+</code>
+<code num="4" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+fn g[X](&amp;X x) -&gt; X {
+  ret x;
+}
+
+fn f[T](&amp;T t) -&gt; tup(T,T) {
+  type pair = tup(T,T);
+  let pair x = tup(t,t);
+  ret g[pair](x);
+}
+
+fn main() {
+  auto b = f[int](10);
+  log b._0;
+  log b._1;
+  assert (b._0 == 10);
+  assert (b._1 == 10);
+}
+</code>
+<code num="5" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+fn g[X](&amp;X x) -&gt; X { ret x; }
+
+fn f[T](&amp;T t) -&gt; tup(T, T) {
+    type pair = tup(T, T);
+
+    let pair x = tup(t, t);
+    ret g[pair](x);
+}
+
+fn main() {
+    auto b = f[int](10);
+    log b._0;
+    log b._1;
+    assert (b._0 == 10);
+    assert (b._1 == 10);
+}
+</code>
+<code num="6" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+fn g[X](&amp;X x) -&gt; X { ret x; }
+
+fn f[T](&amp;T t) -&gt; rec(T a, T b) {
+    type pair = rec(T a, T b);
+
+    let pair x = rec(a=t, b=t);
+    ret g[pair](x);
+}
+
+fn main() {
+    auto b = f[int](10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="7" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+fn g[X](x: &amp;X) -&gt; X { ret x; }
+
+fn f[T](t: &amp;T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g[pair](x);
+}
+
+fn main() {
+    let b = f[int](10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="8" date="2011-08-12 06:37:25 -0700" desc="Port the tests to the decl foo&lt;T&gt; syntax.">
+fn g&lt;X&gt;(x: &amp;X) -&gt; X { ret x; }
+
+fn f&lt;T&gt;(t: &amp;T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g[pair](x);
+}
+
+fn main() {
+    let b = f[int](10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="9" date="2011-08-13 00:10:18 -0700" desc="Port the tests to the expr foo::&lt;T&gt; syntax.">
+fn g&lt;X&gt;(x: &amp;X) -&gt; X { ret x; }
+
+fn f&lt;T&gt;(t: &amp;T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="10" date="2011-08-23 15:58:53 -0700" desc="Add kind-checking for assign-op, copy, ret, be, fail exprs. Fix caught kinding-violations in rustc and libstd.">
+fn g&lt;@X&gt;(x: &amp;X) -&gt; X { ret x; }
+
+fn f&lt;@T&gt;(t: &amp;T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="11" date="2011-09-12 11:27:30 +0200" desc="Reformat for new mode syntax, step 1">
+fn g&lt;@X&gt;(x: X) -&gt; X { ret x; }
+
+fn f&lt;@T&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="12" date="2011-10-25 15:56:55 +0200" desc="Update our code to new type parameter kind syntax">
+fn g&lt;X&gt;(x: X) -&gt; X { ret x; }
+
+fn f&lt;T&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="13" date="2011-11-18 12:39:20 +0100" desc="Update stdlib, compiler, and tests to new kind system">
+fn g&lt;copy X&gt;(x: X) -&gt; X { ret x; }
+
+fn f&lt;copy T&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log b.a;
+    log b.b;
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="14" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+fn g&lt;copy X&gt;(x: X) -&gt; X { ret x; }
+
+fn f&lt;copy T&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log_full(core::debug, b.a);
+    log_full(core::debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="15" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+fn g&lt;copy X&gt;(x: X) -&gt; X { ret x; }
+
+fn f&lt;copy T&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="16" date="2012-01-05 15:35:37 +0100" desc="Switch to new param kind bound syntax">
+fn g&lt;X: copy&gt;(x: X) -&gt; X { ret x; }
+
+fn f&lt;T: copy&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    ret g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="17" date="2012-08-01 17:30:05 -0700" desc="Convert ret to return">
+fn g&lt;X: copy&gt;(x: X) -&gt; X { return x; }
+
+fn f&lt;T: copy&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    return g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="18" date="2012-09-07 14:52:28 -0700" desc="Convert all kind bounds to camel case. Remove send, owned keywords.">
+fn g&lt;X: Copy&gt;(x: X) -&gt; X { return x; }
+
+fn f&lt;T: Copy&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    return g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="19" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X: Copy&gt;(x: X) -&gt; X { return x; }
+
+fn f&lt;T: Copy&gt;(t: T) -&gt; {a: T, b: T} {
+    type pair = {a: T, b: T};
+
+    let x: pair = {a: t, b: t};
+    return g::&lt;pair&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="20" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X: Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T: Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="21" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X: Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T: Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="22" date="2013-02-20 17:07:17 -0800" desc="librustc: Separate most trait bounds with '+'. rs=plussing">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    assert (b.a == 10);
+    assert (b.b == 10);
+}
+</code>
+<code num="23" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    log(debug, b.a);
+    log(debug, b.b);
+    fail_unless!((b.a == 10));
+    fail_unless!((b.b == 10));
+}
+</code>
+<code num="24" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    debug!(b.a);
+    debug!(b.b);
+    fail_unless!((b.a == 10));
+    fail_unless!((b.b == 10));
+}
+</code>
+<code num="25" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    debug!(b.a);
+    debug!(b.b);
+    assert!((b.a == 10));
+    assert!((b.b == 10));
+}
+</code>
+<code num="26" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+
+    let x: Pair&lt;T&gt; = Pair {a: t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    debug!(b.a);
+    debug!(b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="27" date="2013-06-15 20:26:59 -0400" desc="Add copies to type params with Copy bound">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: copy t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    debug!(b.a);
+    debug!(b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+</revisions>

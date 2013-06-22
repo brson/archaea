@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="33">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn x(str s, int n) {
+  log s;
+  log n;
+}
+
+fn main() {
+  spawn x("hello from first spawned fn", 65);
+  spawn x("hello from second spawned fn", 66);
+  spawn x("hello from third spawned fn", 67);
+  let int i = 30;
+  while (i &gt; 0) {
+    i = i - 1;
+    log "parent sleeping";
+    yield;
+  }
+}
+</code>
+<code num="1" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// -*- rust -*-
+
+fn x(str s, int n) {
+  log s;
+  log n;
+}
+
+fn main() {
+  spawn x("hello from first spawned fn", 65);
+  spawn x("hello from second spawned fn", 66);
+  spawn x("hello from third spawned fn", 67);
+  let int i = 30;
+  while (i &gt; 0) {
+    i = i - 1;
+    log "parent sleeping";
+    yield;
+  }
+}
+</code>
+<code num="2" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn x(str s, int n) {
+  log s;
+  log n;
+}
+
+fn main() {
+  spawn x("hello from first spawned fn", 65);
+  spawn x("hello from second spawned fn", 66);
+  spawn x("hello from third spawned fn", 67);
+  let int i = 30;
+  while (i &gt; 0) {
+    i = i - 1;
+    log "parent sleeping";
+    yield;
+  }
+}
+</code>
+<code num="3" date="2011-07-20 19:37:09 -0700" desc="Add xfail-stage3 directives to tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+
+fn x(str s, int n) {
+  log s;
+  log n;
+}
+
+fn main() {
+  spawn x("hello from first spawned fn", 65);
+  spawn x("hello from second spawned fn", 66);
+  spawn x("hello from third spawned fn", 67);
+  let int i = 30;
+  while (i &gt; 0) {
+    i = i - 1;
+    log "parent sleeping";
+    yield;
+  }
+}
+</code>
+<code num="4" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+
+fn x(s: str, n: int) { log s; log n; }
+
+fn main() {
+    spawn x("hello from first spawned fn", 65);
+    spawn x("hello from second spawned fn", 66);
+    spawn x("hello from third spawned fn", 67);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield; }
+}
+</code>
+<code num="5" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+
+fn x(s: str, n: int) { log s; log n; }
+
+fn main() {
+    spawn x("hello from first spawned fn", 65);
+    spawn x("hello from second spawned fn", 66);
+    spawn x("hello from third spawned fn", 67);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield; }
+}
+</code>
+<code num="6" date="2011-08-10 22:48:17 -0700" desc="Bring run-pass/spawn-fn up to date and un-XFAIL">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+
+fn x(s: str, n: int) { log s; log n; }
+
+fn main() {
+    spawn x("hello from first spawned fn", 65);
+    spawn x("hello from second spawned fn", 66);
+    spawn x("hello from third spawned fn", 67);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="7" date="2011-08-13 15:20:11 -0700" desc="Removed spawn and task from the parser. Updated all the tests except for the benchmarks.">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(s: str, n: int) { log s; log n; }
+
+fn main() {
+    task::_spawn(bind x("hello from first spawned fn", 65));
+    task::_spawn(bind x("hello from second spawned fn", 66));
+    task::_spawn(bind x("hello from third spawned fn", 67));
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="8" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(s: str, n: int) { log s; log n; }
+
+fn main() {
+    task::_spawn(bind x("hello from first spawned fn", 65));
+    task::_spawn(bind x("hello from second spawned fn", 66));
+    task::_spawn(bind x("hello from third spawned fn", 67));
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="9" date="2011-08-25 11:20:43 -0700" desc="Cleaning up task and comm exports, updating all the test cases.">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(s: str, n: int) { log s; log n; }
+
+fn main() {
+    task::spawn(bind x("hello from first spawned fn", 65));
+    task::spawn(bind x("hello from second spawned fn", 66));
+    task::spawn(bind x("hello from third spawned fn", 67));
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="10" date="2011-09-01 16:39:51 -0700" desc="Convert some comm tests to istrs. Issue #855">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(s: -istr, n: int) { log s; log n; }
+
+fn main() {
+    task::spawn(bind x(~"hello from first spawned fn", 65));
+    task::spawn(bind x(~"hello from second spawned fn", 66));
+    task::spawn(bind x(~"hello from third spawned fn", 67));
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="11" date="2011-09-02 15:34:58 -0700" desc="Reformat. Issue #855">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(s: -str, n: int) { log s; log n; }
+
+fn main() {
+    task::spawn(bind x("hello from first spawned fn", 65));
+    task::spawn(bind x("hello from second spawned fn", 66));
+    task::spawn(bind x("hello from third spawned fn", 67));
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="12" date="2011-09-12 12:39:38 +0200" desc="Pretty-print for new arg-mode syntax">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(-s: str, n: int) { log s; log n; }
+
+fn main() {
+    task::spawn(bind x("hello from first spawned fn", 65));
+    task::spawn(bind x("hello from second spawned fn", 66));
+    task::spawn(bind x("hello from third spawned fn", 67));
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="13" date="2011-10-13 15:37:07 -0700" desc="Convert tests to use bare-fn spawn">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn# x(&amp;&amp;args: (str, int)) {
+    let (s, n) = args;
+    log s; log n;
+}
+
+fn main() {
+    task::spawn2(("hello from first spawned fn", 65), x);
+    task::spawn2(("hello from second spawned fn", 66), x);
+    task::spawn2(("hello from third spawned fn", 67), x);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="14" date="2011-10-13 21:23:07 -0700" desc="Drop the 2 from the spawn*2 functions">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn# x(&amp;&amp;args: (str, int)) {
+    let (s, n) = args;
+    log s; log n;
+}
+
+fn main() {
+    task::spawn(("hello from first spawned fn", 65), x);
+    task::spawn(("hello from second spawned fn", 66), x);
+    task::spawn(("hello from third spawned fn", 67), x);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="15" date="2011-10-20 20:34:04 -0700" desc="Remove temporary fn# syntax">
+// -*- rust -*-
+
+use std;
+import std::task::yield;
+import std::task;
+
+fn x(&amp;&amp;args: (str, int)) {
+    let (s, n) = args;
+    log s; log n;
+}
+
+fn main() {
+    task::spawn(("hello from first spawned fn", 65), x);
+    task::spawn(("hello from second spawned fn", 66), x);
+    task::spawn(("hello from third spawned fn", 67), x);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="16" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(&amp;&amp;args: (str, int)) {
+    let (s, n) = args;
+    log s; log n;
+}
+
+fn main() {
+    task::spawn(("hello from first spawned fn", 65), x);
+    task::spawn(("hello from second spawned fn", 66), x);
+    task::spawn(("hello from third spawned fn", 67), x);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; log "parent sleeping"; yield(); }
+}
+</code>
+<code num="17" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(&amp;&amp;args: (str, int)) {
+    let (s, n) = args;
+    log_full(core::debug, s); log_full(core::debug, n);
+}
+
+fn main() {
+    task::spawn(("hello from first spawned fn", 65), x);
+    task::spawn(("hello from second spawned fn", 66), x);
+    task::spawn(("hello from third spawned fn", 67), x);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="18" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(&amp;&amp;args: (str, int)) {
+    let (s, n) = args;
+    log(debug, s); log(debug, n);
+}
+
+fn main() {
+    task::spawn(("hello from first spawned fn", 65), x);
+    task::spawn(("hello from second spawned fn", 66), x);
+    task::spawn(("hello from third spawned fn", 67), x);
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="19" date="2012-01-04 21:14:53 -0800" desc="port over the tests to use the new API">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn {|| x("hello from first spawned fn", 65); };
+    task::spawn {|| x("hello from second spawned fn", 66); };
+    task::spawn {|| x("hello from third spawned fn", 67); };
+    let i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="20" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn {|| x("hello from first spawned fn", 65); };
+    task::spawn {|| x("hello from second spawned fn", 66); };
+    task::spawn {|| x("hello from third spawned fn", 67); };
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="21" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn({|| x("hello from first spawned fn", 65); });
+    task::spawn({|| x("hello from second spawned fn", 66); });
+    task::spawn({|| x("hello from third spawned fn", 67); });
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="22" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x("hello from first spawned fn", 65) );
+    task::spawn(|| x("hello from second spawned fn", 66) );
+    task::spawn(|| x("hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="23" date="2012-07-13 22:57:48 -0700" desc="Move the world over to using the new style string literals and types. Closes #2907.">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; #debug("parent sleeping"); yield(); }
+}
+</code>
+<code num="24" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!{"parent sleeping"}; yield(); }
+}
+</code>
+<code num="25" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// -*- rust -*-
+
+use std;
+import task::yield;
+import task;
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); yield(); }
+}
+</code>
+<code num="26" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// -*- rust -*-
+
+use std;
+use task::yield;
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); yield(); }
+}
+</code>
+<code num="27" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+
+extern mod std;
+use task::yield;
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); yield(); }
+}
+</code>
+<code num="28" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+use task::yield;
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); yield(); }
+}
+</code>
+<code num="29" date="2012-12-13 13:05:22 -0800" desc="librustc: Make `use` statements crate-relative by default. r=brson">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); task::yield(); }
+}
+</code>
+<code num="30" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn x(s: ~str, n: int) {
+    log(debug, s);
+    log(debug, n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); task::yield(); }
+}
+</code>
+<code num="31" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+fn x(s: ~str, n: int) {
+    debug!(s);
+    debug!(n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); task::yield(); }
+}
+</code>
+<code num="32" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    debug!(s);
+    debug!(n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; debug!("parent sleeping"); task::yield(); }
+}
+</code>
+</revisions>

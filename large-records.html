@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="7">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn f() {
+  let rec(int a, int b, int c, int d,
+          int e, int f, int g, int h,
+          int i, int j, int k, int l) foo =
+    rec(a=0, b=0, c=0, d=0,
+        e=0, f=0, g=0, h=0,
+        i=0, j=0, k=0, l=0);
+}
+
+fn main() {
+  f();
+}
+</code>
+<code num="1" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+fn f() {
+    let rec(int a,
+            int b,
+            int c,
+            int d,
+            int e,
+            int f,
+            int g,
+            int h,
+            int i,
+            int j,
+            int k,
+            int l) foo =
+        rec(a=0, b=0, c=0, d=0, e=0, f=0, g=0, h=0, i=0, j=0, k=0, l=0);
+}
+
+fn main() { f(); }
+</code>
+<code num="2" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+fn f() {
+    let foo:
+            {a: int,
+             b: int,
+             c: int,
+             d: int,
+             e: int,
+             f: int,
+             g: int,
+             h: int,
+             i: int,
+             j: int,
+             k: int,
+             l: int} =
+        {a: 0,
+         b: 0,
+         c: 0,
+         d: 0,
+         e: 0,
+         f: 0,
+         g: 0,
+         h: 0,
+         i: 0,
+         j: 0,
+         k: 0,
+         l: 0};
+}
+
+fn main() { f(); }
+</code>
+<code num="3" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+fn f() {
+    let foo:
+            {a: int,
+             b: int,
+             c: int,
+             d: int,
+             e: int,
+             f: int,
+             g: int,
+             h: int,
+             i: int,
+             j: int,
+             k: int,
+             l: int} =
+        {a: 0,
+         b: 0,
+         c: 0,
+         d: 0,
+         e: 0,
+         f: 0,
+         g: 0,
+         h: 0,
+         i: 0,
+         j: 0,
+         k: 0,
+         l: 0};
+}
+
+fn main() { f(); }
+</code>
+<code num="4" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f() {
+    let foo:
+            {a: int,
+             b: int,
+             c: int,
+             d: int,
+             e: int,
+             f: int,
+             g: int,
+             h: int,
+             i: int,
+             j: int,
+             k: int,
+             l: int} =
+        {a: 0,
+         b: 0,
+         c: 0,
+         d: 0,
+         e: 0,
+         f: 0,
+         g: 0,
+         h: 0,
+         i: 0,
+         j: 0,
+         k: 0,
+         l: 0};
+}
+
+fn main() { f(); }
+</code>
+<code num="5" date="2013-01-25 22:46:32 -0800" desc="testsuite: Eliminate uses of structural records from most run-pass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+
+struct Large {a: int,
+             b: int,
+             c: int,
+             d: int,
+             e: int,
+             f: int,
+             g: int,
+             h: int,
+             i: int,
+             j: int,
+             k: int,
+             l: int}
+fn f() {
+    let foo: Large =
+        Large {a: 0,
+         b: 0,
+         c: 0,
+         d: 0,
+         e: 0,
+         f: 0,
+         g: 0,
+         h: 0,
+         i: 0,
+         j: 0,
+         k: 0,
+         l: 0};
+}
+
+fn main() { f(); }
+</code>
+<code num="6" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+
+struct Large {a: int,
+             b: int,
+             c: int,
+             d: int,
+             e: int,
+             f: int,
+             g: int,
+             h: int,
+             i: int,
+             j: int,
+             k: int,
+             l: int}
+fn f() {
+    let foo: Large =
+        Large {a: 0,
+         b: 0,
+         c: 0,
+         d: 0,
+         e: 0,
+         f: 0,
+         g: 0,
+         h: 0,
+         i: 0,
+         j: 0,
+         k: 0,
+         l: 0};
+}
+
+pub fn main() { f(); }
+</code>
+</revisions>

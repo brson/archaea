@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="30">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  check (size_of[u8]() == uint(1));
+  check (size_of[u32]() == uint(4));
+  check (size_of[char]() == uint(4));
+  check (size_of[i8]() == uint(1));
+  check (size_of[i32]() == uint(4));
+  check (size_of[tup(u8,i8)]() == uint(2));
+  check (size_of[tup(u8,i8,u8)]() == uint(3));
+  // Alignment causes padding before the char and the u32.
+  check (size_of[tup(u8,i8,tup(char,u8),u32)]() == uint(16));
+  check (size_of[int]() == size_of[uint]());
+  check (size_of[tup(int,())]() == size_of[int]());
+  check (size_of[tup(int,(),())]() == size_of[int]());
+  check (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="1" date="2010-07-26 15:20:13 -0700" desc="Move the test suite to the "as" form for casts. XFAIL a few tests for LLVM.">
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  check (size_of[u8]() == (1 as uint));
+  check (size_of[u32]() == (4 as uint));
+  check (size_of[char]() == (4 as uint));
+  check (size_of[i8]() == (1 as uint));
+  check (size_of[i32]() == (4 as uint));
+  check (size_of[tup(u8,i8)]() == (2 as uint));
+  check (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  check (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  check (size_of[int]() == size_of[uint]());
+  check (size_of[tup(int,())]() == size_of[int]());
+  check (size_of[tup(int,(),())]() == size_of[int]());
+  check (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="2" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  check (size_of[u8]() == (1 as uint));
+  check (size_of[u32]() == (4 as uint));
+  check (size_of[char]() == (4 as uint));
+  check (size_of[i8]() == (1 as uint));
+  check (size_of[i32]() == (4 as uint));
+  check (size_of[tup(u8,i8)]() == (2 as uint));
+  check (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  check (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  check (size_of[int]() == size_of[uint]());
+  check (size_of[tup(int,())]() == size_of[int]());
+  check (size_of[tup(int,(),())]() == size_of[int]());
+  check (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="3" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// xfail-stage0
+
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  assert (size_of[u8]() == (1 as uint));
+  assert (size_of[u32]() == (4 as uint));
+  assert (size_of[char]() == (4 as uint));
+  assert (size_of[i8]() == (1 as uint));
+  assert (size_of[i32]() == (4 as uint));
+  assert (size_of[tup(u8,i8)]() == (2 as uint));
+  assert (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  assert (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  assert (size_of[int]() == size_of[uint]());
+  assert (size_of[tup(int,())]() == size_of[int]());
+  assert (size_of[tup(int,(),())]() == size_of[int]());
+  assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="4" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// xfail-stage0
+
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  check (size_of[u8]() == (1 as uint));
+  check (size_of[u32]() == (4 as uint));
+  check (size_of[char]() == (4 as uint));
+  check (size_of[i8]() == (1 as uint));
+  check (size_of[i32]() == (4 as uint));
+  check (size_of[tup(u8,i8)]() == (2 as uint));
+  check (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  check (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  check (size_of[int]() == size_of[uint]());
+  check (size_of[tup(int,())]() == size_of[int]());
+  check (size_of[tup(int,(),())]() == size_of[int]());
+  check (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="5" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// xfail-stage0
+
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  assert (size_of[u8]() == (1 as uint));
+  assert (size_of[u32]() == (4 as uint));
+  assert (size_of[char]() == (4 as uint));
+  assert (size_of[i8]() == (1 as uint));
+  assert (size_of[i32]() == (4 as uint));
+  assert (size_of[tup(u8,i8)]() == (2 as uint));
+  assert (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  assert (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  assert (size_of[int]() == size_of[uint]());
+  assert (size_of[tup(int,())]() == size_of[int]());
+  assert (size_of[tup(int,(),())]() == size_of[int]());
+  assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="6" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+
+import size_of = std.sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  assert (size_of[u8]() == (1 as uint));
+  assert (size_of[u32]() == (4 as uint));
+  assert (size_of[char]() == (4 as uint));
+  assert (size_of[i8]() == (1 as uint));
+  assert (size_of[i32]() == (4 as uint));
+  assert (size_of[tup(u8,i8)]() == (2 as uint));
+  assert (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  assert (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  assert (size_of[int]() == size_of[uint]());
+  assert (size_of[tup(int,())]() == size_of[int]());
+  assert (size_of[tup(int,(),())]() == size_of[int]());
+  assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="7" date="2011-05-06 22:13:13 +0200" desc="Rename std modules to be camelcased">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+
+import size_of = std.Sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  assert (size_of[u8]() == (1 as uint));
+  assert (size_of[u32]() == (4 as uint));
+  assert (size_of[char]() == (4 as uint));
+  assert (size_of[i8]() == (1 as uint));
+  assert (size_of[i32]() == (4 as uint));
+  assert (size_of[tup(u8,i8)]() == (2 as uint));
+  assert (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  assert (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  assert (size_of[int]() == size_of[uint]());
+  assert (size_of[tup(int,())]() == size_of[int]());
+  assert (size_of[tup(int,(),())]() == size_of[int]());
+  assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="8" date="2011-05-12 17:24:54 +0200" desc="Downcase std modules again, move to :: for module dereferencing">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+
+import size_of = std::sys.rustrt.size_of;
+
+use std;
+
+fn main() {
+  assert (size_of[u8]() == (1 as uint));
+  assert (size_of[u32]() == (4 as uint));
+  assert (size_of[char]() == (4 as uint));
+  assert (size_of[i8]() == (1 as uint));
+  assert (size_of[i32]() == (4 as uint));
+  assert (size_of[tup(u8,i8)]() == (2 as uint));
+  assert (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  assert (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  assert (size_of[int]() == size_of[uint]());
+  assert (size_of[tup(int,())]() == size_of[int]());
+  assert (size_of[tup(int,(),())]() == size_of[int]());
+  assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="9" date="2011-06-02 16:19:30 +0200" desc="Un-xfail lib-io test">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+
+import size_of = std::sys::rustrt::size_of;
+
+use std;
+
+fn main() {
+  assert (size_of[u8]() == (1 as uint));
+  assert (size_of[u32]() == (4 as uint));
+  assert (size_of[char]() == (4 as uint));
+  assert (size_of[i8]() == (1 as uint));
+  assert (size_of[i32]() == (4 as uint));
+  assert (size_of[tup(u8,i8)]() == (2 as uint));
+  assert (size_of[tup(u8,i8,u8)]() == (3 as uint));
+  // Alignment causes padding before the char and the u32.
+  assert (size_of[tup(u8,i8,tup(char,u8),u32)]() == (16 as uint));
+  assert (size_of[int]() == size_of[uint]());
+  assert (size_of[tup(int,())]() == size_of[int]());
+  assert (size_of[tup(int,(),())]() == size_of[int]());
+  assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="10" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of[u8]() == 1 as uint);
+    assert (size_of[u32]() == 4 as uint);
+    assert (size_of[char]() == 4 as uint);
+    assert (size_of[i8]() == 1 as uint);
+    assert (size_of[i32]() == 4 as uint);
+    assert (size_of[tup(u8, i8)]() == 2 as uint);
+    assert (size_of[tup(u8, i8, u8)]() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of[tup(u8, i8, tup(char, u8), u32)]() == 16 as uint);
+    assert (size_of[int]() == size_of[uint]());
+    assert (size_of[tup(int, ())]() == size_of[int]());
+    assert (size_of[tup(int, (), ())]() == size_of[int]());
+    assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="11" date="2011-07-20 19:37:09 -0700" desc="Add xfail-stage3 directives to tests">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of[u8]() == 1 as uint);
+    assert (size_of[u32]() == 4 as uint);
+    assert (size_of[char]() == 4 as uint);
+    assert (size_of[i8]() == 1 as uint);
+    assert (size_of[i32]() == 4 as uint);
+    assert (size_of[tup(u8, i8)]() == 2 as uint);
+    assert (size_of[tup(u8, i8, u8)]() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of[tup(u8, i8, tup(char, u8), u32)]() == 16 as uint);
+    assert (size_of[int]() == size_of[uint]());
+    assert (size_of[tup(int, ())]() == size_of[int]());
+    assert (size_of[tup(int, (), ())]() == size_of[int]());
+    assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="12" date="2011-07-26 14:49:40 +0200" desc="Remove uses of tuples from the test suite">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of[u8]() == 1 as uint);
+    assert (size_of[u32]() == 4 as uint);
+    assert (size_of[char]() == 4 as uint);
+    assert (size_of[i8]() == 1 as uint);
+    assert (size_of[i32]() == 4 as uint);
+    assert (size_of[rec(u8 a, i8 b)]() == 2 as uint);
+    assert (size_of[rec(u8 a, i8 b, u8 c)]() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of[rec(u8 a, i8 b, rec(char u, u8 v) c, u32 d)]()
+            == 16 as uint);
+    assert (size_of[int]() == size_of[uint]());
+    assert (size_of[rec(int a, () b)]() == size_of[int]());
+    assert (size_of[rec(int a, () b, () c)]() == size_of[int]());
+    assert (size_of[int]() == size_of[rec(int x)]());
+}
+</code>
+<code num="13" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of[u8]() == 1 as uint);
+    assert (size_of[u32]() == 4 as uint);
+    assert (size_of[char]() == 4 as uint);
+    assert (size_of[i8]() == 1 as uint);
+    assert (size_of[i32]() == 4 as uint);
+    assert (size_of[{a: u8, b: i8}]() == 2 as uint);
+    assert (size_of[{a: u8, b: i8, c: u8}]() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of[{a: u8, b: i8, c: {u: char, v: u8}, d: u32}]() ==
+                16 as uint);
+    assert (size_of[int]() == size_of[uint]());
+    assert (size_of[{a: int, b: ()}]() == size_of[int]());
+    assert (size_of[{a: int, b: (), c: ()}]() == size_of[int]());
+    assert (size_of[int]() == size_of[{x: int}]());
+}
+</code>
+<code num="14" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of[u8]() == 1 as uint);
+    assert (size_of[u32]() == 4 as uint);
+    assert (size_of[char]() == 4 as uint);
+    assert (size_of[i8]() == 1 as uint);
+    assert (size_of[i32]() == 4 as uint);
+    assert (size_of[{a: u8, b: i8}]() == 2 as uint);
+    assert (size_of[{a: u8, b: i8, c: u8}]() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of[{a: u8, b: i8, c: {u: char, v: u8}, d: u32}]() ==
+                16 as uint);
+    assert (size_of[int]() == size_of[uint]());
+    assert (size_of[{a: int, b: ()}]() == size_of[int]());
+    assert (size_of[{a: int, b: (), c: ()}]() == size_of[int]());
+    assert (size_of[int]() == size_of[{x: int}]());
+}
+</code>
+<code num="15" date="2011-08-13 00:10:18 -0700" desc="Port the tests to the expr foo::&lt;T&gt; syntax.">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="16" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+// xfail-test
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="17" date="2011-08-31 14:24:08 +0200" desc="Revert "Replace xfail-stageN with simply xfail-test"">
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="18" date="2011-08-31 13:22:58 +0200" desc="Replace xfail-stageN with simply xfail-test">
+// xfail-test
+import std::sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="19" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// xfail-test
+import sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="20" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// xfail-test
+use sys::rustrt::size_of;
+use std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="21" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// xfail-test
+use sys::rustrt::size_of;
+extern mod std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="22" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+use sys::rustrt::size_of;
+extern mod std;
+
+fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="23" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+use sys::rustrt::size_of;
+extern mod std;
+
+pub fn main() {
+    assert (size_of::&lt;u8&gt;() == 1 as uint);
+    assert (size_of::&lt;u32&gt;() == 4 as uint);
+    assert (size_of::&lt;char&gt;() == 4 as uint);
+    assert (size_of::&lt;i8&gt;() == 1 as uint);
+    assert (size_of::&lt;i32&gt;() == 4 as uint);
+    assert (size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint);
+    assert (size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert (size_of::&lt;int&gt;() == size_of::&lt;uint&gt;());
+    assert (size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;());
+    assert (size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;());
+}
+</code>
+<code num="24" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+use sys::rustrt::size_of;
+extern mod std;
+
+pub fn main() {
+    fail_unless!((size_of::&lt;u8&gt;() == 1 as uint));
+    fail_unless!((size_of::&lt;u32&gt;() == 4 as uint));
+    fail_unless!((size_of::&lt;char&gt;() == 4 as uint));
+    fail_unless!((size_of::&lt;i8&gt;() == 1 as uint));
+    fail_unless!((size_of::&lt;i32&gt;() == 4 as uint));
+    fail_unless!((size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint));
+    fail_unless!((size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint));
+    // Alignment causes padding before the char and the u32.
+
+    assert (size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    fail_unless!((size_of::&lt;int&gt;() == size_of::&lt;uint&gt;()));
+    fail_unless!((size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;()));
+    fail_unless!((size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;()));
+    fail_unless!((size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;()));
+}
+</code>
+<code num="25" date="2013-03-06 19:09:17 -0800" desc="test: Fix tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+use sys::rustrt::size_of;
+extern mod std;
+
+pub fn main() {
+    fail_unless!((size_of::&lt;u8&gt;() == 1 as uint));
+    fail_unless!((size_of::&lt;u32&gt;() == 4 as uint));
+    fail_unless!((size_of::&lt;char&gt;() == 4 as uint));
+    fail_unless!((size_of::&lt;i8&gt;() == 1 as uint));
+    fail_unless!((size_of::&lt;i32&gt;() == 4 as uint));
+    fail_unless!((size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint));
+    fail_unless!((size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint));
+    // Alignment causes padding before the char and the u32.
+
+    fail_unless!(size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    fail_unless!((size_of::&lt;int&gt;() == size_of::&lt;uint&gt;()));
+    fail_unless!((size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;()));
+    fail_unless!((size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;()));
+    fail_unless!((size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;()));
+}
+</code>
+<code num="26" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+use sys::rustrt::size_of;
+extern mod std;
+
+pub fn main() {
+    assert!((size_of::&lt;u8&gt;() == 1 as uint));
+    assert!((size_of::&lt;u32&gt;() == 4 as uint));
+    assert!((size_of::&lt;char&gt;() == 4 as uint));
+    assert!((size_of::&lt;i8&gt;() == 1 as uint));
+    assert!((size_of::&lt;i32&gt;() == 4 as uint));
+    assert!((size_of::&lt;{a: u8, b: i8}&gt;() == 2 as uint));
+    assert!((size_of::&lt;{a: u8, b: i8, c: u8}&gt;() == 3 as uint));
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;{a: u8, b: i8, c: {u: char, v: u8}, d: u32}&gt;() ==
+                16 as uint);
+    assert!((size_of::&lt;int&gt;() == size_of::&lt;uint&gt;()));
+    assert!((size_of::&lt;{a: int, b: ()}&gt;() == size_of::&lt;int&gt;()));
+    assert!((size_of::&lt;{a: int, b: (), c: ()}&gt;() == size_of::&lt;int&gt;()));
+    assert!((size_of::&lt;int&gt;() == size_of::&lt;{x: int}&gt;()));
+}
+</code>
+<code num="27" date="2013-04-18 17:28:22 -0700" desc="fixed up syntax">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod core;
+use core::sys::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+pub fn main() {
+    assert!((size_of::&lt;u8&gt;() == 1 as uint));
+    assert!((size_of::&lt;u32&gt;() == 4 as uint));
+    assert!((size_of::&lt;char&gt;() == 4 as uint));
+    assert!((size_of::&lt;i8&gt;() == 1 as uint));
+    assert!((size_of::&lt;i32&gt;() == 4 as uint));
+    assert!((size_of::&lt;t&gt;() == 2 as uint));
+    assert!((size_of::&lt;u&gt;() == 3 as uint));
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert!((size_of::&lt;int&gt;() == size_of::&lt;uint&gt;()));
+    assert!((size_of::&lt;w&gt;() == size_of::&lt;int&gt;()));
+    assert!((size_of::&lt;x&gt;() == size_of::&lt;int&gt;()));
+    assert!((size_of::&lt;int&gt;() == size_of::&lt;y&gt;()));
+}
+</code>
+<code num="28" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod core;
+use core::sys::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+}
+</code>
+<code num="29" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+use std::sys::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+}
+</code>
+</revisions>

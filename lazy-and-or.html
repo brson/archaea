@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="20">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+fn incr(mutable &amp;int x) -&gt; bool {
+  x += 1;
+  check (false);
+  ret false;
+}
+
+fn main() {
+
+  auto x = (1 == 2) || (3 == 3);
+  check (x);
+
+  let int y = 10;
+  log x || incr(y);
+  check (y == 10);
+
+  if (true &amp;&amp; x) {
+    check (true);
+  } else {
+    check (false);
+  }
+
+}
+</code>
+<code num="1" date="2010-06-30 02:30:17 -0700" desc="rewrite 'mutable &amp;' as '&amp; mutable', corresponding to grammar shift.">
+fn incr(&amp; mutable int x) -&gt; bool {
+  x += 1;
+  check (false);
+  ret false;
+}
+
+fn main() {
+
+  auto x = (1 == 2) || (3 == 3);
+  check (x);
+
+  let int y = 10;
+  log x || incr(y);
+  check (y == 10);
+
+  if (true &amp;&amp; x) {
+    check (true);
+  } else {
+    check (false);
+  }
+
+}
+</code>
+<code num="2" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+fn incr(&amp; mutable int x) -&gt; bool {
+  x += 1;
+  assert (false);
+  ret false;
+}
+
+fn main() {
+
+  auto x = (1 == 2) || (3 == 3);
+  assert (x);
+
+  let int y = 10;
+  log x || incr(y);
+  assert (y == 10);
+
+  if (true &amp;&amp; x) {
+    assert (true);
+  } else {
+    assert (false);
+  }
+
+}
+</code>
+<code num="3" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+fn incr(&amp; mutable int x) -&gt; bool {
+  x += 1;
+  check (false);
+  ret false;
+}
+
+fn main() {
+
+  auto x = (1 == 2) || (3 == 3);
+  check (x);
+
+  let int y = 10;
+  log x || incr(y);
+  check (y == 10);
+
+  if (true &amp;&amp; x) {
+    check (true);
+  } else {
+    check (false);
+  }
+
+}
+</code>
+<code num="4" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+fn incr(&amp; mutable int x) -&gt; bool {
+  x += 1;
+  assert (false);
+  ret false;
+}
+
+fn main() {
+
+  auto x = (1 == 2) || (3 == 3);
+  assert (x);
+
+  let int y = 10;
+  log x || incr(y);
+  assert (y == 10);
+
+  if (true &amp;&amp; x) {
+    assert (true);
+  } else {
+    assert (false);
+  }
+
+}
+</code>
+<code num="5" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+fn incr(&amp;mutable int x) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    auto x = 1 == 2 || 3 == 3;
+    assert (x);
+    let int y = 10;
+    log x || incr(y);
+    assert (y == 10);
+    if (true &amp;&amp; x) { assert (true); } else { assert (false); }
+}
+</code>
+<code num="6" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+fn incr(x: &amp;mutable int) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let y: int = 10;
+    log x || incr(y);
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="7" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+fn incr(x: &amp;mutable int) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let y: int = 10;
+    log x || incr(y);
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="8" date="2011-09-12 12:39:38 +0200" desc="Pretty-print for new arg-mode syntax">
+fn incr(&amp;x: int) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let y: int = 10;
+    log x || incr(y);
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="9" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+fn incr(&amp;x: int) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let y: int = 10;
+    log_full(core::debug, x || incr(y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="10" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+fn incr(&amp;x: int) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let y: int = 10;
+    log(debug, x || incr(y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="11" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+fn incr(&amp;x: int) -&gt; bool { x += 1; assert (false); ret false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let mut y: int = 10;
+    log(debug, x || incr(y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="12" date="2012-08-01 17:30:05 -0700" desc="Convert ret to return">
+fn incr(&amp;x: int) -&gt; bool { x += 1; assert (false); return false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let mut y: int = 10;
+    log(debug, x || incr(y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="13" date="2012-10-05 22:07:53 -0700" desc="Remove by-mutable-ref mode from the compiler">
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert (false); return false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let mut y: int = 10;
+    log(debug, x || incr(&amp;mut y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="14" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert (false); return false; }
+
+fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let mut y: int = 10;
+    log(debug, x || incr(&amp;mut y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="15" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert (false); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert (x);
+    let mut y: int = 10;
+    log(debug, x || incr(&amp;mut y));
+    assert (y == 10);
+    if true &amp;&amp; x { assert (true); } else { assert (false); }
+}
+</code>
+<code num="16" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; fail_unless!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    fail_unless!((x));
+    let mut y: int = 10;
+    log(debug, x || incr(&amp;mut y));
+    fail_unless!((y == 10));
+    if true &amp;&amp; x { fail_unless!((true)); } else { fail_unless!((false)); }
+}
+</code>
+<code num="17" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; fail_unless!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    fail_unless!((x));
+    let mut y: int = 10;
+    debug!(x || incr(&amp;mut y));
+    fail_unless!((y == 10));
+    if true &amp;&amp; x { fail_unless!((true)); } else { fail_unless!((false)); }
+}
+</code>
+<code num="18" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    debug!(x || incr(&amp;mut y));
+    assert!((y == 10));
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="19" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    debug!(x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+</revisions>

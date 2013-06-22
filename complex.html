@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="16">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+type t = int;
+fn putstr(str s) {}
+fn putint(int i) {
+  let int i = 33;
+  while (i &lt; 36) {
+    putstr("hi"); i = i + 1;
+  }
+}
+fn zerg(int i) -&gt; int { ret i; }
+fn foo(int x) -&gt; int {
+  let t y = x + 2;
+  putstr("hello");
+  while (y &lt; 10) {
+    putint(y);
+    if (y * 3 == 4) {
+      y = y + 2;
+    }
+  }
+  let t z;
+  z = 0x55;
+  foo(z);
+}
+
+fn main() {
+  let int x = 2 + 2;
+  log x;
+  log "hello, world";
+  log 10;
+}
+</code>
+<code num="1" date="2010-07-16 15:33:30 -0700" desc="Ensure that functions that should return a value do; issue 41">
+// -*- rust -*-
+
+type t = int;
+fn putstr(str s) {}
+fn putint(int i) {
+  let int i = 33;
+  while (i &lt; 36) {
+    putstr("hi"); i = i + 1;
+  }
+}
+fn zerg(int i) -&gt; int { ret i; }
+fn foo(int x) -&gt; int {
+  let t y = x + 2;
+  putstr("hello");
+  while (y &lt; 10) {
+    putint(y);
+    if (y * 3 == 4) {
+      y = y + 2;
+    }
+  }
+  let t z;
+  z = 0x55;
+  foo(z);
+  ret 0;
+}
+
+fn main() {
+  let int x = 2 + 2;
+  log x;
+  log "hello, world";
+  log 10;
+}
+</code>
+<code num="2" date="2010-11-23 17:02:08 -0800" desc="rustc: Typecheck whiles and do-whiles. Add a workaround to complex.rs pending a solution to the one-armed-if problem.">
+// -*- rust -*-
+
+type t = int;
+fn nothing() {}
+fn putstr(str s) {}
+fn putint(int i) {
+  let int i = 33;
+  while (i &lt; 36) {
+    putstr("hi"); i = i + 1;
+  }
+}
+fn zerg(int i) -&gt; int { ret i; }
+fn foo(int x) -&gt; int {
+  let t y = x + 2;
+  putstr("hello");
+  while (y &lt; 10) {
+    putint(y);
+    if (y * 3 == 4) {
+      y = y + 2; nothing();
+    }
+  }
+  let t z;
+  z = 0x55;
+  foo(z);
+  ret 0;
+}
+
+fn main() {
+  let int x = 2 + 2;
+  log x;
+  log "hello, world";
+  log 10;
+}
+</code>
+<code num="3" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(str s) { }
+
+fn putint(int i) {
+    let int i = 33;
+    while (i &lt; 36) { putstr("hi"); i = i + 1; }
+}
+
+fn zerg(int i) -&gt; int { ret i; }
+
+fn foo(int x) -&gt; int {
+    let t y = x + 2;
+    putstr("hello");
+    while (y &lt; 10) { putint(y); if (y * 3 == 4) { y = y + 2; nothing(); } }
+    let t z;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() { let int x = 2 + 2; log x; log "hello, world"; log 10; }
+</code>
+<code num="4" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: str) { }
+
+fn putint(i: int) {
+    let i: int = 33;
+    while i &lt; 36 { putstr("hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let y: t = x + 2;
+    putstr("hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() { let x: int = 2 + 2; log x; log "hello, world"; log 10; }
+</code>
+<code num="5" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: str) { }
+
+fn putint(i: int) {
+    let i: int = 33;
+    while i &lt; 36 { putstr("hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let y: t = x + 2;
+    putstr("hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() { let x: int = 2 + 2; log x; log "hello, world"; log 10; }
+</code>
+<code num="6" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: str) { }
+
+fn putint(i: int) {
+    let i: int = 33;
+    while i &lt; 36 { putstr("hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let y: t = x + 2;
+    putstr("hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log_full(core::debug, x);
+    #debug("hello, world");
+    log_full(core::debug, 10);
+}
+</code>
+<code num="7" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: str) { }
+
+fn putint(i: int) {
+    let i: int = 33;
+    while i &lt; 36 { putstr("hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let y: t = x + 2;
+    putstr("hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    #debug("hello, world");
+    log(debug, 10);
+}
+</code>
+<code num="8" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    #debug("hello, world");
+    log(debug, 10);
+}
+</code>
+<code num="9" date="2012-07-13 22:57:48 -0700" desc="Move the world over to using the new style string literals and types. Closes #2907.">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    #debug("hello, world");
+    log(debug, 10);
+}
+</code>
+<code num="10" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { ret i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    ret 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    debug!{"hello, world"};
+    log(debug, 10);
+}
+</code>
+<code num="11" date="2012-08-01 17:30:05 -0700" desc="Convert ret to return">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    debug!{"hello, world"};
+    log(debug, 10);
+}
+</code>
+<code num="12" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    debug!("hello, world");
+    log(debug, 10);
+}
+</code>
+<code num="13" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    debug!("hello, world");
+    log(debug, 10);
+}
+</code>
+<code num="14" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    log(debug, x);
+    debug!("hello, world");
+    log(debug, 10);
+}
+</code>
+<code num="15" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    debug!("%?", x);
+    debug!("hello, world");
+    debug!("%?", 10);
+}
+</code>
+</revisions>

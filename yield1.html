@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="37">
+<code num="0" date="2011-05-31 17:44:54 -0700" desc="This is the mega-ucontext commit. It replaces the task switching mechanism with a new one inspired by ucontext. It works under Linux, OS X and Windows, and is Valgrind clean on Linux and OS X (provided the runtime is built with gcc).">
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+
+import std::task::*;
+
+fn main() {
+  auto other = spawn child();
+  log_err "1";
+  yield();
+  join(other);
+}
+
+fn child() {
+  log_err "2";
+}
+</code>
+<code num="1" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// xfail-stage0
+// -*- rust -*-
+use std;
+import std::task::*;
+
+fn main() { auto other = spawn child(); log_err "1"; yield(); join(other); }
+
+fn child() { log_err "2"; }
+</code>
+<code num="2" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// -*- rust -*-
+use std;
+import std::task::*;
+
+fn main() { let other = spawn child(); log_err "1"; yield(); join(other); }
+
+fn child() { log_err "2"; }
+</code>
+<code num="3" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// -*- rust -*-
+use std;
+import std::task::*;
+
+fn main() { let other = spawn child(); log_err "1"; yield(); join(other); }
+
+fn child() { log_err "2"; }
+</code>
+<code num="4" date="2011-08-12 18:34:19 -0700" desc="Porting a bunch of tests over.">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let other = task::_spawn(bind child());
+    log_err "1"; yield();
+    join_id(other);
+}
+
+fn child() { log_err "2"; }
+</code>
+<code num="5" date="2011-08-17 11:44:35 -0700" desc="Using move-mode for spawn thunks to avoid race conditions.">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let c = child;
+    let other = task::spawn(c);
+    log_err "1"; yield();
+    join_id(other);
+}
+
+fn child() { log_err "2"; }
+</code>
+<code num="6" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let c = child;
+    let other = task::spawn(c);
+    log_err "1";
+    yield();
+    join_id(other);
+}
+
+fn child() { log_err "2"; }
+</code>
+<code num="7" date="2011-08-25 11:20:43 -0700" desc="Cleaning up task and comm exports, updating all the test cases.">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let c = child;
+    let other = task::spawn_joinable(c);
+    log_err "1";
+    yield();
+    join(other);
+}
+
+fn child() { log_err "2"; }
+</code>
+<code num="8" date="2011-10-13 15:37:07 -0700" desc="Convert tests to use bare-fn spawn">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let other = task::spawn_joinable2((), child);
+    log_err "1";
+    yield();
+    join(other);
+}
+
+fn# child(&amp;&amp;_i: ()) { log_err "2"; }
+</code>
+<code num="9" date="2011-10-13 21:23:07 -0700" desc="Drop the 2 from the spawn*2 functions">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let other = task::spawn_joinable((), child);
+    log_err "1";
+    yield();
+    join(other);
+}
+
+fn# child(&amp;&amp;_i: ()) { log_err "2"; }
+</code>
+<code num="10" date="2011-10-20 20:34:04 -0700" desc="Remove temporary fn# syntax">
+// -*- rust -*-
+use std;
+import std::task;
+import std::task::*;
+
+fn main() {
+    let other = task::spawn_joinable((), child);
+    log_err "1";
+    yield();
+    join(other);
+}
+
+fn child(&amp;&amp;_i: ()) { log_err "2"; }
+</code>
+<code num="11" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let other = task::spawn_joinable((), child);
+    log_err "1";
+    yield();
+    join(other);
+}
+
+fn child(&amp;&amp;_i: ()) { log_err "2"; }
+</code>
+<code num="12" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let other = task::spawn_joinable((), child);
+    #error("1");
+    yield();
+    join(other);
+}
+
+fn child(&amp;&amp;_i: ()) { #error("2"); }
+</code>
+<code num="13" date="2012-01-04 21:14:53 -0800" desc="port over the tests to use the new API">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let other = task::spawn_joinable {|| child(); };
+    #error("1");
+    yield();
+    join(other);
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="14" date="2012-02-18 16:34:42 -0800" desc="core: New task API">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let builder = task::mk_task_builder();
+    let result = task::future_result(builder);
+    task::run(builder) {|| child(); }
+    #error("1");
+    yield();
+    future::get(result);
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="15" date="2012-03-12 15:52:30 -0700" desc="Overhaul constructor naming in libs">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let builder = task::task_builder();
+    let result = task::future_result(builder);
+    task::run(builder) {|| child(); }
+    #error("1");
+    yield();
+    future::get(result);
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="16" date="2012-04-05 14:09:32 -0700" desc="Rename task::task_builder to task::builder">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let builder = task::builder();
+    let result = task::future_result(builder);
+    task::run(builder) {|| child(); }
+    #error("1");
+    yield();
+    future::get(result);
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="17" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let builder = task::builder();
+    let result = task::future_result(builder);
+    task::run(builder, {|| child(); });
+    #error("1");
+    yield();
+    future::get(result);
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="18" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let builder = task::builder();
+    let result = task::future_result(builder);
+    task::run(builder, || child() );
+    #error("1");
+    yield();
+    future::get(result);
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="19" date="2012-07-23 19:58:47 -0400" desc="Convert bench and run-pass tests to new task_builder interface">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let mut result = none;
+    task::task().future_result(|-r| { result = some(r); }).spawn(child);
+    #error("1");
+    yield();
+    future::get(option::unwrap(result));
+}
+
+fn child() { #error("2"); }
+</code>
+<code num="20" date="2012-07-30 16:01:07 -0700" desc="Change syntax extension syntax: `#m[...]` -&gt; `m!{...}`.">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let mut result = none;
+    task::task().future_result(|-r| { result = some(r); }).spawn(child);
+    error!{"1"};
+    yield();
+    future::get(option::unwrap(result));
+}
+
+fn child() { error!{"2"}; }
+</code>
+<code num="21" date="2012-08-07 14:26:03 -0400" desc="Change task().future_result's argument mode">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let mut result = none;
+    task::task().future_result(|+r| { result = some(r); }).spawn(child);
+    error!{"1"};
+    yield();
+    future::get(option::unwrap(result));
+}
+
+fn child() { error!{"2"}; }
+</code>
+<code num="22" date="2012-08-14 04:36:52 +0000" desc="fix fallout from future de-mode-ing.">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let mut result = none;
+    task::task().future_result(|+r| { result = some(r); }).spawn(child);
+    error!{"1"};
+    yield();
+    future::get(&amp;option::unwrap(result));
+}
+
+fn child() { error!{"2"}; }
+</code>
+<code num="23" date="2012-08-22 17:24:52 -0700" desc="`m1!{...}` -&gt; `m1!(...)`">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let mut result = none;
+    task::task().future_result(|+r| { result = some(r); }).spawn(child);
+    error!("1");
+    yield();
+    future::get(&amp;option::unwrap(result));
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="24" date="2012-08-20 12:23:37 -0700" desc="Camel case the option type">
+// -*- rust -*-
+use std;
+import task;
+import task::*;
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(r); }).spawn(child);
+    error!("1");
+    yield();
+    future::get(&amp;option::unwrap(result));
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="25" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// -*- rust -*-
+use std;
+use task::*;
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(r); }).spawn(child);
+    error!("1");
+    yield();
+    future::get(&amp;option::unwrap(result));
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="26" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+extern mod std;
+use task::*;
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(r); }).spawn(child);
+    error!("1");
+    yield();
+    future::get(&amp;option::unwrap(result));
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="27" date="2012-09-18 22:45:24 -0700" desc="Make moves explicit in rpass tests">
+// -*- rust -*-
+extern mod std;
+use task::*;
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(move r); }).spawn(child);
+    error!("1");
+    yield();
+    future::get(&amp;option::unwrap(move result));
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="28" date="2012-10-22 19:01:37 -0700" desc="core: Use PortOne instead of Future in future_result">
+// -*- rust -*-
+extern mod std;
+use task::*;
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(move r); }).spawn(child);
+    error!("1");
+    yield();
+    option::unwrap(move result).recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="29" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+use task::*;
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(move r); }).spawn(child);
+    error!("1");
+    yield();
+    option::unwrap(move result).recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="30" date="2012-12-13 13:05:22 -0800" desc="librustc: Make `use` statements crate-relative by default. r=brson">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(move r); }).spawn(child);
+    error!("1");
+    task::yield();
+    option::unwrap(move result).recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="31" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(move r); }).spawn(child);
+    error!("1");
+    task::yield();
+    option::unwrap(move result).recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="32" date="2013-02-15 02:44:18 -0800" desc="tests/tutorials: Get rid of `move`.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(r); }).spawn(child);
+    error!("1");
+    task::yield();
+    option::unwrap(result).recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="33" date="2013-03-16 15:49:12 -0400" desc="option: rm functions that duplicate methods">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut result = None;
+    task::task().future_result(|+r| { result = Some(r); }).spawn(child);
+    error!("1");
+    task::yield();
+    result.unwrap().recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="34" date="2013-05-06 19:29:04 -0700" desc="test: Fix tests and the pipe compiler">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut result = None;
+    let mut builder = task::task();
+    builder.future_result(|+r| { result = Some(r); });
+    builder.spawn(child);
+    error!("1");
+    task::yield();
+    result.unwrap().recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="35" date="2013-05-07 21:33:31 -0700" desc="test: Fix tests.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut result = None;
+    let mut builder = task::task();
+    builder.future_result(|r| { result = Some(r); });
+    builder.spawn(child);
+    error!("1");
+    task::yield();
+    result.unwrap().recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="36" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut result = None;
+    let mut builder = task::task();
+    builder.future_result(|r| { result = Some(r); });
+    builder.spawn(child);
+    error!("1");
+    task::yield();
+    result.unwrap().recv();
+}
+
+fn child() { error!("2"); }
+</code>
+</revisions>

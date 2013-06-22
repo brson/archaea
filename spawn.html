@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="41">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn main() {
+  spawn child(10);
+}
+
+fn child(int i) {
+   log i;
+}
+</code>
+<code num="1" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  spawn child(10);
+}
+
+fn child(int i) {
+   log i;
+}
+</code>
+<code num="2" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  spawn child(10);
+}
+
+fn child(int i) {
+   log i;
+}
+</code>
+<code num="3" date="2011-05-23 17:35:15 -0700" desc="Arguments seem to be correctly passed to child processes now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  spawn child(10);
+}
+
+fn child(int i) {
+   log_err i;
+}
+</code>
+<code num="4" date="2011-05-24 12:18:42 -0700" desc="Programs using spawn terminate">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  auto t = spawn child(10);
+}
+
+fn child(int i) {
+   log_err i;
+}
+</code>
+<code num="5" date="2011-05-24 15:06:45 -0700" desc="Un-XFAILing spawn tests.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  auto t = spawn child(10);
+}
+
+fn child(int i) {
+   log_err i;
+}
+</code>
+<code num="6" date="2011-05-26 18:00:33 -0700" desc="Switching over to wrappers for spawning functions of multiple arguments. Doesn't quite work yet.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  auto t = spawn child(10);
+}
+
+fn child(int i) {
+   log_err i;
+}
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C .. 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="7" date="2011-05-27 15:19:38 -0700" desc="Switched calling conventions so that spawn with multiple arguments works.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+    auto t = spawn child(10);
+}
+
+fn child(int i) {
+    log_err i;
+}
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C .. 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="8" date="2011-05-27 15:52:00 -0700" desc="Re-XFAIL, not valgrind-clean.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+
+fn main() {
+    auto t = spawn child(10);
+}
+
+fn child(int i) {
+    log_err i;
+}
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C .. 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="9" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+fn main() { auto t = spawn child(10); }
+
+fn child(int i) { log_err i; }
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C .. 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="10" date="2011-06-15 12:01:19 -0700" desc="Fix a bunch of compile-command lines to use RBUILD">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// xfail-stage3
+// -*- rust -*-
+fn main() { auto t = spawn child(10); }
+
+fn child(int i) { log_err i; }
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="11" date="2011-06-15 18:16:17 -0700" desc="Fixed a problem where spawn arguments were getting lost again. Also, fixed up stack alignment, which closes #496">
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+
+fn main() {
+    auto t = spawn child(10);
+    std::task::join(t)
+}
+
+fn child(int i) {
+    log_err i;
+    assert(i == 10);
+}
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="12" date="2011-07-14 19:39:53 -0700" desc="Modify task::join to indicate how the task terminated">
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+
+fn main() {
+    auto t = spawn child(10);
+    std::task::join(t);
+}
+
+fn child(int i) {
+    log_err i;
+    assert(i == 10);
+}
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="13" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+
+fn main() { let t = spawn child(10); std::task::join(t); }
+
+fn child(i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="14" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// -*- rust -*-
+
+use std;
+
+fn main() { let t = spawn child(10); std::task::join(t); }
+
+fn child(i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="15" date="2011-08-11 10:46:57 -0700" desc="Working on more spawn test cases.">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() {
+    let t = task::_spawn(bind child(10));
+    task::join_id(t);
+}
+
+fn child(i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="16" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() { let t = task::_spawn(bind child(10)); task::join_id(t); }
+
+fn child(i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="17" date="2011-08-25 11:20:43 -0700" desc="Cleaning up task and comm exports, updating all the test cases.">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() {
+    let t = task::spawn_joinable(bind child(10));
+    task::join(t);
+}
+
+fn child(i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="18" date="2011-09-02 15:34:58 -0700" desc="Reformat. Issue #855">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() { let t = task::spawn_joinable(bind child(10)); task::join(t); }
+
+fn child(i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="19" date="2011-10-13 15:37:07 -0700" desc="Convert tests to use bare-fn spawn">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() { let t = task::spawn_joinable2(10, child); task::join(t); }
+
+fn# child(&amp;&amp;i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="20" date="2011-10-13 21:23:07 -0700" desc="Drop the 2 from the spawn*2 functions">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() { let t = task::spawn_joinable(10, child); task::join(t); }
+
+fn# child(&amp;&amp;i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="21" date="2011-10-20 20:34:04 -0700" desc="Remove temporary fn# syntax">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() { let t = task::spawn_joinable(10, child); task::join(t); }
+
+fn child(&amp;&amp;i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// compile-command: "make -k -C $RBUILD 2&gt;&amp;1 | sed -e 's/\\/x\\//x:\\//g'";
+// End:
+</code>
+<code num="22" date="2011-11-17 11:46:13 -0800" desc="remove compile-command from local variable blocks">
+// -*- rust -*-
+
+use std;
+
+import std::task;
+
+fn main() { let t = task::spawn_joinable(10, child); task::join(t); }
+
+fn child(&amp;&amp;i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="23" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() { let t = task::spawn_joinable(10, child); task::join(t); }
+
+fn child(&amp;&amp;i: int) { log_err i; assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="24" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() { let t = task::spawn_joinable(10, child); task::join(t); }
+
+fn child(&amp;&amp;i: int) { log_full(core::error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="25" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() { let t = task::spawn_joinable(10, child); task::join(t); }
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="26" date="2012-01-04 21:14:53 -0800" desc="port over the tests to use the new API">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() {
+    let t = task::spawn_joinable {|| child(10); };
+    task::join(t);
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="27" date="2012-02-18 16:34:42 -0800" desc="core: New task API">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() {
+    task::spawn {|| child(10); };
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="28" date="2012-06-26 13:55:56 -0700" desc="Eliminate usages of old sugared call syntax">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() {
+    task::spawn({|| child(10); });
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="29" date="2012-06-30 16:19:07 -0700" desc="Convert to new closure syntax">
+// -*- rust -*-
+
+use std;
+
+import task;
+
+fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="30" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// -*- rust -*-
+
+use std;
+
+
+fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="31" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+
+extern mod std;
+
+
+fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="32" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="33" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); assert (i == 10); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="34" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { log(error, i); fail_unless!((i == 10)); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="35" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { error!(i); fail_unless!((i == 10)); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="36" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { error!(i); assert!((i == 10)); }
+
+// Local Variables:
+// mode: rust;
+// fill-column: 78;
+// indent-tabs-mode: nil
+// c-basic-offset: 4
+// buffer-file-coding-system: utf-8-unix
+// End:
+</code>
+<code num="37" date="2013-05-01 20:52:09 +1000" desc="Remove 'Local Variable' comments">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(&amp;&amp;i: int) { error!(i); assert!((i == 10)); }
+</code>
+<code num="38" date="2013-05-07 21:33:31 -0700" desc="test: Fix tests.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod std;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(i: int) { error!(i); assert!((i == 10)); }
+</code>
+<code num="39" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+extern mod extra;
+
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(i: int) { error!(i); assert!((i == 10)); }
+</code>
+<code num="40" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    task::spawn(|| child(10) );
+}
+
+fn child(i: int) { error!(i); assert!((i == 10)); }
+</code>
+</revisions>

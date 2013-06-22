@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="14">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+mod foo {
+  fn x(int y) {
+    log y;
+  }
+}
+
+mod bar {
+  import foo.x;
+  import z = foo.x;
+  fn main() {
+    x(10);
+    z(10);
+  }
+}
+</code>
+<code num="1" date="2011-05-12 17:24:54 +0200" desc="Downcase std modules again, move to :: for module dereferencing">
+mod foo {
+  fn x(int y) {
+    log y;
+  }
+}
+
+mod bar {
+  import foo::x;
+  import z = foo::x;
+  fn main() {
+    x(10);
+    z(10);
+  }
+}
+</code>
+<code num="2" date="2011-06-29 09:13:48 -0700" desc="Make tests a little more friendly to combine.">
+mod foo {
+  fn x(int y) {
+    log y;
+  }
+}
+
+mod bar {
+  import foo::x;
+  import z = foo::x;
+  fn thing() {
+    x(10);
+    z(10);
+  }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="3" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+mod foo {
+    fn x(y: int) { log y; }
+}
+
+mod bar {
+    import foo::x;
+    import z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="4" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+mod foo {
+    fn x(y: int) { log y; }
+}
+
+mod bar {
+    import foo::x;
+    import z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="5" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+mod foo {
+    fn x(y: int) { log_full(core::debug, y); }
+}
+
+mod bar {
+    import foo::x;
+    import z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="6" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+mod foo {
+    fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    import foo::x;
+    import z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="7" date="2012-09-07 18:08:21 -0700" desc="Convert 'import' to 'use'. Remove 'import' keyword.">
+mod foo {
+    fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="8" date="2012-09-21 18:10:45 -0700" desc="Install new pub/priv/export rules as defaults, old rules accessible under #[legacy_exports];">
+mod foo {
+    #[legacy_exports];
+    fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    #[legacy_exports];
+    use foo::x;
+    use z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="9" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    #[legacy_exports];
+    fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    #[legacy_exports];
+    use foo::x;
+    use z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="10" date="2012-12-13 13:05:22 -0800" desc="librustc: Make `use` statements crate-relative by default. r=brson">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    #[legacy_exports];
+    fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    #[legacy_exports];
+    use foo::x;
+    use z = foo::x;
+    fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="11" date="2013-01-30 15:56:40 -0800" desc="test: Remove export from the tests, language, and libraries. rs=deexporting">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+fn main() { bar::thing(); }
+</code>
+<code num="12" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { log(debug, y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="13" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { debug!(y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+</revisions>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="34">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn main() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  check(s.(9) == u8('d'));
+}
+</code>
+<code num="1" date="2010-07-26 15:20:13 -0700" desc="Move the test suite to the "as" form for casts. XFAIL a few tests for LLVM.">
+// -*- rust -*-
+
+fn main() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  check(s.(9) == ('d' as u8));
+}
+</code>
+<code num="2" date="2010-09-20 17:42:14 -0700" desc="Add issue #163 testcase to str-append testcase.">
+// -*- rust -*-
+
+use std;
+import std._str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  check(s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  check (_str.eq(a, "abcABCabc"));
+  check (_str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="3" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+import std._str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  check(s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  check (_str.eq(a, "abcABCabc"));
+  check (_str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="4" date="2011-04-29 14:46:23 -0700" desc="Un-XFAIL most library tests.">
+// -*- rust -*-
+
+use std;
+import std._str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  check(s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  check (_str.eq(a, "abcABCabc"));
+  check (_str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="5" date="2011-05-02 11:23:07 -0700" desc="Use different syntax for checks that matter to typestate">
+// -*- rust -*-
+
+use std;
+import std._str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  assert (s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  assert (_str.eq(a, "abcABCabc"));
+  assert (_str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="6" date="2011-05-02 16:24:09 -0700" desc="Revert "Use different syntax for checks that matter to typestate"">
+// -*- rust -*-
+
+use std;
+import std._str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  check(s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  check (_str.eq(a, "abcABCabc"));
+  check (_str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="7" date="2011-05-02 17:47:24 -0700" desc="Un-revert "Use different syntax for checks that matter to typestate", fixing the problem.">
+// -*- rust -*-
+
+use std;
+import std._str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  assert (s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  assert (_str.eq(a, "abcABCabc"));
+  assert (_str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="8" date="2011-05-06 22:13:13 +0200" desc="Rename std modules to be camelcased">
+// -*- rust -*-
+
+use std;
+import std.Str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  assert (s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  assert (Str.eq(a, "abcABCabc"));
+  assert (Str.eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="9" date="2011-05-12 17:24:54 +0200" desc="Downcase std modules again, move to :: for module dereferencing">
+// -*- rust -*-
+
+use std;
+import std::_str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  assert (s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  assert (_str::eq(a, "abcABCabc"));
+  assert (_str::eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="10" date="2011-05-17 20:41:41 +0200" desc="Finally rename std::_xxx to std::xxx">
+// -*- rust -*-
+
+use std;
+import std::str;
+
+fn test1() {
+  let str s = "hello";
+  s += "world";
+  log s;
+  assert (s.(9) == ('d' as u8));
+}
+
+fn test2() {
+  // This tests for issue #163
+
+  let str ff = "abc";
+  let str a = ff + "ABC" + ff;
+  let str b = "ABC" + ff + "ABC";
+
+  log a;
+  log b;
+
+  assert (str::eq(a, "abcABCabc"));
+  assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() {
+  test1();
+  test2();
+}
+</code>
+<code num="11" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// -*- rust -*-
+use std;
+import std::str;
+
+fn test1() {
+    let str s = "hello";
+    s += "world";
+    log s;
+    assert (s.(9) == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let str ff = "abc";
+    let str a = ff + "ABC" + ff;
+    let str b = "ABC" + ff + "ABC";
+    log a;
+    log b;
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="12" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// -*- rust -*-
+use std;
+import std::str;
+
+fn test1() {
+    let s: str = "hello";
+    s += "world";
+    log s;
+    assert (s.(9) == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log a;
+    log b;
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="13" date="2011-08-19 15:16:48 -0700" desc="Reformat">
+// -*- rust -*-
+use std;
+import std::str;
+
+fn test1() {
+    let s: str = "hello";
+    s += "world";
+    log s;
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log a;
+    log b;
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="14" date="2011-08-31 17:05:50 -0700" desc="Remove more functions from std::str. Issue #855">
+// -*- rust -*-
+use std;
+import std::istr;
+
+fn test1() {
+    let s: istr = ~"hello";
+    s += ~"world";
+    log s;
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: istr = ~"abc";
+    let a: istr = ff + ~"ABC" + ff;
+    let b: istr = ~"ABC" + ff + ~"ABC";
+    log a;
+    log b;
+    assert (istr::eq(a, ~"abcABCabc"));
+    assert (istr::eq(b, ~"ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="15" date="2011-09-01 17:27:58 -0700" desc="Rename std::istr to std::str. Issue #855">
+// -*- rust -*-
+use std;
+import std::str;
+
+fn test1() {
+    let s: istr = ~"hello";
+    s += ~"world";
+    log s;
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: istr = ~"abc";
+    let a: istr = ff + ~"ABC" + ff;
+    let b: istr = ~"ABC" + ff + ~"ABC";
+    log a;
+    log b;
+    assert (str::eq(a, ~"abcABCabc"));
+    assert (str::eq(b, ~"ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="16" date="2011-09-02 15:34:58 -0700" desc="Reformat. Issue #855">
+// -*- rust -*-
+use std;
+import std::str;
+
+fn test1() {
+    let s: str = "hello";
+    s += "world";
+    log s;
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log a;
+    log b;
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="17" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+use std;
+import str;
+
+fn test1() {
+    let s: str = "hello";
+    s += "world";
+    log s;
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log a;
+    log b;
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="18" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+use std;
+import str;
+
+fn test1() {
+    let s: str = "hello";
+    s += "world";
+    log_full(core::debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log_full(core::debug, a);
+    log_full(core::debug, b);
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="19" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+use std;
+import str;
+
+fn test1() {
+    let s: str = "hello";
+    s += "world";
+    log(debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log(debug, a);
+    log(debug, b);
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="20" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+use std;
+import str;
+
+fn test1() {
+    let mut s: str = "hello";
+    s += "world";
+    log(debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: str = "abc";
+    let a: str = ff + "ABC" + ff;
+    let b: str = "ABC" + ff + "ABC";
+    log(debug, a);
+    log(debug, b);
+    assert (str::eq(a, "abcABCabc"));
+    assert (str::eq(b, "ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="21" date="2012-07-13 22:57:48 -0700" desc="Move the world over to using the new style string literals and types. Closes #2907.">
+// -*- rust -*-
+use std;
+import str;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, a);
+    log(debug, b);
+    assert (str::eq(a, ~"abcABCabc"));
+    assert (str::eq(b, ~"ABCabcABC"));
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="22" date="2012-08-02 15:42:56 -0700" desc="Remove modes from map API and replace with regions.">
+// -*- rust -*-
+use std;
+import str;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, a);
+    log(debug, b);
+    assert (a == ~"abcABCabc");
+    assert (b == ~"ABCabcABC");
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="23" date="2012-09-05 12:32:05 -0700" desc="test: "import" -&gt; "use"">
+// -*- rust -*-
+use std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, a);
+    log(debug, b);
+    assert (a == ~"abcABCabc");
+    assert (b == ~"ABCabcABC");
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="24" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, a);
+    log(debug, b);
+    assert (a == ~"abcABCabc");
+    assert (b == ~"ABCabcABC");
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="25" date="2012-12-05 16:51:32 -0800" desc="test: More run-pass test fixes">
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, copy s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, copy a);
+    log(debug, copy b);
+    assert (a == ~"abcABCabc");
+    assert (b == ~"ABCabcABC");
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="26" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, copy s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, copy a);
+    log(debug, copy b);
+    assert (a == ~"abcABCabc");
+    assert (b == ~"ABCabcABC");
+}
+
+fn main() { test1(); test2(); }
+</code>
+<code num="27" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, copy s);
+    assert (s[9] == 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, copy a);
+    log(debug, copy b);
+    assert (a == ~"abcABCabc");
+    assert (b == ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="28" date="2013-03-06 13:58:02 -0800" desc="librustc: Convert all uses of `assert` over to `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    log(debug, copy s);
+    fail_unless!((s[9] == 'd' as u8));
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    log(debug, copy a);
+    log(debug, copy b);
+    fail_unless!((a == ~"abcABCabc"));
+    fail_unless!((b == ~"ABCabcABC"));
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="29" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    debug!(copy s);
+    fail_unless!((s[9] == 'd' as u8));
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    debug!(copy a);
+    debug!(copy b);
+    fail_unless!((a == ~"abcABCabc"));
+    fail_unless!((b == ~"ABCabcABC"));
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="30" date="2013-03-15 18:27:15 -0400" desc="Clonify some of run-pass">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    debug!(s.clone());
+    fail_unless!((s[9] == 'd' as u8));
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    debug!(a.clone());
+    debug!(b.clone());
+    fail_unless!((a == ~"abcABCabc"));
+    fail_unless!((b == ~"ABCabcABC"));
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="31" date="2013-03-28 18:39:09 -0700" desc="librustc: Remove `fail_unless!`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    debug!(s.clone());
+    assert!((s[9] == 'd' as u8));
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    debug!(a.clone());
+    debug!(b.clone());
+    assert!((a == ~"abcABCabc"));
+    assert!((b == ~"ABCabcABC"));
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="32" date="2013-05-18 22:02:45 -0400" desc="Use assert_eq! rather than assert! where possible">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod std;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    debug!(s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    debug!(a.clone());
+    debug!(b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="33" date="2013-05-20 17:07:24 -0700" desc="test: Update tests to use the new syntax.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s += ~"world";
+    debug!(s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    debug!(a.clone());
+    debug!(b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+</revisions>

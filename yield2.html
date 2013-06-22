@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="archaea.css">
+<script type="text/javascript" src="jquery-2.0.2.min.js"></script>
+<script type="text/javascript" src="archaea.js"></script>
+<button id="back"></button>
+<button id="forward"></button>
+<button id="action" class="start"></button>
+<button id="reset"></button>
+<span id="status"></span>
+<revisions count="18">
+<code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
+// -*- rust -*-
+
+fn main() {
+  let int i = 0;
+  while (i &lt; 100) {
+    i = i + 1;
+    log i;
+    yield;
+  }
+}
+</code>
+<code num="1" date="2011-03-25 12:19:20 -0700" desc="Switch xfail system to use comments embedded in source files.">
+// xfail-stage0
+// -*- rust -*-
+
+fn main() {
+  let int i = 0;
+  while (i &lt; 100) {
+    i = i + 1;
+    log i;
+    yield;
+  }
+}
+</code>
+<code num="2" date="2011-05-03 18:13:51 -0700" desc="Assume xfail-stage0 implies stage1 and stage2 in tests, for now.">
+// xfail-stage0
+// xfail-stage1
+// xfail-stage2
+// -*- rust -*-
+
+fn main() {
+  let int i = 0;
+  while (i &lt; 100) {
+    i = i + 1;
+    log i;
+    yield;
+  }
+}
+</code>
+<code num="3" date="2011-05-31 17:44:54 -0700" desc="This is the mega-ucontext commit. It replaces the task switching mechanism with a new one inspired by ucontext. It works under Linux, OS X and Windows, and is Valgrind clean on Linux and OS X (provided the runtime is built with gcc).">
+// xfail-stage0
+// -*- rust -*-
+
+use std;
+
+fn main() {
+  let int i = 0;
+  while (i &lt; 100) {
+    i = i + 1;
+    log_err i;
+    std::task::yield();
+  }
+}
+</code>
+<code num="4" date="2011-06-15 11:19:50 -0700" desc="Reformat source tree (minus a couple tests that are still grumpy).">
+// xfail-stage0
+// -*- rust -*-
+use std;
+
+fn main() {
+    let int i = 0;
+    while (i &lt; 100) { i = i + 1; log_err i; std::task::yield(); }
+}
+</code>
+<code num="5" date="2011-07-27 14:19:39 +0200" desc="Reformat for new syntax">
+// xfail-stage0
+// -*- rust -*-
+use std;
+
+fn main() {
+    let i: int = 0;
+    while i &lt; 100 { i = i + 1; log_err i; std::task::yield(); }
+}
+</code>
+<code num="6" date="2011-08-02 23:46:52 -0700" desc="Remove all xfail-stage0 directives">
+// -*- rust -*-
+use std;
+
+fn main() {
+    let i: int = 0;
+    while i &lt; 100 { i = i + 1; log_err i; std::task::yield(); }
+}
+</code>
+<code num="7" date="2011-08-17 11:44:35 -0700" desc="Using move-mode for spawn thunks to avoid race conditions.">
+// -*- rust -*-
+use std;
+
+fn main() {
+    let i: int = 0;
+    while i &lt; 100 { i = i + 1; log_err i; std::task::yield(); }
+}
+</code>
+<code num="8" date="2011-12-13 16:25:51 -0800" desc="Copy first batch of material from libstd to libcore.">
+// -*- rust -*-
+use std;
+
+fn main() {
+    let i: int = 0;
+    while i &lt; 100 { i = i + 1; log_err i; task::yield(); }
+}
+</code>
+<code num="9" date="2011-12-22 14:42:52 -0800" desc="Register snapshots and switch logging over to use of log_full or #error / #debug.">
+// -*- rust -*-
+use std;
+
+fn main() {
+    let i: int = 0;
+    while i &lt; 100 { i = i + 1; log_full(core::error, i); task::yield(); }
+}
+</code>
+<code num="10" date="2011-12-22 17:53:53 -0800" desc="Register new snapshots, purge log_err and log_full in favour of log(...).">
+// -*- rust -*-
+use std;
+
+fn main() {
+    let i: int = 0;
+    while i &lt; 100 { i = i + 1; log(error, i); task::yield(); }
+}
+</code>
+<code num="11" date="2012-03-22 08:39:41 -0700" desc="make --enforce-mut-vars always on, add mut annotations to remaining files">
+// -*- rust -*-
+use std;
+
+fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; log(error, i); task::yield(); }
+}
+</code>
+<code num="12" date="2012-09-11 17:46:20 -0700" desc="Convert 'use' to 'extern mod'. Remove old 'use' syntax">
+// -*- rust -*-
+extern mod std;
+
+fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; log(error, i); task::yield(); }
+}
+</code>
+<code num="13" date="2012-12-10 17:32:48 -0800" desc="Reliciense makefiles and testsuite. Yup.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+
+fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; log(error, i); task::yield(); }
+}
+</code>
+<code num="14" date="2012-12-13 13:05:22 -0800" desc="librustc: Make `use` statements crate-relative by default. r=brson">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; log(error, i); task::yield(); }
+}
+</code>
+<code num="15" date="2013-02-01 19:43:17 -0800" desc="check-fast fallout from removing export, r=burningtree">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; log(error, i); task::yield(); }
+}
+</code>
+<code num="16" date="2013-03-08 12:39:42 -0800" desc="Remove uses of log">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; error!(i); task::yield(); }
+}
+</code>
+<code num="17" date="2013-05-24 19:35:29 -0700" desc="librustc: Stop reexporting the standard modules from prelude.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; error!(i); task::yield(); }
+}
+</code>
+</revisions>
