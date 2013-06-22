@@ -7,6 +7,26 @@ code.current-frame {
     display: block;
 }
 
-button#play:before {
-    content: "play";
+button.start:before {
+    content: "start";
+}
+
+button.stop:before {
+    content: "stop"
+}
+
+button#action {
+    font-weight: bold;
+}
+
+button#back:before {
+    content: "back";
+}
+
+button#forward:before {
+    content: "forward";
+}
+
+button#reset:before {
+    content: "reset";
 }

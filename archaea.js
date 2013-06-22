@@ -2,30 +2,93 @@ function codeSelector(num) {
     return 'code[num="' + num + '"]' ;
 }
 
-var timeoutId = null;
-
 $(window).load(function() {
-    $(codeSelector(0)).addClass('current-frame');
+    var total = $('revisions').attr('count');
+    var timeoutId = null;
+    var mode = "start";
+    var currentFrame = 0;
+    var delayMs = 500;
 
-    $('#play').click(function() {
+    function setFrame(num) {
+        currentFrame = num;
+	$('code').removeClass('current-frame');
+	$(codeSelector(currentFrame)).addClass('current-frame');
+        $('#status').text(currentFrame + "/" + total);
+    }
 
-	clearTimeout(timeoutId);
+    function advance() {
+        if (currentFrame + 1 == total) {
+            return;
+        }
+        setFrame(currentFrame + 1);
+    }
 
-	var total = $('revisions').attr('count');
+    function retreat() {
+        if (currentFrame == 0) {
+            return;
+        }
+        setFrame(currentFrame - 1);
+    }
 
-	$(codeSelector(0)).addClass('current-frame');
+    function start() {
+        $('#action').removeClass('start');
+        $('#action').addClass('stop');
+        $('#back').attr('disabled', 'disabled');
+        $('#forward').attr('disabled', 'disabled');
+        $('#back').attr('disabled', 'disabled');
+        $('#reset').attr('disabled', 'disabled');
+        mode = "stop";
+    }
 
-	function showFrame(num, total) {
-	    $('code').removeClass('current-frame');
-	    $(codeSelector(num)).addClass('current-frame');
-	    
-	    if (num < total - 1) {
-		timeoutId = setTimeout(function() {
-		    showFrame(num + 1, total)
-		}, 500);
-	    }
+    function stop() {
+        $('#action').removeClass('stop');
+        $('#action').addClass('start');
+        $('#back').removeAttr('disabled');
+        $('#forward').removeAttr('disabled');
+        $('#reset').removeAttr('disabled');
+        mode = "start";
+    }
+
+    function reset() {
+        setFrame(0);
+    }
+
+    setFrame(0);
+
+    $('#action').click(function() {
+
+        if (mode == "start") {
+            start();
+        } else {
+            stop();
+	    clearTimeout(timeoutId);
+            return;
+        }
+
+	function showNextFrame() {
+            if (currentFrame + 1 == total) {
+                stop();
+                return;
+            }
+	    timeoutId = setTimeout(function() {
+                advance();
+                showNextFrame();
+	    }, delayMs);
 	}
 
-	showFrame(0, total);
+	showNextFrame();
     })
+
+    $('#reset').click(function() {
+        reset();
+    });
+
+    $('#back').click(function() {
+        retreat();
+    });
+
+    $('#forward').click(function() {
+        advance();
+    });
+
 });
