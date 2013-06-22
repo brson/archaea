@@ -5,7 +5,7 @@ import cgi
 source_file = sys.argv[1]
 
 proc = subprocess.Popen(['git', 'log',
-                         '--pretty=%H',
+                         '--pretty=%H @@ %ai @@ %s',
                          '--',
                          source_file],
                         stdout=subprocess.PIPE)
@@ -20,8 +20,11 @@ commits.reverse()
 sources = []
 
 for commit in commits:
+
+    sha, date, desc = commit.split(' @@ ')
+
     proc = subprocess.Popen(['git', 'show',
-                             commit + ":" + source_file],
+                             sha + ":" + source_file],
                             stdout=subprocess.PIPE)
 
     lines = ""
@@ -30,9 +33,7 @@ for commit in commits:
 
     lines = lines.strip()
 
-    sources += [lines]
-
-i = 0
+    sources += [(date, desc, lines)]
 
 print '<!DOCTYPE html>'
 print '<meta charset="utf-8">'
@@ -48,9 +49,11 @@ print '<span id="status"></span>'
 
 print '<revisions count="' + str(len(sources)) + '">'
 
+i = 0
+
 for source in sources:
-    print '<code num="' + str(i) + '">'
-    print cgi.escape(source)
+    print '<code num="' + str(i) + '" date="' + source[0] + '" desc="' + cgi.escape(source[1]) + '">'
+    print cgi.escape(source[2])
     print '</code>'
 
     i += 1

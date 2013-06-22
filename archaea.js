@@ -13,7 +13,14 @@ $(window).load(function() {
         currentFrame = num;
 	$('code').removeClass('current-frame');
 	$(codeSelector(currentFrame)).addClass('current-frame');
-        $('#status').text(currentFrame + "/" + total);
+
+        var progress = currentFrame + "/" + total;
+        var date = $(codeSelector(currentFrame)).attr('date');
+        var desc = $(codeSelector(currentFrame)).attr('desc');
+
+        var status = progress + " " + date + " " + desc;
+        
+        $('#status').text(status);
     }
 
     function advance() {
