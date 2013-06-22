@@ -1,0 +1,12 @@
+code {
+    white-space: pre;
+    display: none;
+}
+
+code.current-frame {
+    display: block;
+}
+
+button#play:before {
+    content: "play";
+}
