@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="13">
+<revisions count="22">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -203,6 +203,234 @@ pub fn main() {
     let x = X {foo: ~"hello", bar: ~"world"};
     debug!(x.foo.clone());
     debug!(x.bar.clone());
+}
+</code>
+<code num="13" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+
+// Issue #50.
+
+struct X { foo: ~str, bar: ~str }
+
+pub fn main() {
+    let x = X {foo: ~"hello", bar: ~"world"};
+    info!(x.foo.clone());
+    info!(x.bar.clone());
+}
+</code>
+<code num="14" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+
+// Issue #50.
+
+struct X { foo: ~str, bar: ~str }
+
+pub fn main() {
+    let x = X {foo: ~"hello", bar: ~"world"};
+    info2!("{}", x.foo.clone());
+    info2!("{}", x.bar.clone());
+}
+</code>
+<code num="15" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+
+// Issue #50.
+
+struct X { foo: ~str, bar: ~str }
+
+pub fn main() {
+    let x = X {foo: ~"hello", bar: ~"world"};
+    info!("{}", x.foo.clone());
+    info!("{}", x.bar.clone());
+}
+</code>
+<code num="16" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+// Issue #50.
+
+struct X { foo: ~str, bar: ~str }
+
+pub fn main() {
+    let x = X {foo: ~"hello", bar: ~"world"};
+    info!("{}", x.foo.clone());
+    info!("{}", x.bar.clone());
+}
+</code>
+<code num="17" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+// Issue #50.
+
+struct X { foo: ~str, bar: ~str }
+
+pub fn main() {
+    let x = X {foo: ~"hello", bar: ~"world"};
+    println!("{}", x.foo.clone());
+    println!("{}", x.bar.clone());
+}
+</code>
+<code num="18" date="2014-04-15 18:17:48 -0700" desc="Replace all ~"" with "".to_owned()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+// Issue #50.
+
+struct X { foo: ~str, bar: ~str }
+
+pub fn main() {
+    let x = X {foo: "hello".to_owned(), bar: "world".to_owned()};
+    println!("{}", x.foo.clone());
+    println!("{}", x.bar.clone());
+}
+</code>
+<code num="19" date="2014-05-12 17:56:43 -0700" desc="test: Remove all uses of `~str` from the test suite.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+// Issue #50.
+
+struct X { foo: StrBuf, bar: StrBuf }
+
+pub fn main() {
+    let x = X {foo: "hello".to_strbuf(), bar: "world".to_strbuf()};
+    println!("{}", x.foo.clone());
+    println!("{}", x.bar.clone());
+}
+</code>
+<code num="20" date="2014-05-22 16:57:53 -0700" desc="core: rename strbuf::StrBuf to string::String">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+// Issue #50.
+
+struct X { foo: String, bar: String }
+
+pub fn main() {
+    let x = X {foo: "hello".to_strbuf(), bar: "world".to_strbuf()};
+    println!("{}", x.foo.clone());
+    println!("{}", x.bar.clone());
+}
+</code>
+<code num="21" date="2014-05-25 03:17:19 -0700" desc="std: Rename strbuf operations to string">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+// Issue #50.
+
+struct X { foo: String, bar: String }
+
+pub fn main() {
+    let x = X {foo: "hello".to_string(), bar: "world".to_string()};
+    println!("{}", x.foo.clone());
+    println!("{}", x.bar.clone());
 }
 </code>
 </revisions>

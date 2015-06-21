@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="10">
+<revisions count="17">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -80,5 +80,106 @@ fn main() { if 1 == 1 { return; } debug!("Paul is dead"); }
 
 // -*- rust -*-
 pub fn main() { if 1 == 1 { return; } debug!("Paul is dead"); }
+</code>
+<code num="10" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+pub fn main() { if 1 == 1 { return; } info!("Paul is dead"); }
+</code>
+<code num="11" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+pub fn main() { if 1 == 1 { return; } info2!("Paul is dead"); }
+</code>
+<code num="12" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+pub fn main() { if 1 == 1 { return; } info!("Paul is dead"); }
+</code>
+<code num="13" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() { if 1 == 1 { return; } info!("Paul is dead"); }
+</code>
+<code num="14" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() { if 1 == 1 { return; } println!("Paul is dead"); }
+</code>
+<code num="15" date="2014-03-12 23:34:31 -0700" desc="Test fixes and rebase conflicts">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test #12920
+
+pub fn main() { if 1 == 1 { return; } println!("Paul is dead"); }
+</code>
+<code num="16" date="2014-09-21 01:45:58 +0200" desc="Unignore a few tests">
+
 </code>
 </revisions>

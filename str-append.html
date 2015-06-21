@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="34">
+<revisions count="44">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -1000,5 +1000,329 @@ fn test2() {
 }
 
 pub fn main() { test1(); test2(); }
+</code>
+<code num="34" date="2013-06-11 19:13:42 -0700" desc="librustc: Remove the broken overloaded assign-ops from the language.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    debug!(s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    debug!(a.clone());
+    debug!(b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="35" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info!(s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + ~"ABC" + ff;
+    let b: ~str = ~"ABC" + ff + ~"ABC";
+    info!(a.clone());
+    info!(b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="36" date="2013-08-17 08:37:42 -0700" desc="Fix warnings it tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info!(s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    info!(a.clone());
+    info!(b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="37" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info2!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    info2!("{}", a.clone());
+    info2!("{}", b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="38" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+// -*- rust -*-
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    info!("{}", a.clone());
+    info!("{}", b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="39" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+extern mod extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    info!("{}", a.clone());
+    info!("{}", b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="40" date="2014-02-14 10:10:06 -0800" desc="extern mod =&gt; extern crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+extern crate extra;
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    info!("{}", a.clone());
+    info!("{}", b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="41" date="2014-03-14 11:16:10 -0700" desc="extra: Put the nail in the coffin, delete libextra">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    info!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    info!("{}", a.clone());
+    info!("{}", b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="42" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn test1() {
+    let mut s: ~str = ~"hello";
+    s.push_str("world");
+    println!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+
+fn test2() {
+    // This tests for issue #163
+
+    let ff: ~str = ~"abc";
+    let a: ~str = ff + "ABC" + ff;
+    let b: ~str = ~"ABC" + ff + "ABC";
+    println!("{}", a.clone());
+    println!("{}", b.clone());
+    assert_eq!(a, ~"abcABCabc");
+    assert_eq!(b, ~"ABCabcABC");
+}
+
+pub fn main() { test1(); test2(); }
+</code>
+<code num="43" date="2014-04-02 16:54:22 -0700" desc="libstd: Implement `StrBuf`, a new string buffer type like `Vec`, and port all code over to use it.">
+
 </code>
 </revisions>

@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="22">
+<revisions count="30">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 iter pairs() -&gt; tup(int,int) {
   let int i = 0;
@@ -560,6 +560,270 @@ pub fn main() {
         i += 1;
         j = _1;
     };
+    assert_eq!(j, 45);
+}
+</code>
+<code num="22" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        info!(_0);
+        info!(_1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    };
+    assert_eq!(j, 45);
+}
+</code>
+<code num="23" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        info2!("{}", _0);
+        info2!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    };
+    assert_eq!(j, 45);
+}
+</code>
+<code num="24" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: &amp;fn((int, int))) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        info!("{}", _0);
+        info!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    };
+    assert_eq!(j, 45);
+}
+</code>
+<code num="25" date="2013-11-19 16:34:19 -0800" desc="test: Remove most uses of `&amp;fn()` from the tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: |(int, int)|) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    do pairs() |p| {
+        let (_0, _1) = p;
+        info!("{}", _0);
+        info!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    };
+    assert_eq!(j, 45);
+}
+</code>
+<code num="26" date="2013-11-21 17:23:21 -0800" desc="test: Remove non-procedure uses of `do` from compiletest, libstd tests, compile-fail tests, run-fail tests, and run-pass tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: |(int, int)|) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    pairs(|p| {
+        let (_0, _1) = p;
+        info!("{}", _0);
+        info!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    });
+    assert_eq!(j, 45);
+}
+</code>
+<code num="27" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs(it: |(int, int)|) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    pairs(|p| {
+        let (_0, _1) = p;
+        println!("{}", _0);
+        println!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    });
+    assert_eq!(j, 45);
+}
+</code>
+<code num="28" date="2015-01-02 17:32:54 -0500" desc="fix rpass tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs&lt;F&gt;(mut it: F) where F: FnMut((int, int)) {
+    let mut i: int = 0;
+    let mut j: int = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: int = 10;
+    let mut j: int = 0;
+    pairs(|p| {
+        let (_0, _1) = p;
+        println!("{}", _0);
+        println!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    });
+    assert_eq!(j, 45);
+}
+</code>
+<code num="29" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn pairs&lt;F&gt;(mut it: F) where F: FnMut((isize, isize)) {
+    let mut i: isize = 0;
+    let mut j: isize = 0;
+    while i &lt; 10 { it((i, j)); i += 1; j += i; }
+}
+
+pub fn main() {
+    let mut i: isize = 10;
+    let mut j: isize = 0;
+    pairs(|p| {
+        let (_0, _1) = p;
+        println!("{}", _0);
+        println!("{}", _1);
+        assert_eq!(_0 + 10, i);
+        i += 1;
+        j = _1;
+    });
     assert_eq!(j, 45);
 }
 </code>

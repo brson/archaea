@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="20">
+<revisions count="33">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -438,6 +438,420 @@ pub fn main() {
     f(b);
     assert_eq!(a.z, 12);
     assert_eq!(b.z, 13);
+}
+</code>
+<code num="20" date="2013-06-27 17:41:35 -0700" desc="librustc: Add a lint mode for unnecessary `copy` and remove a bunch of them.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+struct Point {x: int, y: int, z: int}
+
+fn f(p: @mut Point) { assert!((p.z == 12)); p.z = 13; assert!((p.z == 13)); }
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: @mut Point = @mut a;
+    assert_eq!(b.z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.z, 13);
+}
+</code>
+<code num="21" date="2013-10-23 04:49:18 -0400" desc="register snapshots">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: @mut Point) { assert!((p.z == 12)); p.z = 13; assert!((p.z == 13)); }
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: @mut Point = @mut a;
+    assert_eq!(b.z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.z, 13);
+}
+</code>
+<code num="22" date="2013-12-31 15:46:27 -0800" desc="test: De-`@mut` the test suite">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+use std::cell::Cell;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: @Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: @Cell&lt;Point&gt; = @Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="23" date="2014-04-14 21:00:31 +0530" desc="Use new attribute syntax in python files in src/etc too (#13478)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+use std::cell::Cell;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: @Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: @Cell&lt;Point&gt; = @Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="24" date="2014-06-11 19:33:52 -0700" desc="rustc: Obsolete the `@` syntax entirely">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+use std::cell::Cell;
+use std::gc::{Gc, GC};
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: Gc&lt;Cell&lt;Point&gt;&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: Gc&lt;Cell&lt;Point&gt;&gt; = box(GC) Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="25" date="2014-07-26 21:05:03 -0700" desc="Remove managed_box gate from tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::cell::Cell;
+use std::gc::{Gc, GC};
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: Gc&lt;Cell&lt;Point&gt;&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: Gc&lt;Cell&lt;Point&gt;&gt; = box(GC) Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="26" date="2014-10-02 08:10:09 +0300" desc="tests: remove uses of Gc.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::cell::Cell;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="27" date="2014-12-05 17:01:33 -0800" desc="librustc: Make `Copy` opt-in.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::cell::Cell;
+
+struct Point {x: int, y: int, z: int}
+
+impl Copy for Point {}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="28" date="2015-01-24 16:36:30 -0500" desc="cleanup: s/impl Copy/#[derive(Copy)]/g">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::cell::Cell;
+
+#[derive(Copy)]
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="29" date="2015-03-22 13:13:15 -0700" desc="rustdoc: Replace no-pretty-expanded with pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+// pretty-expanded FIXME #23616
+
+use std::cell::Cell;
+
+#[derive(Copy)]
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="30" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+// pretty-expanded FIXME #23616
+
+use std::cell::Cell;
+
+#[derive(Copy)]
+struct Point {x: isize, y: isize, z: isize}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="31" date="2015-03-30 09:38:27 -0400" desc="Fallout in tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+// pretty-expanded FIXME #23616
+
+use std::cell::Cell;
+
+#[derive(Copy, Clone)]
+struct Point {x: isize, y: isize, z: isize}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
+}
+</code>
+<code num="32" date="2015-04-08 16:27:10 -0700" desc="Remove pretty-expanded from failing tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+use std::cell::Cell;
+
+#[derive(Copy, Clone)]
+struct Point {x: isize, y: isize, z: isize}
+
+fn f(p: &amp;Cell&lt;Point&gt;) {
+    assert!((p.get().z == 12));
+    p.set(Point {x: 10, y: 11, z: 13});
+    assert!((p.get().z == 13));
+}
+
+pub fn main() {
+    let a: Point = Point {x: 10, y: 11, z: 12};
+    let b: &amp;Cell&lt;Point&gt; = &amp;Cell::new(a);
+    assert_eq!(b.get().z, 12);
+    f(b);
+    assert_eq!(a.z, 12);
+    assert_eq!(b.get().z, 13);
 }
 </code>
 </revisions>

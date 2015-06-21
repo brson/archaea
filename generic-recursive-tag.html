@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="12">
+<revisions count="23">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 type list[T] = tag(cons(@T, @list[T]), nil());
 
@@ -131,6 +131,265 @@ enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
 pub fn main() {
     let a: list&lt;int&gt; =
         cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="12" date="2013-08-17 08:37:42 -0700" desc="Fix warnings it tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="13" date="2013-10-23 04:49:18 -0400" desc="register snapshots">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="14" date="2014-04-14 21:00:31 +0530" desc="Use new attribute syntax in python files in src/etc too (#13478)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="15" date="2014-05-16 10:15:33 -0700" desc="rustc: Move the AST from @T to Gc&lt;T&gt;">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+#![feature(managed_boxes)]
+
+enum list&lt;T&gt; { cons(@T, @list&lt;T&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(@10, @cons::&lt;int&gt;(@12, @cons::&lt;int&gt;(@13, @nil::&lt;int&gt;)));
+}
+</code>
+<code num="16" date="2014-06-11 19:33:52 -0700" desc="rustc: Obsolete the `@` syntax entirely">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+#![feature(managed_boxes)]
+
+use std::gc::{Gc, GC};
+
+enum list&lt;T&gt; { cons(Gc&lt;T&gt;, Gc&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(box(GC) 10,
+        box(GC) cons::&lt;int&gt;(box(GC) 12,
+        box(GC) cons::&lt;int&gt;(box(GC) 13,
+        box(GC) nil::&lt;int&gt;)));
+}
+</code>
+<code num="17" date="2014-07-26 21:05:03 -0700" desc="Remove managed_box gate from tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+
+use std::gc::{Gc, GC};
+
+enum list&lt;T&gt; { cons(Gc&lt;T&gt;, Gc&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(box(GC) 10,
+        box(GC) cons::&lt;int&gt;(box(GC) 12,
+        box(GC) cons::&lt;int&gt;(box(GC) 13,
+        box(GC) nil::&lt;int&gt;)));
+}
+</code>
+<code num="18" date="2014-10-02 08:10:09 +0300" desc="tests: remove uses of Gc.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+
+enum list&lt;T&gt; { cons(Box&lt;T&gt;, Box&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        cons::&lt;int&gt;(box 10,
+        box cons::&lt;int&gt;(box 12,
+        box cons::&lt;int&gt;(box 13,
+        box nil::&lt;int&gt;)));
+}
+</code>
+<code num="19" date="2014-11-06 00:05:53 -0800" desc="Switch to purely namespaced enums">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+
+enum list&lt;T&gt; { cons(Box&lt;T&gt;, Box&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        list::cons::&lt;int&gt;(box 10,
+        box list::cons::&lt;int&gt;(box 12,
+        box list::cons::&lt;int&gt;(box 13,
+        box list::nil::&lt;int&gt;)));
+}
+</code>
+<code num="20" date="2015-01-08 02:25:56 +0100" desc="fallout: run-pass tests that use box.  (many could be ported to `Box::new` instead in the future.)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+#![allow(unknown_features)]
+#![feature(box_syntax)]
+
+enum list&lt;T&gt; { cons(Box&lt;T&gt;, Box&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;int&gt; =
+        list::cons::&lt;int&gt;(box 10,
+        box list::cons::&lt;int&gt;(box 12,
+        box list::cons::&lt;int&gt;(box 13,
+        box list::nil::&lt;int&gt;)));
+}
+</code>
+<code num="21" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME(#14193)
+
+#![allow(unknown_features)]
+#![feature(box_syntax)]
+
+enum list&lt;T&gt; { cons(Box&lt;T&gt;, Box&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;isize&gt; =
+        list::cons::&lt;isize&gt;(box 10,
+        box list::cons::&lt;isize&gt;(box 12,
+        box list::cons::&lt;isize&gt;(box 13,
+        box list::nil::&lt;isize&gt;)));
+}
+</code>
+<code num="22" date="2015-05-02 15:06:00 +0200" desc="Remove several FIXMEs">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![allow(unknown_features)]
+#![feature(box_syntax)]
+
+enum list&lt;T&gt; { cons(Box&lt;T&gt;, Box&lt;list&lt;T&gt;&gt;), nil, }
+
+pub fn main() {
+    let _a: list&lt;isize&gt; =
+        list::cons::&lt;isize&gt;(box 10,
+        box list::cons::&lt;isize&gt;(box 12,
+        box list::cons::&lt;isize&gt;(box 13,
+        box list::nil::&lt;isize&gt;)));
 }
 </code>
 </revisions>

@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="11">
+<revisions count="17">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 export foo;
 
@@ -116,5 +116,95 @@ fn main() { }
 enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), nil }
 
 pub fn main() { }
+</code>
+<code num="11" date="2013-10-23 04:49:18 -0400" desc="register snapshots">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), nil }
+
+pub fn main() { }
+</code>
+<code num="12" date="2014-04-14 21:00:31 +0530" desc="Use new attribute syntax in python files in src/etc too (#13478)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+enum list_cell&lt;T&gt; { cons(@list_cell&lt;T&gt;), nil }
+
+pub fn main() { }
+</code>
+<code num="13" date="2014-06-11 19:33:52 -0700" desc="rustc: Obsolete the `@` syntax entirely">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+use std::gc::Gc;
+
+enum list_cell&lt;T&gt; { cons(Gc&lt;list_cell&lt;T&gt;&gt;), nil }
+
+pub fn main() { }
+</code>
+<code num="14" date="2014-07-26 21:05:03 -0700" desc="Remove managed_box gate from tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::gc::Gc;
+
+enum list_cell&lt;T&gt; { cons(Gc&lt;list_cell&lt;T&gt;&gt;), nil }
+
+pub fn main() { }
+</code>
+<code num="15" date="2014-10-02 08:10:09 +0300" desc="tests: remove uses of Gc.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+enum list_cell&lt;T&gt; { cons(Box&lt;list_cell&lt;T&gt;&gt;), nil }
+
+pub fn main() { }
+</code>
+<code num="16" date="2015-02-12 10:29:52 -0500" desc="Fallout: tests. As tests frequently elide things, lots of changes here.  Some of this may have been poorly rebased, though I tried to be careful and preserve the spirit of the test.">
+
 </code>
 </revisions>

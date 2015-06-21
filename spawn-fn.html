@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="33">
+<revisions count="51">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -678,6 +678,525 @@ pub fn main() {
     task::spawn(|| x(~"hello from third spawned fn", 67) );
     let mut i: int = 30;
     while i &gt; 0 { i = i - 1; debug!("parent sleeping"); task::yield(); }
+}
+</code>
+<code num="33" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    info!(s);
+    info!(n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; info!("parent sleeping"); task::yield(); }
+}
+</code>
+<code num="34" date="2013-08-16 12:49:40 -0700" desc="Reserve 'yield' keyword">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    info!(s);
+    info!(n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; info!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="35" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    info2!("{:?}", s);
+    info2!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; info2!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="36" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    info!("{:?}", s);
+    info!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; info!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="37" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    info!("{:?}", s);
+    info!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(|| x(~"hello from first spawned fn", 65) );
+    task::spawn(|| x(~"hello from second spawned fn", 66) );
+    task::spawn(|| x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; info!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="38" date="2013-11-21 23:36:52 -0800" desc="librustc: Make `||` lambdas not infer to `proc`s">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    info!("{:?}", s);
+    info!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x(~"hello from first spawned fn", 65) );
+    task::spawn(proc() x(~"hello from second spawned fn", 66) );
+    task::spawn(proc() x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; info!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="39" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    println!("{:?}", s);
+    println!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x(~"hello from first spawned fn", 65) );
+    task::spawn(proc() x(~"hello from second spawned fn", 66) );
+    task::spawn(proc() x(~"hello from third spawned fn", 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; println!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="40" date="2014-04-15 18:17:48 -0700" desc="Replace all ~"" with "".to_owned()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: ~str, n: int) {
+    println!("{:?}", s);
+    println!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x("hello from first spawned fn".to_owned(), 65) );
+    task::spawn(proc() x("hello from second spawned fn".to_owned(), 66) );
+    task::spawn(proc() x("hello from third spawned fn".to_owned(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 { i = i - 1; println!("parent sleeping"); task::deschedule(); }
+}
+</code>
+<code num="41" date="2014-05-12 17:56:43 -0700" desc="test: Remove all uses of `~str` from the test suite.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: StrBuf, n: int) {
+    println!("{:?}", s);
+    println!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x("hello from first spawned fn".to_strbuf(), 65) );
+    task::spawn(proc() x("hello from second spawned fn".to_strbuf(), 66) );
+    task::spawn(proc() x("hello from third spawned fn".to_strbuf(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        task::deschedule();
+    }
+}
+</code>
+<code num="42" date="2014-05-22 16:57:53 -0700" desc="core: rename strbuf::StrBuf to string::String">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: String, n: int) {
+    println!("{:?}", s);
+    println!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x("hello from first spawned fn".to_strbuf(), 65) );
+    task::spawn(proc() x("hello from second spawned fn".to_strbuf(), 66) );
+    task::spawn(proc() x("hello from third spawned fn".to_strbuf(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        task::deschedule();
+    }
+}
+</code>
+<code num="43" date="2014-05-25 03:17:19 -0700" desc="std: Rename strbuf operations to string">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: String, n: int) {
+    println!("{:?}", s);
+    println!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x("hello from first spawned fn".to_string(), 65) );
+    task::spawn(proc() x("hello from second spawned fn".to_string(), 66) );
+    task::spawn(proc() x("hello from third spawned fn".to_string(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        task::deschedule();
+    }
+}
+</code>
+<code num="44" date="2014-05-22 11:28:01 -0700" desc="Move std::{reflect,repr,Poly} to a libdebug crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+use std::task;
+
+fn x(s: String, n: int) {
+    println!("{:?}", s);
+    println!("{:?}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x("hello from first spawned fn".to_string(), 65) );
+    task::spawn(proc() x("hello from second spawned fn".to_string(), 66) );
+    task::spawn(proc() x("hello from third spawned fn".to_string(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        task::deschedule();
+    }
+}
+</code>
+<code num="45" date="2014-10-14 21:07:11 -0400" desc="Remove libdebug and update tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: String, n: int) {
+    println!("{}", s);
+    println!("{}", n);
+}
+
+pub fn main() {
+    task::spawn(proc() x("hello from first spawned fn".to_string(), 65) );
+    task::spawn(proc() x("hello from second spawned fn".to_string(), 66) );
+    task::spawn(proc() x("hello from third spawned fn".to_string(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        task::deschedule();
+    }
+}
+</code>
+<code num="46" date="2014-11-26 08:12:18 -0500" desc="Mostly rote conversion of `proc()` to `move||` (and occasionally `Thunk::new`)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+fn x(s: String, n: int) {
+    println!("{}", s);
+    println!("{}", n);
+}
+
+pub fn main() {
+    task::spawn(move|| x("hello from first spawned fn".to_string(), 65) );
+    task::spawn(move|| x("hello from second spawned fn".to_string(), 66) );
+    task::spawn(move|| x("hello from third spawned fn".to_string(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        task::deschedule();
+    }
+}
+</code>
+<code num="47" date="2015-01-01 23:53:35 -0800" desc="Remove deprecated functionality">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+fn x(s: String, n: int) {
+    println!("{}", s);
+    println!("{}", n);
+}
+
+pub fn main() {
+    let _t = Thread::spawn(|| x("hello from first spawned fn".to_string(), 65) );
+    let _t = Thread::spawn(|| x("hello from second spawned fn".to_string(), 66) );
+    let _t = Thread::spawn(|| x("hello from third spawned fn".to_string(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        Thread::yield_now();
+    }
+}
+</code>
+<code num="48" date="2015-03-05 18:33:58 -0800" desc="Require feature attributes, and add them where necessary">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(std_misc)]
+
+use std::thread::Thread;
+
+fn x(s: String, n: int) {
+    println!("{}", s);
+    println!("{}", n);
+}
+
+pub fn main() {
+    let _t = Thread::spawn(|| x("hello from first spawned fn".to_string(), 65) );
+    let _t = Thread::spawn(|| x("hello from second spawned fn".to_string(), 66) );
+    let _t = Thread::spawn(|| x("hello from third spawned fn".to_string(), 67) );
+    let mut i: int = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        Thread::yield_now();
+    }
+}
+</code>
+<code num="49" date="2015-03-26 22:11:50 -0700" desc="alloc: Don't run some Arc doc tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread;
+
+fn x(s: String, n: isize) {
+    println!("{}", s);
+    println!("{}", n);
+}
+
+pub fn main() {
+    let _t = thread::scoped(|| x("hello from first spawned fn".to_string(), 65) );
+    let _t = thread::scoped(|| x("hello from second spawned fn".to_string(), 66) );
+    let _t = thread::scoped(|| x("hello from third spawned fn".to_string(), 67) );
+    let mut i = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        thread::yield_now();
+    }
+}
+</code>
+<code num="50" date="2015-04-13 15:15:32 -0700" desc="Fallout: move from scoped to spawn">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread;
+
+fn x(s: String, n: isize) {
+    println!("{}", s);
+    println!("{}", n);
+}
+
+pub fn main() {
+    let t1 = thread::spawn(|| x("hello from first spawned fn".to_string(), 65) );
+    let t2 = thread::spawn(|| x("hello from second spawned fn".to_string(), 66) );
+    let t3 = thread::spawn(|| x("hello from third spawned fn".to_string(), 67) );
+    let mut i = 30;
+    while i &gt; 0 {
+        i = i - 1;
+        println!("parent sleeping");
+        thread::yield_now();
+    }
+    t1.join();
+    t2.join();
+    t3.join();
 }
 </code>
 </revisions>

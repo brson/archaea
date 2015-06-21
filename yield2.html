@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="18">
+<revisions count="26">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -234,6 +234,153 @@ use std::task;
 pub fn main() {
     let mut i: int = 0;
     while i &lt; 100 { i = i + 1; error!(i); task::yield(); }
+}
+</code>
+<code num="18" date="2013-08-16 12:49:40 -0700" desc="Reserve 'yield' keyword">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; error!(i); task::deschedule(); }
+}
+</code>
+<code num="19" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; error2!("{}", i); task::deschedule(); }
+}
+</code>
+<code num="20" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; error!("{}", i); task::deschedule(); }
+}
+</code>
+<code num="21" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; error!("{}", i); task::deschedule(); }
+}
+</code>
+<code num="22" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; println!("{}", i); task::deschedule(); }
+}
+</code>
+<code num="23" date="2015-01-01 23:53:35 -0800" desc="Remove deprecated functionality">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; println!("{}", i); Thread::yield_now(); }
+}
+</code>
+<code num="24" date="2015-02-17 15:10:25 -0800" desc="Fallout from stabilization">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread;
+
+pub fn main() {
+    let mut i: int = 0;
+    while i &lt; 100 { i = i + 1; println!("{}", i); thread::yield_now(); }
+}
+</code>
+<code num="25" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread;
+
+pub fn main() {
+    let mut i: isize = 0;
+    while i &lt; 100 { i = i + 1; println!("{}", i); thread::yield_now(); }
 }
 </code>
 </revisions>

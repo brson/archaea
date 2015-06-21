@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="15">
+<revisions count="20">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -221,6 +221,121 @@ fn f() -&gt; int { return 42; }
 pub fn main() {
     let g: extern fn() -&gt; int = f;
     let i: int = g();
+    assert_eq!(i, 42);
+}
+</code>
+<code num="15" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn f() -&gt; int { return 42; }
+
+pub fn main() {
+    let g: extern fn() -&gt; int = f;
+    let i: int = g();
+    assert_eq!(i, 42);
+}
+</code>
+<code num="16" date="2014-02-14 17:23:01 +1300" desc="All uses of `extern fn` should mean `extern "C" fn`. Closes #9309.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn f() -&gt; int { return 42; }
+
+pub fn main() {
+    let g: fn() -&gt; int = f;
+    let i: int = g();
+    assert_eq!(i, 42);
+}
+</code>
+<code num="17" date="2015-03-22 13:13:15 -0700" desc="rustdoc: Replace no-pretty-expanded with pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// pretty-expanded FIXME #23616
+
+fn f() -&gt; int { return 42; }
+
+pub fn main() {
+    let g: fn() -&gt; int = f;
+    let i: int = g();
+    assert_eq!(i, 42);
+}
+</code>
+<code num="18" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// pretty-expanded FIXME #23616
+
+fn f() -&gt; isize { return 42; }
+
+pub fn main() {
+    let g: fn() -&gt; isize = f;
+    let i: isize = g();
+    assert_eq!(i, 42);
+}
+</code>
+<code num="19" date="2015-04-08 16:27:10 -0700" desc="Remove pretty-expanded from failing tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+
+fn f() -&gt; isize { return 42; }
+
+pub fn main() {
+    let g: fn() -&gt; isize = f;
+    let i: isize = g();
     assert_eq!(i, 42);
 }
 </code>

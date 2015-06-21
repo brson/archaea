@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="14">
+<revisions count="23">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 fn main() {
   // This just tests whether the vec leaks its members.
@@ -154,5 +154,195 @@ pub fn main() {
     let pvec: ~[@Pair] =
         ~[@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6}];
 }
+</code>
+<code num="14" date="2013-08-17 08:37:42 -0700" desc="Fix warnings it tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: ~[@Pair] =
+        ~[@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6}];
+}
+</code>
+<code num="15" date="2013-10-23 04:49:18 -0400" desc="register snapshots">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: ~[@Pair] =
+        ~[@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6}];
+}
+</code>
+<code num="16" date="2014-03-05 14:02:44 -0800" desc="test: Automatically remove all `~[T]` from tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: Vec&lt;@Pair&gt; =
+        vec!(@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6});
+}
+</code>
+<code num="17" date="2014-03-05 15:28:08 -0800" desc="test: Make manual changes to deal with the fallout from removal of `~[T]` in test, libgetopts, compiletest, librustdoc, and libnum.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+use std::vec_ng::Vec;
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: Vec&lt;@Pair&gt; =
+        vec!(@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6});
+}
+</code>
+<code num="18" date="2014-03-21 22:37:41 +1100" desc="Remove outdated and unnecessary std::vec_ng::Vec imports.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: Vec&lt;@Pair&gt; =
+        vec!(@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6});
+}
+</code>
+<code num="19" date="2014-04-14 21:00:31 +0530" desc="Use new attribute syntax in python files in src/etc too (#13478)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: Vec&lt;@Pair&gt; =
+        vec!(@Pair{x: 1, y: 2}, @Pair{x: 3, y: 4}, @Pair{x: 5, y: 6});
+}
+</code>
+<code num="20" date="2014-06-11 19:33:52 -0700" desc="rustc: Obsolete the `@` syntax entirely">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+use std::gc::{GC, Gc};
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: Vec&lt;Gc&lt;Pair&gt;&gt; =
+        vec!(box(GC) Pair{x: 1, y: 2},
+             box(GC) Pair{x: 3, y: 4},
+             box(GC) Pair{x: 5, y: 6});
+}
+</code>
+<code num="21" date="2014-07-26 21:05:03 -0700" desc="Remove managed_box gate from tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::gc::{GC, Gc};
+
+struct Pair { x: int, y: int }
+
+pub fn main() {
+    // This just tests whether the vec leaks its members.
+
+    let _pvec: Vec&lt;Gc&lt;Pair&gt;&gt; =
+        vec!(box(GC) Pair{x: 1, y: 2},
+             box(GC) Pair{x: 3, y: 4},
+             box(GC) Pair{x: 5, y: 6});
+}
+</code>
+<code num="22" date="2014-10-02 08:10:09 +0300" desc="tests: remove uses of Gc.">
+
 </code>
 </revisions>

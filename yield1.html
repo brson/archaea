@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="37">
+<revisions count="49">
 <code num="0" date="2011-05-31 17:44:54 -0700" desc="This is the mega-ucontext commit. It replaces the task switching mechanism with a new one inspired by ucontext. It works under Linux, OS X and Windows, and is Valgrind clean on Linux and OS X (provided the runtime is built with gcc).">
 // xfail-stage0
 // -*- rust -*-
@@ -635,5 +635,292 @@ pub fn main() {
 }
 
 fn child() { error!("2"); }
+</code>
+<code num="37" date="2013-08-16 12:49:40 -0700" desc="Reserve 'yield' keyword">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut result = None;
+    let mut builder = task::task();
+    builder.future_result(|r| { result = Some(r); });
+    builder.spawn(child);
+    error!("1");
+    task::deschedule();
+    result.unwrap().recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="38" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut result = None;
+    let mut builder = task::task();
+    builder.future_result(|r| { result = Some(r); });
+    builder.spawn(child);
+    error2!("1");
+    task::deschedule();
+    result.unwrap().recv();
+}
+
+fn child() { error2!("2"); }
+</code>
+<code num="39" date="2013-10-18 10:38:46 +0200" desc="Made `std::task::TaskBuilder::future_result()` easier to use">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut builder = task::task();
+    let result = builder.future_result();
+    builder.spawn(child);
+    error2!("1");
+    task::deschedule();
+    result.recv();
+}
+
+fn child() { error2!("2"); }
+</code>
+<code num="40" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut builder = task::task();
+    let result = builder.future_result();
+    builder.spawn(child);
+    error!("1");
+    task::deschedule();
+    result.recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="41" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut builder = task::task();
+    let result = builder.future_result();
+    builder.spawn(child);
+    error!("1");
+    task::deschedule();
+    result.recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="42" date="2013-12-05 18:19:06 -0800" desc="Fallout of rewriting std::comm">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut builder = task::task();
+    let mut result = builder.future_result();
+    builder.spawn(child);
+    error!("1");
+    task::deschedule();
+    result.recv();
+}
+
+fn child() { error!("2"); }
+</code>
+<code num="43" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut builder = task::task();
+    let mut result = builder.future_result();
+    builder.spawn(child);
+    println!("1");
+    task::deschedule();
+    result.recv();
+}
+
+fn child() { println!("2"); }
+</code>
+<code num="44" date="2014-04-21 21:19:59 -0700" desc="Move task::task() to TaskBuilder::new()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+use std::task::TaskBuilder;
+
+pub fn main() {
+    let mut builder = TaskBuilder::new();
+    let mut result = builder.future_result();
+    builder.spawn(child);
+    println!("1");
+    task::deschedule();
+    result.recv();
+}
+
+fn child() { println!("2"); }
+</code>
+<code num="45" date="2014-06-16 16:17:59 -0700" desc="Fallout from TaskBuilder changes">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut result = task::try_future(child);
+    println!("1");
+    task::deschedule();
+    result.unwrap();
+}
+
+fn child() { println!("2"); }
+</code>
+<code num="46" date="2014-12-14 00:05:32 -0800" desc="Revise std::thread API to join by default">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut result = Thread::spawn(child);
+    println!("1");
+    Thread::yield_now();
+    result.join();
+}
+
+fn child() { println!("2"); }
+</code>
+<code num="47" date="2015-01-05 21:59:45 -0800" desc="Fallout from stabilization">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut result = Thread::scoped(child);
+    println!("1");
+    Thread::yield_now();
+    result.join();
+}
+
+fn child() { println!("2"); }
+</code>
+<code num="48" date="2015-02-17 15:10:25 -0800" desc="Fallout from stabilization">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread;
+
+pub fn main() {
+    let mut result = thread::spawn(child);
+    println!("1");
+    thread::yield_now();
+    result.join();
+}
+
+fn child() { println!("2"); }
 </code>
 </revisions>

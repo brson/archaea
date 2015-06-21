@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="13">
+<revisions count="20">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -281,6 +281,175 @@ pub fn main() {
     assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
     assert_eq!(0x51 as char, 'Q');
     assert_eq!(true, 1 as bool);
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="13" date="2013-09-03 19:24:12 -0400" desc="stop treating char as an integer type">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// -*- rust -*-
+pub fn main() {
+    let i: int = 'Q' as int;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51u8 as char, 'Q');
+    assert_eq!(true, 1 as bool);
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="14" date="2013-09-04 17:05:31 -0400" desc="forbid cast as bool">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// -*- rust -*-
+pub fn main() {
+    let i: int = 'Q' as int;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51u8 as char, 'Q');
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="15" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let i: int = 'Q' as int;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51u8 as char, 'Q');
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="16" date="2015-03-03 10:42:26 +0200" desc="Remove integer suffixes where the types in compiled code are identical.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let i: int = 'Q' as int;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51 as char, 'Q');
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="17" date="2015-03-22 13:13:15 -0700" desc="rustdoc: Replace no-pretty-expanded with pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// pretty-expanded FIXME #23616
+
+pub fn main() {
+    let i: int = 'Q' as int;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51 as char, 'Q');
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="18" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// pretty-expanded FIXME #23616
+
+pub fn main() {
+    let i: isize = 'Q' as isize;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51 as char, 'Q');
+    assert_eq!(0 as u32, false as u32);
+}
+</code>
+<code num="19" date="2015-04-08 16:27:10 -0700" desc="Remove pretty-expanded from failing tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+pub fn main() {
+    let i: isize = 'Q' as isize;
+    assert_eq!(i, 0x51);
+    let u: u32 = i as u32;
+    assert_eq!(u, 0x51 as u32);
+    assert_eq!(u, 'Q' as u32);
+    assert_eq!(i as u8, 'Q' as u8);
+    assert_eq!(i as u8 as i8, 'Q' as u8 as i8);
+    assert_eq!(0x51 as char, 'Q');
     assert_eq!(0 as u32, false as u32);
 }
 </code>

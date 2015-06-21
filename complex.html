@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="16">
+<revisions count="29">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -549,6 +549,582 @@ pub fn main() {
     debug!("%?", x);
     debug!("hello, world");
     debug!("%?", 10);
+}
+</code>
+<code num="16" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(s: ~str) { }
+
+fn putint(i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    info!("%?", x);
+    info!("hello, world");
+    info!("%?", 10);
+}
+</code>
+<code num="17" date="2013-08-17 08:37:42 -0700" desc="Fix warnings it tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: ~str) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    info!("%?", x);
+    info!("hello, world");
+    info!("%?", 10);
+}
+</code>
+<code num="18" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: ~str) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    info2!("{}", x);
+    info2!("hello, world");
+    info2!("{}", 10);
+}
+</code>
+<code num="19" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: ~str) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    info!("{}", x);
+    info!("hello, world");
+    info!("{}", 10);
+}
+</code>
+<code num="20" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: ~str) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    info!("{}", x);
+    info!("hello, world");
+    info!("{}", 10);
+}
+</code>
+<code num="21" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: ~str) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr(~"hi"); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr(~"hello");
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
+}
+</code>
+<code num="22" date="2014-04-15 18:17:48 -0700" desc="Replace all ~"" with "".to_owned()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: ~str) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi".to_owned()); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello".to_owned());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
+}
+</code>
+<code num="23" date="2014-05-12 17:56:43 -0700" desc="test: Remove all uses of `~str` from the test suite.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: StrBuf) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi".to_strbuf()); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello".to_strbuf());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
+}
+</code>
+<code num="24" date="2014-05-22 16:57:53 -0700" desc="core: rename strbuf::StrBuf to string::String">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: String) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi".to_strbuf()); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello".to_strbuf());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
+}
+</code>
+<code num="25" date="2014-05-25 03:17:19 -0700" desc="std: Rename strbuf operations to string">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: String) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi".to_string()); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello".to_string());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
+}
+</code>
+<code num="26" date="2014-04-21 17:58:52 -0400" desc="librustc: Remove the fallback to `int` from typechecking.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: String) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi".to_string()); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello".to_string());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2i + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10i);
+}
+</code>
+<code num="27" date="2015-01-25 22:05:03 +0100" desc="Remove all `i` suffixes">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = int;
+
+fn nothing() { }
+
+fn putstr(_s: String) { }
+
+fn putint(_i: int) {
+    let mut i: int = 33;
+    while i &lt; 36 { putstr("hi".to_string()); i = i + 1; }
+}
+
+fn zerg(i: int) -&gt; int { return i; }
+
+fn foo(x: int) -&gt; int {
+    let mut y: t = x + 2;
+    putstr("hello".to_string());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: int = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
+}
+</code>
+<code num="28" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+type t = isize;
+
+fn nothing() { }
+
+fn putstr(_s: String) { }
+
+fn putint(_i: isize) {
+    let mut i: isize = 33;
+    while i &lt; 36 { putstr("hi".to_string()); i = i + 1; }
+}
+
+fn zerg(i: isize) -&gt; isize { return i; }
+
+fn foo(x: isize) -&gt; isize {
+    let mut y: t = x + 2;
+    putstr("hello".to_string());
+    while y &lt; 10 { putint(y); if y * 3 == 4 { y = y + 2; nothing(); } }
+    let mut z: t;
+    z = 0x55;
+    foo(z);
+    return 0;
+}
+
+pub fn main() {
+    let x: isize = 2 + 2;
+    println!("{}", x);
+    println!("hello, world");
+    println!("{}", 10);
 }
 </code>
 </revisions>

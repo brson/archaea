@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="27">
+<revisions count="49">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 fn main() {
   let char yen = '¥';         // 0xa5
@@ -1453,6 +1453,1346 @@ pub fn main() {
             debug!(ab);
             let bb: u8 = b[i];
             debug!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="27" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for a.bytes_iter().advance |ab| {
+            info!(i);
+            info!(ab);
+            let bb: u8 = b[i];
+            info!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="28" date="2013-07-27 23:38:38 +0200" desc="Added str::char_offset_iter() and str::rev_char_offset_iter() Renamed bytes_iter to byte_iter to match other iterators Refactored str Iterators to use DoubleEnded Iterators and typedefs instead of wrapper structs Reordered the Iterator section Whitespace fixup Moved clunky `each_split_within` function to the one place in the tree where it's actually needed Replaced all block doccomments in str with line doccomments">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for a.byte_iter().advance |ab| {
+            info!(i);
+            info!(ab);
+            let bb: u8 = b[i];
+            info!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="29" date="2013-08-01 03:16:42 -0400" desc="migrate many `for` loops to `foreach`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        foreach ab in a.byte_iter() {
+            info!(i);
+            info!(ab);
+            let bb: u8 = b[i];
+            info!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="30" date="2013-08-03 12:45:23 -0400" desc="remove obsolete `foreach` keyword">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.byte_iter() {
+            info!(i);
+            info!(ab);
+            let bb: u8 = b[i];
+            info!(bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="31" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.byte_iter() {
+            info2!("{}", i);
+            info2!("{}", ab);
+            let bb: u8 = b[i];
+            info2!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="32" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.byte_iter() {
+            info!("{}", i);
+            info!("{}", ab);
+            let bb: u8 = b[i];
+            info!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="33" date="2013-11-23 11:18:51 +0100" desc="Removed unneccessary `_iter` suffixes from various APIs">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.bytes() {
+            info!("{}", i);
+            info!("{}", ab);
+            let bb: u8 = b[i];
+            info!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="34" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b[i];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="35" date="2014-04-01 20:39:26 -0700" desc="Fix fallout of requiring uint indices">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = ~"འབྲུག་ཡུལ།";
+    let japan: ~str = ~"日本";
+    let uzbekistan: ~str = ~"Ўзбекистон";
+    let austria: ~str = ~"Österreich";
+
+    let bhutan_e: ~str =
+        ~"\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d";
+    let japan_e: ~str = ~"\u65e5\u672c";
+    let uzbekistan_e: ~str =
+        ~"\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d";
+    let austria_e: ~str = ~"\u00d6sterreich";
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="36" date="2014-04-15 18:17:48 -0700" desc="Replace all ~"" with "".to_owned()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: ~str = "འབྲུག་ཡུལ།".to_owned();
+    let japan: ~str = "日本".to_owned();
+    let uzbekistan: ~str = "Ўзбекистон".to_owned();
+    let austria: ~str = "Österreich".to_owned();
+
+    let bhutan_e: ~str =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_owned();
+    let japan_e: ~str = "\u65e5\u672c".to_owned();
+    let uzbekistan_e: ~str =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_owned();
+    let austria_e: ~str = "\u00d6sterreich".to_owned();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: ~str, b: ~str) {
+        let mut i: int = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="37" date="2014-05-12 17:56:43 -0700" desc="test: Remove all uses of `~str` from the test suite.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: StrBuf = "འབྲུག་ཡུལ།".to_strbuf();
+    let japan: StrBuf = "日本".to_strbuf();
+    let uzbekistan: StrBuf = "Ўзбекистон".to_strbuf();
+    let austria: StrBuf = "Österreich".to_strbuf();
+
+    let bhutan_e: StrBuf =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_strbuf();
+    let japan_e: StrBuf = "\u65e5\u672c".to_strbuf();
+    let uzbekistan_e: StrBuf =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_strbuf();
+    let austria_e: StrBuf = "\u00d6sterreich".to_strbuf();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: StrBuf, b: StrBuf) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_slice()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="38" date="2014-05-22 16:57:53 -0700" desc="core: rename strbuf::StrBuf to string::String">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_strbuf();
+    let japan: String = "日本".to_strbuf();
+    let uzbekistan: String = "Ўзбекистон".to_strbuf();
+    let austria: String = "Österreich".to_strbuf();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_strbuf();
+    let japan_e: String = "\u65e5\u672c".to_strbuf();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_strbuf();
+    let austria_e: String = "\u00d6sterreich".to_strbuf();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_slice()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="39" date="2014-05-25 03:17:19 -0700" desc="std: Rename strbuf operations to string">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_string();
+    let japan_e: String = "\u65e5\u672c".to_string();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_string();
+    let austria_e: String = "\u00d6sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_slice()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="40" date="2014-06-25 17:08:08 -0700" desc="work around 15189 in test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_string();
+    let japan_e: String = "\u65e5\u672c".to_string();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_string();
+    let austria_e: String = "\u00d6sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_slice()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="41" date="2014-06-25 19:41:16 -0700" desc="replaced ignore-pretty with no-pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_string();
+    let japan_e: String = "\u65e5\u672c".to_string();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_string();
+    let austria_e: String = "\u00d6sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_slice()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="42" date="2014-06-19 18:22:33 -0700" desc="rustc: Remove `&amp;str` indexing from the language.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_string();
+    let japan_e: String = "\u65e5\u672c".to_string();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_string();
+    let austria_e: String = "\u00d6sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="43" date="2014-07-21 15:57:14 -0700" desc="Add a ton of ignore-lexer-test">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+//
+// ignore-lexer-test FIXME #15679
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_string();
+    let japan_e: String = "\u65e5\u672c".to_string();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_string();
+    let austria_e: String = "\u00d6sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.as_slice().bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="44" date="2015-01-26 21:21:15 -0500" desc="cleanup: s/`v.slice*()`/`&amp;v[a..b]`/g + remove redundant  `as_slice()` calls">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+//
+// ignore-lexer-test FIXME #15679
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u03a0' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0d".to_string();
+    let japan_e: String = "\u65e5\u672c".to_string();
+    let uzbekistan_e: String =
+        "\u040e\u0437\u0431\u0435\u043a\u0438\u0441\u0442\u043e\u043d".to_string();
+    let austria_e: String = "\u00d6sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="45" date="2015-03-06 13:57:44 -0800" desc="syntax: Remove deprecated unicode escapes">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+//
+// ignore-lexer-test FIXME #15679
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as int, 0xa5);
+    assert_eq!(c_cedilla as int, 0xe7);
+    assert_eq!(thorn as int, 0xfe);
+    assert_eq!(y_diaeresis as int, 0xff);
+    assert_eq!(pi as int, 0x3a0);
+
+    assert_eq!(pi as int, '\u{3a0}' as int);
+    assert_eq!('\x0a' as int, '\n' as int);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u{f60}\u{f56}\u{fb2}\u{f74}\u{f42}\u{f0b}\u{f61}\u{f74}\u{f63}\u{f0d}".to_string();
+    let japan_e: String = "\u{65e5}\u{672c}".to_string();
+    let uzbekistan_e: String =
+        "\u{40e}\u{437}\u{431}\u{435}\u{43a}\u{438}\u{441}\u{442}\u{43e}\u{43d}".to_string();
+    let austria_e: String = "\u{d6}sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as int, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: int = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as uint];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="46" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+//
+// ignore-lexer-test FIXME #15679
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as isize, 0xa5);
+    assert_eq!(c_cedilla as isize, 0xe7);
+    assert_eq!(thorn as isize, 0xfe);
+    assert_eq!(y_diaeresis as isize, 0xff);
+    assert_eq!(pi as isize, 0x3a0);
+
+    assert_eq!(pi as isize, '\u{3a0}' as isize);
+    assert_eq!('\x0a' as isize, '\n' as isize);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u{f60}\u{f56}\u{fb2}\u{f74}\u{f42}\u{f0b}\u{f61}\u{f74}\u{f63}\u{f0d}".to_string();
+    let japan_e: String = "\u{65e5}\u{672c}".to_string();
+    let uzbekistan_e: String =
+        "\u{40e}\u{437}\u{431}\u{435}\u{43a}\u{438}\u{441}\u{442}\u{43e}\u{43d}".to_string();
+    let austria_e: String = "\u{d6}sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as isize, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: isize = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as usize];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="47" date="2015-04-21 12:02:12 +0200" desc="Model lexer: Fix remaining issues">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+//
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as isize, 0xa5);
+    assert_eq!(c_cedilla as isize, 0xe7);
+    assert_eq!(thorn as isize, 0xfe);
+    assert_eq!(y_diaeresis as isize, 0xff);
+    assert_eq!(pi as isize, 0x3a0);
+
+    assert_eq!(pi as isize, '\u{3a0}' as isize);
+    assert_eq!('\x0a' as isize, '\n' as isize);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u{f60}\u{f56}\u{fb2}\u{f74}\u{f42}\u{f0b}\u{f61}\u{f74}\u{f63}\u{f0d}".to_string();
+    let japan_e: String = "\u{65e5}\u{672c}".to_string();
+    let uzbekistan_e: String =
+        "\u{40e}\u{437}\u{431}\u{435}\u{43a}\u{438}\u{441}\u{442}\u{43e}\u{43d}".to_string();
+    let austria_e: String = "\u{d6}sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as isize, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: isize = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as usize];
+            println!("{}", bb);
+            assert_eq!(ab, bb);
+            i += 1;
+        }
+    }
+
+    check_str_eq(bhutan, bhutan_e);
+    check_str_eq(japan, japan_e);
+    check_str_eq(uzbekistan, uzbekistan_e);
+    check_str_eq(austria, austria_e);
+}
+</code>
+<code num="48" date="2015-05-02 15:06:00 +0200" desc="Remove several FIXMEs">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let yen: char = '¥'; // 0xa5
+    let c_cedilla: char = 'ç'; // 0xe7
+    let thorn: char = 'þ'; // 0xfe
+    let y_diaeresis: char = 'ÿ'; // 0xff
+    let pi: char = 'Π'; // 0x3a0
+
+    assert_eq!(yen as isize, 0xa5);
+    assert_eq!(c_cedilla as isize, 0xe7);
+    assert_eq!(thorn as isize, 0xfe);
+    assert_eq!(y_diaeresis as isize, 0xff);
+    assert_eq!(pi as isize, 0x3a0);
+
+    assert_eq!(pi as isize, '\u{3a0}' as isize);
+    assert_eq!('\x0a' as isize, '\n' as isize);
+
+    let bhutan: String = "འབྲུག་ཡུལ།".to_string();
+    let japan: String = "日本".to_string();
+    let uzbekistan: String = "Ўзбекистон".to_string();
+    let austria: String = "Österreich".to_string();
+
+    let bhutan_e: String =
+        "\u{f60}\u{f56}\u{fb2}\u{f74}\u{f42}\u{f0b}\u{f61}\u{f74}\u{f63}\u{f0d}".to_string();
+    let japan_e: String = "\u{65e5}\u{672c}".to_string();
+    let uzbekistan_e: String =
+        "\u{40e}\u{437}\u{431}\u{435}\u{43a}\u{438}\u{441}\u{442}\u{43e}\u{43d}".to_string();
+    let austria_e: String = "\u{d6}sterreich".to_string();
+
+    let oo: char = 'Ö';
+    assert_eq!(oo as isize, 0xd6);
+
+    fn check_str_eq(a: String, b: String) {
+        let mut i: isize = 0;
+        for ab in a.bytes() {
+            println!("{}", i);
+            println!("{}", ab);
+            let bb: u8 = b.as_bytes()[i as usize];
+            println!("{}", bb);
             assert_eq!(ab, bb);
             i += 1;
         }

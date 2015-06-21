@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="31">
+<revisions count="41">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 type box[T] = tup(@T);
 
@@ -488,5 +488,227 @@ pub fn main() {
     debug!("see what's in our box");
     assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
 }
+</code>
+<code num="31" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Copy&gt;(b: Box&lt;T&gt;) -&gt; T { return copy *b.c; }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    info!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="32" date="2013-07-02 12:47:32 -0700" desc="librustc: Remove all uses of "copy".">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    info!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="33" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    info2!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="34" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    info!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="35" date="2013-10-23 04:49:18 -0400" desc="register snapshots">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    info!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="36" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[feature(managed_boxes)];
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    println!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="37" date="2014-04-14 21:00:31 +0530" desc="Use new attribute syntax in python files in src/etc too (#13478)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+struct Box&lt;T&gt; {c: @T}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: @foo};
+    println!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="38" date="2014-06-11 19:33:52 -0700" desc="rustc: Obsolete the `@` syntax entirely">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(managed_boxes)]
+
+use std::gc::{Gc, GC};
+
+struct Box&lt;T&gt; {c: Gc&lt;T&gt;}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: box(GC) foo};
+    println!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="39" date="2014-07-26 21:05:03 -0700" desc="Remove managed_box gate from tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::gc::{Gc, GC};
+
+struct Box&lt;T&gt; {c: Gc&lt;T&gt;}
+
+fn unbox&lt;T:Clone&gt;(b: Box&lt;T&gt;) -&gt; T { return (*b.c).clone(); }
+
+pub fn main() {
+    let foo: int = 17;
+    let bfoo: Box&lt;int&gt; = Box {c: box(GC) foo};
+    println!("see what's in our box");
+    assert_eq!(unbox::&lt;int&gt;(bfoo), foo);
+}
+</code>
+<code num="40" date="2014-10-02 08:10:09 +0300" desc="tests: remove uses of Gc.">
+
 </code>
 </revisions>

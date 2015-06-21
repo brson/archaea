@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="34">
+<revisions count="50">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -587,5 +587,385 @@ pub fn main() {
 }
 
 fn child(x: int) { debug!(x); }
+</code>
+<code num="34" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    info!("main thread exiting");
+}
+
+fn child(x: int) { info!(x); }
+</code>
+<code num="35" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    info2!("main thread exiting");
+}
+
+fn child(x: int) { info2!("{}", x); }
+</code>
+<code num="36" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    info!("main thread exiting");
+}
+
+fn child(x: int) { info!("{}", x); }
+</code>
+<code num="37" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; || child(i)}); i = i - 1; }
+    info!("main thread exiting");
+}
+
+fn child(x: int) { info!("{}", x); }
+</code>
+<code num="38" date="2013-11-21 23:36:52 -0800" desc="librustc: Make `||` lambdas not infer to `proc`s">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; proc() child(i)}); i = i - 1; }
+    info!("main thread exiting");
+}
+
+fn child(x: int) { info!("{}", x); }
+</code>
+<code num="39" date="2014-02-14 10:10:06 -0800" desc="extern mod =&gt; extern crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate extra;
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; proc() child(i)}); i = i - 1; }
+    info!("main thread exiting");
+}
+
+fn child(x: int) { info!("{}", x); }
+</code>
+<code num="40" date="2014-03-14 11:16:10 -0700" desc="extra: Put the nail in the coffin, delete libextra">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; proc() child(i)}); i = i - 1; }
+    info!("main thread exiting");
+}
+
+fn child(x: int) { info!("{}", x); }
+</code>
+<code num="41" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; proc() child(i)}); i = i - 1; }
+    println!("main thread exiting");
+}
+
+fn child(x: int) { println!("{}", x); }
+</code>
+<code num="42" date="2014-11-26 08:12:18 -0500" desc="Mostly rote conversion of `proc()` to `move||` (and occasionally `Thunk::new`)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::task;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 { task::spawn({let i = i; move|| child(i)}); i = i - 1; }
+    println!("main thread exiting");
+}
+
+fn child(x: int) { println!("{}", x); }
+</code>
+<code num="43" date="2015-01-01 23:53:35 -0800" desc="Remove deprecated functionality">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        Thread::spawn({let i = i; move|| child(i)}).detach();
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: int) { println!("{}", x); }
+</code>
+<code num="44" date="2015-01-05 21:59:45 -0800" desc="Fallout from stabilization">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        Thread::spawn({let i = i; move|| child(i)});
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: int) { println!("{}", x); }
+</code>
+<code num="45" date="2015-01-07 09:22:06 -0800" desc="test: Move some tests to scoped instead of spawn">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        Thread::scoped({let i = i; move|| child(i)});
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: int) { println!("{}", x); }
+</code>
+<code num="46" date="2015-03-05 18:33:58 -0800" desc="Require feature attributes, and add them where necessary">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(std_misc)]
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        Thread::scoped({let i = i; move|| child(i)});
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: int) { println!("{}", x); }
+</code>
+<code num="47" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(std_misc)]
+
+use std::thread::Thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        Thread::scoped({let i = i; move|| child(i)});
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: isize) { println!("{}", x); }
+</code>
+<code num="48" date="2015-03-30 11:00:05 -0700" desc="std: Clean out #[deprecated] APIs">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(std_misc)]
+
+use std::thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        thread::scoped({let i = i; move|| child(i)});
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: isize) { println!("{}", x); }
+</code>
+<code num="49" date="2015-04-13 15:15:32 -0700" desc="Fallout: move from scoped to spawn">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(std_misc)]
+
+use std::thread;
+
+pub fn main() {
+    let mut i = 10;
+    while i &gt; 0 {
+        thread::spawn({let i = i; move|| child(i)}).join();
+        i = i - 1;
+    }
+    println!("main thread exiting");
+}
+
+fn child(x: isize) { println!("{}", x); }
 </code>
 </revisions>

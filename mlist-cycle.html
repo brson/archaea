@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="32">
+<revisions count="34">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -647,5 +647,36 @@ pub fn main() {
     rustrt::gc();
     let third: @cell = @mut cell{c: @nil()};
 }
+</code>
+<code num="32" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+extern mod std;
+use std::gc;
+use std::gc::rustrt;
+
+struct cell {c: @list}
+
+enum list { link(@mut cell), nil, }
+
+pub fn main() {
+    let first: @cell = @mut cell{c: @nil()};
+    let second: @cell = @mut cell{c: @link(first)};
+    first._0 = @link(second);
+    rustrt::gc();
+    let third: @cell = @mut cell{c: @nil()};
+}
+</code>
+<code num="33" date="2013-12-31 15:46:27 -0800" desc="test: De-`@mut` the test suite">
+
 </code>
 </revisions>

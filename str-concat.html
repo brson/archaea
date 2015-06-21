@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="19">
+<revisions count="30">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -293,6 +293,251 @@ pub fn main() {
     let s: ~str = a + b;
     debug!(s.clone());
     assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="19" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+pub fn main() {
+    let a: ~str = ~"hello";
+    let b: ~str = ~"world";
+    let s: ~str = a + b;
+    info!(s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="20" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+pub fn main() {
+    let a: ~str = ~"hello";
+    let b: ~str = ~"world";
+    let s: ~str = a + b;
+    info2!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="21" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+pub fn main() {
+    let a: ~str = ~"hello";
+    let b: ~str = ~"world";
+    let s: ~str = a + b;
+    info!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="22" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: ~str = ~"hello";
+    let b: ~str = ~"world";
+    let s: ~str = a + b;
+    info!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="23" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: ~str = ~"hello";
+    let b: ~str = ~"world";
+    let s: ~str = a + b;
+    println!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="24" date="2014-04-15 18:17:48 -0700" desc="Replace all ~"" with "".to_owned()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: ~str = "hello".to_owned();
+    let b: ~str = "world".to_owned();
+    let s: ~str = a + b;
+    println!("{}", s.clone());
+    assert_eq!(s[9], 'd' as u8);
+}
+</code>
+<code num="25" date="2014-05-12 17:56:43 -0700" desc="test: Remove all uses of `~str` from the test suite.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: StrBuf = "hello".to_strbuf();
+    let b: StrBuf = "world".to_strbuf();
+    let s: StrBuf = format_strbuf!("{}{}", a, b);
+    println!("{}", s.clone());
+    assert_eq!(s.as_slice()[9], 'd' as u8);
+}
+</code>
+<code num="26" date="2014-05-22 16:57:53 -0700" desc="core: rename strbuf::StrBuf to string::String">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: String = "hello".to_strbuf();
+    let b: String = "world".to_strbuf();
+    let s: String = format_strbuf!("{}{}", a, b);
+    println!("{}", s.clone());
+    assert_eq!(s.as_slice()[9], 'd' as u8);
+}
+</code>
+<code num="27" date="2014-05-25 03:17:19 -0700" desc="std: Rename strbuf operations to string">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: String = "hello".to_string();
+    let b: String = "world".to_string();
+    let s: String = format_strbuf!("{}{}", a, b);
+    println!("{}", s.clone());
+    assert_eq!(s.as_slice()[9], 'd' as u8);
+}
+</code>
+<code num="28" date="2014-05-27 20:44:58 -0700" desc="std: Remove format_strbuf!()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: String = "hello".to_string();
+    let b: String = "world".to_string();
+    let s: String = format!("{}{}", a, b);
+    println!("{}", s.clone());
+    assert_eq!(s.as_slice()[9], 'd' as u8);
+}
+</code>
+<code num="29" date="2014-06-19 18:22:33 -0700" desc="rustc: Remove `&amp;str` indexing from the language.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let a: String = "hello".to_string();
+    let b: String = "world".to_string();
+    let s: String = format!("{}{}", a, b);
+    println!("{}", s.clone());
+    assert_eq!(s.as_bytes()[9], 'd' as u8);
 }
 </code>
 </revisions>

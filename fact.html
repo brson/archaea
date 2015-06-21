@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="18">
+<revisions count="24">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -550,6 +550,243 @@ fn f(x: int) -&gt; int {
 pub fn main() {
     assert_eq!(f(5), 120);
     // debug!("all done");
+
+}
+</code>
+<code num="18" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // info!("in f:");
+
+    info!(x);
+    if x == 1 {
+        // info!("bottoming out");
+
+        return 1;
+    } else {
+        // info!("recurring");
+
+        let y: int = x * f(x - 1);
+        // info!("returned");
+
+        info!(y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // info!("all done");
+
+}
+</code>
+<code num="19" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // info!("in f:");
+
+    info2!("{}", x);
+    if x == 1 {
+        // info!("bottoming out");
+
+        return 1;
+    } else {
+        // info!("recurring");
+
+        let y: int = x * f(x - 1);
+        // info!("returned");
+
+        info2!("{}", y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // info!("all done");
+
+}
+</code>
+<code num="20" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn f(x: int) -&gt; int {
+    // info!("in f:");
+
+    info!("{}", x);
+    if x == 1 {
+        // info!("bottoming out");
+
+        return 1;
+    } else {
+        // info!("recurring");
+
+        let y: int = x * f(x - 1);
+        // info!("returned");
+
+        info!("{}", y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // info!("all done");
+
+}
+</code>
+<code num="21" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn f(x: int) -&gt; int {
+    // info!("in f:");
+
+    info!("{}", x);
+    if x == 1 {
+        // info!("bottoming out");
+
+        return 1;
+    } else {
+        // info!("recurring");
+
+        let y: int = x * f(x - 1);
+        // info!("returned");
+
+        info!("{}", y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // info!("all done");
+
+}
+</code>
+<code num="22" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn f(x: int) -&gt; int {
+    // println!("in f:");
+
+    println!("{}", x);
+    if x == 1 {
+        // println!("bottoming out");
+
+        return 1;
+    } else {
+        // println!("recurring");
+
+        let y: int = x * f(x - 1);
+        // println!("returned");
+
+        println!("{}", y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // println!("all done");
+
+}
+</code>
+<code num="23" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn f(x: isize) -&gt; isize {
+    // println!("in f:");
+
+    println!("{}", x);
+    if x == 1 {
+        // println!("bottoming out");
+
+        return 1;
+    } else {
+        // println!("recurring");
+
+        let y: isize = x * f(x - 1);
+        // println!("returned");
+
+        println!("{}", y);
+        return y;
+    }
+}
+
+pub fn main() {
+    assert_eq!(f(5), 120);
+    // println!("all done");
 
 }
 </code>

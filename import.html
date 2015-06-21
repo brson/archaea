@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="14">
+<revisions count="24">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 mod foo {
   fn x(int y) {
@@ -261,6 +261,250 @@ mod foo {
 mod bar {
     use foo::x;
     use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="14" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { info!(y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="15" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { info2!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="16" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// xfail-fast
+
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { info!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="17" date="2014-02-07 20:08:32 +0100" desc="Change `xfail` directives in compiletests to `ignore`, closes #11363">
+// ignore-fast
+
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { info!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="18" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// ignore-fast
+
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { println!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="19" date="2014-02-14 19:21:17 -0800" desc="Remove check-fast. Closes #4193, #8844, #6330, #7416">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { println!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="20" date="2014-05-22 11:28:01 -0700" desc="Move std::{reflect,repr,Poly} to a libdebug crate">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+mod foo {
+    pub fn x(y: int) { println!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use z = foo::x;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="21" date="2014-08-12 19:25:05 -0700" desc="libsyntax: Accept `use foo as bar;` in lieu of `use bar as foo;`">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+mod foo {
+    pub fn x(y: int) { println!("{:?}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use foo::x as z;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="22" date="2014-10-14 21:07:11 -0400" desc="Remove libdebug and update tests.">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: int) { println!("{}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use foo::x as z;
+    pub fn thing() { x(10); z(10); }
+}
+
+pub fn main() { bar::thing(); }
+</code>
+<code num="23" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+mod foo {
+    pub fn x(y: isize) { println!("{}", y); }
+}
+
+mod bar {
+    use foo::x;
+    use foo::x as z;
     pub fn thing() { x(10); z(10); }
 }
 

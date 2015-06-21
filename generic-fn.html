@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="28">
+<revisions count="40">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -878,6 +878,462 @@ pub fn main() {
     x = p.z;
     y = q.z;
     debug!(y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="28" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T:Copy&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    info!(y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    info!(b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    info!(y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="29" date="2013-07-10 14:43:25 -0700" desc="librustc: Remove all uses of the `Copy` bound.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    info!(y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    info!(b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    info!(y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="30" date="2013-08-17 08:37:42 -0700" desc="Fix warnings it tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[allow(dead_assignment)];
+
+// -*- rust -*-
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    info!(y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    info!(b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    info!(y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="31" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[allow(dead_assignment)];
+
+// -*- rust -*-
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    info2!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    info2!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    info2!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="32" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[allow(dead_assignment)];
+
+// -*- rust -*-
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    info!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    info!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    info!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="33" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[allow(dead_assignment)];
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    info!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    info!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    info!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="34" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#[allow(dead_assignment)];
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    println!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    println!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    println!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="35" date="2014-04-14 21:00:31 +0530" desc="Use new attribute syntax in python files in src/etc too (#13478)">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![allow(dead_assignment)]
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    println!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    println!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    println!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="36" date="2014-12-05 17:01:33 -0800" desc="librustc: Make `Copy` opt-in.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![allow(dead_assignment)]
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+struct Triple {x: int, y: int, z: int}
+
+impl Copy for Triple {}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    println!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    println!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    println!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="37" date="2015-01-24 16:36:30 -0500" desc="cleanup: s/impl Copy/#[derive(Copy)]/g">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![allow(dead_assignment)]
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+#[derive(Copy)]
+struct Triple {x: int, y: int, z: int}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;int&gt;(x);
+    println!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    println!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    println!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="38" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![allow(dead_assignment)]
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+#[derive(Copy)]
+struct Triple {x: isize, y: isize, z: isize}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;isize&gt;(x);
+    println!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    println!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    println!("{}", y);
+    assert_eq!(x, y);
+}
+</code>
+<code num="39" date="2015-03-30 09:38:27 -0400" desc="Fallout in tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![allow(dead_assignment)]
+
+fn id&lt;T&gt;(x: T) -&gt; T { return x; }
+
+#[derive(Copy, Clone)]
+struct Triple {x: isize, y: isize, z: isize}
+
+pub fn main() {
+    let mut x = 62;
+    let mut y = 63;
+    let a = 'a';
+    let mut b = 'b';
+    let p: Triple = Triple {x: 65, y: 66, z: 67};
+    let mut q: Triple = Triple {x: 68, y: 69, z: 70};
+    y = id::&lt;isize&gt;(x);
+    println!("{}", y);
+    assert_eq!(x, y);
+    b = id::&lt;char&gt;(a);
+    println!("{}", b);
+    assert_eq!(a, b);
+    q = id::&lt;Triple&gt;(p);
+    x = p.z;
+    y = q.z;
+    println!("{}", y);
     assert_eq!(x, y);
 }
 </code>

@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="21">
+<revisions count="30">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -521,6 +521,272 @@ fn evenk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
 fn oddk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
     debug!("oddk");
     debug!(n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="21" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info!("evenk");
+    info!(n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info!("oddk");
+    info!(n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="22" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info2!("evenk");
+    info2!("{:?}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info2!("oddk");
+    info2!("{:?}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="23" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+// -*- rust -*-
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info!("evenk");
+    info!("{:?}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info!("oddk");
+    info!("{:?}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="24" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info!("evenk");
+    info!("{:?}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: extern fn(bool) -&gt; bool) -&gt; bool {
+    info!("oddk");
+    info!("{:?}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="25" date="2014-02-14 17:23:01 +1300" desc="All uses of `extern fn` should mean `extern "C" fn`. Closes #9309.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    info!("evenk");
+    info!("{:?}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    info!("oddk");
+    info!("{:?}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="26" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("evenk");
+    println!("{:?}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("oddk");
+    println!("{:?}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="27" date="2014-05-22 11:28:01 -0700" desc="Move std::{reflect,repr,Poly} to a libdebug crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("evenk");
+    println!("{:?}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("oddk");
+    println!("{:?}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="28" date="2014-10-14 21:07:11 -0400" desc="Remove libdebug and update tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("evenk");
+    println!("{}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: int, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("oddk");
+    println!("{}", n);
+    if n == 0 { return k(false); } else { return evenk(n - 1, k); }
+}
+</code>
+<code num="29" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn checktrue(rs: bool) -&gt; bool { assert!((rs)); return true; }
+
+pub fn main() { let k = checktrue; evenk(42, k); oddk(45, k); }
+
+fn evenk(n: isize, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("evenk");
+    println!("{}", n);
+    if n == 0 { return k(true); } else { return oddk(n - 1, k); }
+}
+
+fn oddk(n: isize, k: fn(bool) -&gt; bool) -&gt; bool {
+    println!("oddk");
+    println!("{}", n);
     if n == 0 { return k(false); } else { return evenk(n - 1, k); }
 }
 </code>

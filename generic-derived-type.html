@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="28">
+<revisions count="37">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 fn g[X](X x) -&gt; X {
   ret x;
@@ -629,6 +629,302 @@ pub fn main() {
     let b = f::&lt;int&gt;(10);
     debug!(b.a);
     debug!(b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="28" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X:Copy&gt;(x: X) -&gt; X { return x; }
+
+struct Pair&lt;T&gt; {a: T, b: T}
+
+fn f&lt;T:Copy&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: copy t, b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    info!(b.a);
+    info!(b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="29" date="2013-07-02 12:47:32 -0700" desc="librustc: Remove all uses of "copy".">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[deriving(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    info!(b.a);
+    info!(b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="30" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[deriving(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    info2!("{:?}" ,b.a);
+    info2!("{:?}", b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="31" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[deriving(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    info!("{:?}" ,b.a);
+    info!("{:?}", b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="32" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[deriving(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    println!("{:?}" ,b.a);
+    println!("{:?}", b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="33" date="2014-05-22 11:28:01 -0700" desc="Move std::{reflect,repr,Poly} to a libdebug crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[deriving(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    println!("{:?}" ,b.a);
+    println!("{:?}", b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="34" date="2014-10-14 21:07:11 -0400" desc="Remove libdebug and update tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[deriving(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    println!("{}" ,b.a);
+    println!("{}", b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="35" date="2014-12-31 17:32:49 +1300" desc="Use `derive` rather than `deriving` in tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[derive(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;int&gt;(10);
+    println!("{}" ,b.a);
+    println!("{}", b.b);
+    assert_eq!(b.a, 10);
+    assert_eq!(b.b, 10);
+}
+</code>
+<code num="36" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn g&lt;X&gt;(x: X) -&gt; X { return x; }
+
+#[derive(Clone)]
+struct Pair&lt;T&gt; {
+    a: T,
+    b: T
+}
+
+fn f&lt;T:Clone&gt;(t: T) -&gt; Pair&lt;T&gt; {
+    let x: Pair&lt;T&gt; = Pair {a: t.clone(), b: t};
+    return g::&lt;Pair&lt;T&gt;&gt;(x);
+}
+
+pub fn main() {
+    let b = f::&lt;isize&gt;(10);
+    println!("{}" ,b.a);
+    println!("{}", b.b);
     assert_eq!(b.a, 10);
     assert_eq!(b.b, 10);
 }

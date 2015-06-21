@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="30">
+<revisions count="40">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 import size_of = std.sys.rustrt.size_of;
 
@@ -817,6 +817,527 @@ pub fn main() {
     assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
     assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
     assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+}
+</code>
+<code num="30" date="2013-10-16 18:34:01 -0700" desc="std: Move size/align functions to std::mem. #2240">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern mod std;
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+}
+</code>
+<code num="31" date="2014-02-14 10:10:06 -0800" desc="extern mod =&gt; extern crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate std;
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+}
+</code>
+<code num="32" date="2014-08-12 20:31:30 -0700" desc="librustc: Forbid external crates, imports, and/or items from being declared with the same name in the same scope.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+}
+</code>
+<code num="33" date="2014-12-20 18:53:37 +1300" desc="Use type-alignment-sized integer for discriminant types">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+enum e3 {
+    a([u64, ..0], u32), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e3&gt;(), 16 as uint);
+}
+</code>
+<code num="34" date="2014-12-20 23:00:50 +1300" desc="Add enum size cases to type-sizes test">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+
+enum e3 {
+    a([u64, ..0], u32), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e3&gt;(), 16 as uint);
+}
+</code>
+<code num="35" date="2014-12-23 20:40:11 +1300" desc="Make alignment-forcing case work the same on 64 and 32-bit platforms">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+
+enum e3 {
+    a([u16, ..0], u8), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e3&gt;(), 4 as uint);
+}
+</code>
+<code num="36" date="2014-12-30 21:19:41 +1300" desc="Fallout - change array syntax to use `;`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+
+enum e3 {
+    a([u16; 0], u8), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e3&gt;(), 4 as uint);
+}
+</code>
+<code num="37" date="2015-03-22 13:13:15 -0700" desc="rustdoc: Replace no-pretty-expanded with pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// pretty-expanded FIXME #23616
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: int, b: ()}
+struct x {a: int, b: (), c: ()}
+struct y {x: int}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+
+enum e3 {
+    a([u16; 0], u8), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as uint);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as uint);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as uint);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as uint);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as uint);
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;uint&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;int&gt;());
+    assert_eq!(size_of::&lt;int&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as uint);
+    assert_eq!(size_of::&lt;e3&gt;(), 4 as uint);
+}
+</code>
+<code num="38" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// pretty-expanded FIXME #23616
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: isize, b: ()}
+struct x {a: isize, b: (), c: ()}
+struct y {x: isize}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+
+enum e3 {
+    a([u16; 0], u8), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as usize);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as usize);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as usize);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as usize);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as usize);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as usize);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as usize);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as usize);
+    assert_eq!(size_of::&lt;isize&gt;(), size_of::&lt;usize&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;isize&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;isize&gt;());
+    assert_eq!(size_of::&lt;isize&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as usize);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as usize);
+    assert_eq!(size_of::&lt;e3&gt;(), 4 as usize);
+}
+</code>
+<code num="39" date="2015-04-08 16:27:10 -0700" desc="Remove pretty-expanded from failing tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::mem::size_of;
+
+struct t {a: u8, b: i8}
+struct u {a: u8, b: i8, c: u8}
+struct v {a: u8, b: i8, c: v2, d: u32}
+struct v2 {u: char, v: u8}
+struct w {a: isize, b: ()}
+struct x {a: isize, b: (), c: ()}
+struct y {x: isize}
+
+enum e1 {
+    a(u8, u32), b(u32), c
+}
+enum e2 {
+    a(u32), b
+}
+
+enum e3 {
+    a([u16; 0], u8), b
+}
+
+pub fn main() {
+    assert_eq!(size_of::&lt;u8&gt;(), 1 as usize);
+    assert_eq!(size_of::&lt;u32&gt;(), 4 as usize);
+    assert_eq!(size_of::&lt;char&gt;(), 4 as usize);
+    assert_eq!(size_of::&lt;i8&gt;(), 1 as usize);
+    assert_eq!(size_of::&lt;i32&gt;(), 4 as usize);
+    assert_eq!(size_of::&lt;t&gt;(), 2 as usize);
+    assert_eq!(size_of::&lt;u&gt;(), 3 as usize);
+    // Alignment causes padding before the char and the u32.
+
+    assert!(size_of::&lt;v&gt;() ==
+                16 as usize);
+    assert_eq!(size_of::&lt;isize&gt;(), size_of::&lt;usize&gt;());
+    assert_eq!(size_of::&lt;w&gt;(), size_of::&lt;isize&gt;());
+    assert_eq!(size_of::&lt;x&gt;(), size_of::&lt;isize&gt;());
+    assert_eq!(size_of::&lt;isize&gt;(), size_of::&lt;y&gt;());
+
+    // Make sure enum types are the appropriate size, mostly
+    // around ensuring alignment is handled properly
+
+    assert_eq!(size_of::&lt;e1&gt;(), 8 as usize);
+    assert_eq!(size_of::&lt;e2&gt;(), 8 as usize);
+    assert_eq!(size_of::&lt;e3&gt;(), 4 as usize);
 }
 </code>
 </revisions>

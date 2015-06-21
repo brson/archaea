@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="21">
+<revisions count="31">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // This checks that preemption works.
 
@@ -596,6 +596,424 @@ pub fn main() {
     debug!("main got alive signal");
     while i &lt; 50 { debug!("main iterated"); i += 1; }
     debug!("main completed");
+}
+</code>
+<code num="21" date="2013-06-22 14:43:15 -0400" desc="Fix/annotate a variety of xfails">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+extern mod extra;
+
+use std::comm;
+use extra::comm;
+
+fn starve_main(alive: Port&lt;int&gt;) {
+    debug!("signalling main");
+    alive.recv();
+    debug!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    debug!("main started");
+    do spawn {
+        starve_main(port);
+    };
+    let mut i: int = 0;
+    debug!("main waiting for alive signal");
+    chan.send(i);
+    debug!("main got alive signal");
+    while i &lt; 50 { debug!("main iterated"); i += 1; }
+    debug!("main completed");
+}
+</code>
+<code num="22" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+extern mod extra;
+
+use std::comm;
+use extra::comm;
+
+fn starve_main(alive: Port&lt;int&gt;) {
+    info!("signalling main");
+    alive.recv();
+    info!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    info!("main started");
+    do spawn {
+        starve_main(port);
+    };
+    let mut i: int = 0;
+    info!("main waiting for alive signal");
+    chan.send(i);
+    info!("main got alive signal");
+    while i &lt; 50 { info!("main iterated"); i += 1; }
+    info!("main completed");
+}
+</code>
+<code num="23" date="2014-01-27 18:29:50 -0500" desc="Remove do keyword from test/">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// xfail-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+extern mod extra;
+
+use std::comm;
+use extra::comm;
+
+fn starve_main(alive: Port&lt;int&gt;) {
+    info!("signalling main");
+    alive.recv();
+    info!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    info!("main started");
+    spawn(proc() {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    info!("main waiting for alive signal");
+    chan.send(i);
+    info!("main got alive signal");
+    while i &lt; 50 { info!("main iterated"); i += 1; }
+    info!("main completed");
+}
+</code>
+<code num="24" date="2014-02-07 20:08:32 +0100" desc="Change `xfail` directives in compiletests to `ignore`, closes #11363">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+extern mod extra;
+
+use std::comm;
+use extra::comm;
+
+fn starve_main(alive: Port&lt;int&gt;) {
+    info!("signalling main");
+    alive.recv();
+    info!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    info!("main started");
+    spawn(proc() {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    info!("main waiting for alive signal");
+    chan.send(i);
+    info!("main got alive signal");
+    while i &lt; 50 { info!("main iterated"); i += 1; }
+    info!("main completed");
+}
+</code>
+<code num="25" date="2014-02-14 10:10:06 -0800" desc="extern mod =&gt; extern crate">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+extern crate extra;
+
+use std::comm;
+use extra::comm;
+
+fn starve_main(alive: Port&lt;int&gt;) {
+    info!("signalling main");
+    alive.recv();
+    info!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    info!("main started");
+    spawn(proc() {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    info!("main waiting for alive signal");
+    chan.send(i);
+    info!("main got alive signal");
+    while i &lt; 50 { info!("main iterated"); i += 1; }
+    info!("main completed");
+}
+</code>
+<code num="26" date="2014-03-09 14:58:32 -0700" desc="std: Rename Chan/Port types and constructor">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+extern crate extra;
+
+use std::comm;
+use extra::comm;
+
+fn starve_main(alive: Receiver&lt;int&gt;) {
+    info!("signalling main");
+    alive.recv();
+    info!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    info!("main started");
+    spawn(proc() {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    info!("main waiting for alive signal");
+    chan.send(i);
+    info!("main got alive signal");
+    while i &lt; 50 { info!("main iterated"); i += 1; }
+    info!("main completed");
+}
+</code>
+<code num="27" date="2014-03-14 11:16:10 -0700" desc="extra: Put the nail in the coffin, delete libextra">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+use std::comm;
+
+fn starve_main(alive: Receiver&lt;int&gt;) {
+    info!("signalling main");
+    alive.recv();
+    info!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    info!("main started");
+    spawn(proc() {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    info!("main waiting for alive signal");
+    chan.send(i);
+    info!("main got alive signal");
+    while i &lt; 50 { info!("main iterated"); i += 1; }
+    info!("main completed");
+}
+</code>
+<code num="28" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+use std::comm;
+
+fn starve_main(alive: Receiver&lt;int&gt;) {
+    println!("signalling main");
+    alive.recv();
+    println!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    println!("main started");
+    spawn(proc() {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    println!("main waiting for alive signal");
+    chan.send(i);
+    println!("main got alive signal");
+    while i &lt; 50 { println!("main iterated"); i += 1; }
+    println!("main completed");
+}
+</code>
+<code num="29" date="2014-11-26 08:12:18 -0500" desc="Mostly rote conversion of `proc()` to `move||` (and occasionally `Thunk::new`)">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+use std::comm;
+
+fn starve_main(alive: Receiver&lt;int&gt;) {
+    println!("signalling main");
+    alive.recv();
+    println!("starving main");
+    let mut i: int = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    println!("main started");
+    spawn(move|| {
+        starve_main(port);
+    });
+    let mut i: int = 0;
+    println!("main waiting for alive signal");
+    chan.send(i);
+    println!("main got alive signal");
+    while i &lt; 50 { println!("main iterated"); i += 1; }
+    println!("main completed");
+}
+</code>
+<code num="30" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-test
+// This checks that preemption works.
+
+// note: halfway done porting to modern rust
+use std::comm;
+
+fn starve_main(alive: Receiver&lt;isize&gt;) {
+    println!("signalling main");
+    alive.recv();
+    println!("starving main");
+    let mut i: isize = 0;
+    loop { i += 1; }
+}
+
+pub fn main() {
+    let (port, chan) = stream();
+
+    println!("main started");
+    spawn(move|| {
+        starve_main(port);
+    });
+    let mut i: isize = 0;
+    println!("main waiting for alive signal");
+    chan.send(i);
+    println!("main got alive signal");
+    while i &lt; 50 { println!("main iterated"); i += 1; }
+    println!("main completed");
 }
 </code>
 </revisions>

@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="20">
+<revisions count="29">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 fn incr(mutable &amp;int x) -&gt; bool {
   x += 1;
@@ -377,6 +377,216 @@ pub fn main() {
     assert!((x));
     let mut y: int = 10;
     debug!(x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="20" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    info!(x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="21" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    info2!("{:?}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="22" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    info!("{:?}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="23" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    println!("{:?}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="24" date="2014-05-22 11:28:01 -0700" desc="Move std::{reflect,repr,Poly} to a libdebug crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    println!("{:?}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="25" date="2014-06-27 12:30:25 -0700" desc="librustc: Remove the fallback to `int` for integers and `f64` for floating point numbers for real.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1i == 2 || 3i == 3;
+    assert!((x));
+    let mut y: int = 10;
+    println!("{:?}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="26" date="2014-10-14 21:07:11 -0400" desc="Remove libdebug and update tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1i == 2 || 3i == 3;
+    assert!((x));
+    let mut y: int = 10;
+    println!("{}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="27" date="2015-01-25 22:05:03 +0100" desc="Remove all `i` suffixes">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn incr(x: &amp;mut int) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: int = 10;
+    println!("{}", x || incr(&amp;mut y));
+    assert_eq!(y, 10);
+    if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
+}
+</code>
+<code num="28" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+fn incr(x: &amp;mut isize) -&gt; bool { *x += 1; assert!((false)); return false; }
+
+pub fn main() {
+    let x = 1 == 2 || 3 == 3;
+    assert!((x));
+    let mut y: isize = 10;
+    println!("{}", x || incr(&amp;mut y));
     assert_eq!(y, 10);
     if true &amp;&amp; x { assert!((true)); } else { assert!((false)); }
 }

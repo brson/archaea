@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="21">
+<revisions count="33">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -321,6 +321,283 @@ pub fn main() {
     let b: ~[int] = ~[6, 7, 8, 9, 0];
     let v: ~[int] = a + b;
     debug!(v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="21" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let a: ~[int] = ~[1, 2, 3, 4, 5];
+    let b: ~[int] = ~[6, 7, 8, 9, 0];
+    let v: ~[int] = a + b;
+    info!(v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="22" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let a: ~[int] = ~[1, 2, 3, 4, 5];
+    let b: ~[int] = ~[6, 7, 8, 9, 0];
+    let v: ~[int] = a + b;
+    info2!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="23" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// -*- rust -*-
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let a: ~[int] = ~[1, 2, 3, 4, 5];
+    let b: ~[int] = ~[6, 7, 8, 9, 0];
+    let v: ~[int] = a + b;
+    info!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="24" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let a: ~[int] = ~[1, 2, 3, 4, 5];
+    let b: ~[int] = ~[6, 7, 8, 9, 0];
+    let v: ~[int] = a + b;
+    info!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="25" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let a: ~[int] = ~[1, 2, 3, 4, 5];
+    let b: ~[int] = ~[6, 7, 8, 9, 0];
+    let v: ~[int] = a + b;
+    println!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="26" date="2014-03-05 15:28:08 -0800" desc="test: Make manual changes to deal with the fallout from removal of `~[T]` in test, libgetopts, compiletest, librustdoc, and libnum.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;int&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;int&gt; = vec!(6, 7, 8, 9, 0);
+    let v: Vec&lt;int&gt; = vec::append(a, b.as_slice());
+    println!("{}", v[9]);
+    assert_eq!(*v.get(0), 1);
+    assert_eq!(*v.get(7), 8);
+    assert_eq!(*v.get(9), 0);
+}
+</code>
+<code num="27" date="2014-03-21 22:37:41 +1100" desc="Remove outdated and unnecessary std::vec_ng::Vec imports.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;int&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;int&gt; = vec!(6, 7, 8, 9, 0);
+    let v: Vec&lt;int&gt; = vec::append(a, b.as_slice());
+    println!("{}", *v.get(9));
+    assert_eq!(*v.get(0), 1);
+    assert_eq!(*v.get(7), 8);
+    assert_eq!(*v.get(9), 0);
+}
+</code>
+<code num="28" date="2014-03-30 23:53:26 -0400" desc="vec: convert `append` and `append_one` to methods">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;int&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;int&gt; = vec!(6, 7, 8, 9, 0);
+    let v: Vec&lt;int&gt; = a.append(b.as_slice());
+    println!("{}", *v.get(9));
+    assert_eq!(*v.get(0), 1);
+    assert_eq!(*v.get(7), 8);
+    assert_eq!(*v.get(9), 0);
+}
+</code>
+<code num="29" date="2014-10-14 23:05:01 -0700" desc="Remove a large amount of deprecated functionality">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;int&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;int&gt; = vec!(6, 7, 8, 9, 0);
+    let mut v: Vec&lt;int&gt; = a;
+    v.push_all(b.as_slice());
+    println!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="30" date="2015-02-01 21:53:25 -0500" desc="cleanup: replace `as[_mut]_slice()` calls with deref coercions">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;int&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;int&gt; = vec!(6, 7, 8, 9, 0);
+    let mut v: Vec&lt;int&gt; = a;
+    v.push_all(&amp;b);
+    println!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="31" date="2015-03-05 18:33:58 -0800" desc="Require feature attributes, and add them where necessary">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(collections)]
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;int&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;int&gt; = vec!(6, 7, 8, 9, 0);
+    let mut v: Vec&lt;int&gt; = a;
+    v.push_all(&amp;b);
+    println!("{}", v[9]);
+    assert_eq!(v[0], 1);
+    assert_eq!(v[7], 8);
+    assert_eq!(v[9], 0);
+}
+</code>
+<code num="32" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+#![feature(collections)]
+
+use std::vec;
+
+pub fn main() {
+    let a: Vec&lt;isize&gt; = vec!(1, 2, 3, 4, 5);
+    let b: Vec&lt;isize&gt; = vec!(6, 7, 8, 9, 0);
+    let mut v: Vec&lt;isize&gt; = a;
+    v.push_all(&amp;b);
+    println!("{}", v[9]);
     assert_eq!(v[0], 1);
     assert_eq!(v[7], 8);
     assert_eq!(v[9], 0);

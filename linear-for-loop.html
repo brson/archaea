@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="30">
+<revisions count="52">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 fn main() {
   auto x = vec(1,2,3);
@@ -928,6 +928,776 @@ pub fn main() {
         i += 1;
         debug!(i);
         debug!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="30" date="2013-06-21 08:29:53 -0400" desc="vec: remove BaseIter implementation">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.iter().advance |i| { debug!(*i); y += *i; }
+    debug!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for s.bytes_iter().advance |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        debug!(i);
+        debug!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="31" date="2013-07-17 03:08:08 +1000" desc="Clean-up tests after debug!/std-macros change.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.iter().advance |i| { info!(*i); y += *i; }
+    info!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for s.bytes_iter().advance |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info!(i);
+        info!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="32" date="2013-07-27 23:38:38 +0200" desc="Added str::char_offset_iter() and str::rev_char_offset_iter() Renamed bytes_iter to byte_iter to match other iterators Refactored str Iterators to use DoubleEnded Iterators and typedefs instead of wrapper structs Reordered the Iterator section Whitespace fixup Moved clunky `each_split_within` function to the one place in the tree where it's actually needed Replaced all block doccomments in str with line doccomments">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for x.iter().advance |i| { info!(*i); y += *i; }
+    info!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for s.byte_iter().advance |c| {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info!(i);
+        info!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="33" date="2013-08-01 03:16:42 -0400" desc="migrate many `for` loops to `foreach`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    foreach i in x.iter() { info!(*i); y += *i; }
+    info!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    foreach c in s.byte_iter() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info!(i);
+        info!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="34" date="2013-08-03 12:45:23 -0400" desc="remove obsolete `foreach` keyword">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for i in x.iter() { info!(*i); y += *i; }
+    info!(y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for c in s.byte_iter() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info!(i);
+        info!(c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="35" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for i in x.iter() { info2!("{:?}", *i); y += *i; }
+    info2!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for c in s.byte_iter() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info2!("{:?}", i);
+        info2!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="36" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for i in x.iter() { info!("{:?}", *i); y += *i; }
+    info!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for c in s.byte_iter() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info!("{:?}", i);
+        info!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="37" date="2013-11-23 11:18:51 +0100" desc="Removed unneccessary `_iter` suffixes from various APIs">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for i in x.iter() { info!("{:?}", *i); y += *i; }
+    info!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        info!("{:?}", i);
+        info!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="38" date="2014-03-08 22:11:44 -0800" desc="log: Introduce liblog, the old std::logging">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = ~[1, 2, 3];
+    let mut y = 0;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="39" date="2014-03-05 14:02:44 -0800" desc="test: Automatically remove all `~[T]` from tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = ~"hello there";
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="40" date="2014-04-15 18:17:48 -0700" desc="Replace all ~"" with "".to_owned()">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_owned();
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="41" date="2014-05-19 23:19:56 -0700" desc="libcore: Remove all uses of `~str` from `libcore`.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_owned();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="42" date="2014-05-25 03:10:11 -0700" desc="std: Remove String's to_owned">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="43" date="2014-05-22 11:28:01 -0700" desc="Move std::{reflect,repr,Poly} to a libdebug crate">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="44" date="2014-04-21 17:58:52 -0400" desc="librustc: Remove the fallback to `int` from typechecking.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate debug;
+
+pub fn main() {
+    let x = vec!(1i, 2i, 3i);
+    let mut y = 0i;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="45" date="2014-06-25 17:08:08 -0700" desc="work around 15189 in test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// ignore-pretty FIXME #15189
+
+extern crate debug;
+
+pub fn main() {
+    let x = vec!(1i, 2i, 3i);
+    let mut y = 0i;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="46" date="2014-06-25 19:41:16 -0700" desc="replaced ignore-pretty with no-pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+extern crate debug;
+
+pub fn main() {
+    let x = vec!(1i, 2i, 3i);
+    let mut y = 0i;
+    for i in x.iter() { println!("{:?}", *i); y += *i; }
+    println!("{:?}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{:?}", i);
+        println!("{:?}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="47" date="2014-10-14 21:07:11 -0400" desc="Remove libdebug and update tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let x = vec!(1i, 2i, 3i);
+    let mut y = 0i;
+    for i in x.iter() { println!("{}", *i); y += *i; }
+    println!("{}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.as_slice().bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{}", i);
+        println!("{}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="48" date="2015-01-26 21:21:15 -0500" desc="cleanup: s/`v.slice*()`/`&amp;v[a..b]`/g + remove redundant  `as_slice()` calls">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let x = vec!(1i, 2i, 3i);
+    let mut y = 0i;
+    for i in x.iter() { println!("{}", *i); y += *i; }
+    println!("{}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{}", i);
+        println!("{}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="49" date="2015-01-25 22:05:03 +0100" desc="Remove all `i` suffixes">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in x.iter() { println!("{}", *i); y += *i; }
+    println!("{}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{}", i);
+        println!("{}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="50" date="2015-01-31 12:20:46 -0500" desc="`for x in xs.iter()` -&gt; `for x in &amp;xs`">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in &amp;x { println!("{}", *i); y += *i; }
+    println!("{}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: int = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{}", i);
+        println!("{}", c);
+    }
+    assert_eq!(i, 11);
+}
+</code>
+<code num="51" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// no-pretty-expanded FIXME #15189
+
+pub fn main() {
+    let x = vec!(1, 2, 3);
+    let mut y = 0;
+    for i in &amp;x { println!("{}", *i); y += *i; }
+    println!("{}", y);
+    assert_eq!(y, 6);
+    let s = "hello there".to_string();
+    let mut i: isize = 0;
+    for c in s.bytes() {
+        if i == 0 { assert!((c == 'h' as u8)); }
+        if i == 1 { assert!((c == 'e' as u8)); }
+        if i == 2 { assert!((c == 'l' as u8)); }
+        if i == 3 { assert!((c == 'l' as u8)); }
+        if i == 4 { assert!((c == 'o' as u8)); }
+        // ...
+
+        i += 1;
+        println!("{}", i);
+        println!("{}", c);
     }
     assert_eq!(i, 11);
 }

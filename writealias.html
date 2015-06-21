@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="23">
+<revisions count="37">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -415,6 +415,412 @@ pub fn main() {
             },
             _ =&gt; fail!()
         }
+    }
+}
+</code>
+<code num="23" date="2013-07-22 13:57:40 -0700" desc="Change concurrency primitives to standard naming conventions">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::unstable;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(unstable::sync::Exclusive::new(true));
+        match x {
+            Some(ref z) if z.with(|b| *b) =&gt; {
+                do z.with |b| { assert!(*b); }
+            },
+            _ =&gt; fail!()
+        }
+    }
+}
+</code>
+<code num="24" date="2013-09-29 19:23:57 -0700" desc="rpass: Remove usage of fmt!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::unstable;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(unstable::sync::Exclusive::new(true));
+        match x {
+            Some(ref z) if z.with(|b| *b) =&gt; {
+                do z.with |b| { assert!(*b); }
+            },
+            _ =&gt; fail2!()
+        }
+    }
+}
+</code>
+<code num="25" date="2013-10-21 13:08:31 -0700" desc="Drop the '2' suffix from logging macros">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::unstable;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(unstable::sync::Exclusive::new(true));
+        match x {
+            Some(ref z) if z.with(|b| *b) =&gt; {
+                do z.with |b| { assert!(*b); }
+            },
+            _ =&gt; fail!()
+        }
+    }
+}
+</code>
+<code num="26" date="2013-11-21 17:23:21 -0800" desc="test: Remove non-procedure uses of `do` from compiletest, libstd tests, compile-fail tests, run-fail tests, and run-pass tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::unstable;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(unstable::sync::Exclusive::new(true));
+        match x {
+            Some(ref z) if z.with(|b| *b) =&gt; {
+                z.with(|b| assert!(*b));
+            },
+            _ =&gt; fail!()
+        }
+    }
+}
+</code>
+<code num="27" date="2014-06-04 00:01:08 -0700" desc="test: Fix fallout of previous changes">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::rt;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(rt::exclusive::Exclusive::new(true));
+        match x {
+            Some(ref z) if *z.lock() =&gt; {
+                assert!(*z.lock());
+            },
+            _ =&gt; fail!()
+        }
+    }
+}
+</code>
+<code num="28" date="2014-08-12 20:31:30 -0700" desc="librustc: Forbid external crates, imports, and/or items from being declared with the same name in the same scope.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(::std::rt::exclusive::Exclusive::new(true));
+        match x {
+            Some(ref z) if *z.lock() =&gt; {
+                assert!(*z.lock());
+            },
+            _ =&gt; fail!()
+        }
+    }
+}
+</code>
+<code num="29" date="2014-10-09 15:17:22 -0400" desc="Rename fail! to panic!">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(::std::rt::exclusive::Exclusive::new(true));
+        match x {
+            Some(ref z) if *z.lock() =&gt; {
+                assert!(*z.lock());
+            },
+            _ =&gt; panic!()
+        }
+    }
+}
+</code>
+<code num="30" date="2014-11-14 16:30:16 -0800" desc="Make most of std::rt private">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+extern crate rustrt;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(::rustrt::exclusive::Exclusive::new(true));
+        match x {
+            Some(ref z) if *z.lock() =&gt; {
+                assert!(*z.lock());
+            },
+            _ =&gt; panic!()
+        }
+    }
+}
+</code>
+<code num="31" date="2014-11-23 19:21:17 -0800" desc="libs: merge librustrt into libstd">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::rt::exclusive;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(exclusive::Exclusive::new(true));
+        match x {
+            Some(ref z) if *z.lock() =&gt; {
+                assert!(*z.lock());
+            },
+            _ =&gt; panic!()
+        }
+    }
+}
+</code>
+<code num="32" date="2014-12-14 00:05:32 -0800" desc="Revise std::thread API to join by default">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::sync::Mutex;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    unsafe {
+        let x = Some(Mutex::new(true));
+        match x {
+            Some(ref z) if *z.lock() =&gt; {
+                assert!(*z.lock());
+            },
+            _ =&gt; panic!()
+        }
+    }
+}
+</code>
+<code num="33" date="2014-12-08 20:20:03 -0800" desc="std: Return Result from RWLock/Mutex methods">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::sync::Mutex;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let x = Some(Mutex::new(true));
+    match x {
+        Some(ref z) if *z.lock().unwrap() =&gt; {
+            assert!(*z.lock().unwrap());
+        },
+        _ =&gt; panic!()
+    }
+}
+</code>
+<code num="34" date="2015-03-22 13:13:15 -0700" desc="rustdoc: Replace no-pretty-expanded with pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// pretty-expanded FIXME #23616
+
+use std::sync::Mutex;
+
+struct Point {x: int, y: int, z: int}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let x = Some(Mutex::new(true));
+    match x {
+        Some(ref z) if *z.lock().unwrap() =&gt; {
+            assert!(*z.lock().unwrap());
+        },
+        _ =&gt; panic!()
+    }
+}
+</code>
+<code num="35" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+// pretty-expanded FIXME #23616
+
+use std::sync::Mutex;
+
+struct Point {x: isize, y: isize, z: isize}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let x = Some(Mutex::new(true));
+    match x {
+        Some(ref z) if *z.lock().unwrap() =&gt; {
+            assert!(*z.lock().unwrap());
+        },
+        _ =&gt; panic!()
+    }
+}
+</code>
+<code num="36" date="2015-04-08 16:27:10 -0700" desc="Remove pretty-expanded from failing tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+use std::sync::Mutex;
+
+struct Point {x: isize, y: isize, z: isize}
+
+fn f(p: &amp;mut Point) { p.z = 13; }
+
+pub fn main() {
+    let x = Some(Mutex::new(true));
+    match x {
+        Some(ref z) if *z.lock().unwrap() =&gt; {
+            assert!(*z.lock().unwrap());
+        },
+        _ =&gt; panic!()
     }
 }
 </code>

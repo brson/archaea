@@ -8,7 +8,7 @@
 <button id="action" class="start"></button>
 <button id="reset"></button>
 <span id="status"></span>
-<revisions count="19">
+<revisions count="27">
 <code num="0" date="2010-06-23 21:03:09 -0700" desc="Populate tree.">
 // -*- rust -*-
 
@@ -338,6 +338,208 @@ pub fn main() {
     assert_eq!(v[0], 10);
     assert_eq!(v[1], 20);
     let mut x: int = 0;
+    assert_eq!(v[x], 10);
+    assert_eq!(v[x + 1], 20);
+    x = x + 1;
+    assert_eq!(v[x], 20);
+    assert_eq!(v[x - 1], 10);
+}
+</code>
+<code num="19" date="2013-10-25 14:28:38 -0700" desc="Remove ancient emacs mode lines from test cases">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let v: ~[int] = ~[10, 20];
+    assert_eq!(v[0], 10);
+    assert_eq!(v[1], 20);
+    let mut x: int = 0;
+    assert_eq!(v[x], 10);
+    assert_eq!(v[x + 1], 20);
+    x = x + 1;
+    assert_eq!(v[x], 20);
+    assert_eq!(v[x - 1], 10);
+}
+</code>
+<code num="20" date="2014-03-05 14:02:44 -0800" desc="test: Automatically remove all `~[T]` from tests.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+
+pub fn main() {
+    let v: Vec&lt;int&gt; = vec!(10, 20);
+    assert_eq!(v[0], 10);
+    assert_eq!(v[1], 20);
+    let mut x: int = 0;
+    assert_eq!(v[x], 10);
+    assert_eq!(v[x + 1], 20);
+    x = x + 1;
+    assert_eq!(v[x], 20);
+    assert_eq!(v[x - 1], 10);
+}
+</code>
+<code num="21" date="2014-03-05 15:28:08 -0800" desc="test: Make manual changes to deal with the fallout from removal of `~[T]` in test, libgetopts, compiletest, librustdoc, and libnum.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+use std::vec_ng::Vec;
+
+pub fn main() {
+    let v: Vec&lt;int&gt; = vec!(10, 20);
+    assert_eq!(*v.get(0), 10);
+    assert_eq!(*v.get(1), 20);
+    let mut x: uint = 0;
+    assert_eq!(*v.get(x), 10);
+    assert_eq!(*v.get(x + 1), 20);
+    x = x + 1;
+    assert_eq!(*v.get(x), 20);
+    assert_eq!(*v.get(x - 1), 10);
+}
+</code>
+<code num="22" date="2014-03-21 22:37:41 +1100" desc="Remove outdated and unnecessary std::vec_ng::Vec imports.">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+pub fn main() {
+    let v: Vec&lt;int&gt; = vec!(10, 20);
+    assert_eq!(*v.get(0), 10);
+    assert_eq!(*v.get(1), 20);
+    let mut x: uint = 0;
+    assert_eq!(*v.get(x), 10);
+    assert_eq!(*v.get(x + 1), 20);
+    x = x + 1;
+    assert_eq!(*v.get(x), 20);
+    assert_eq!(*v.get(x - 1), 10);
+}
+</code>
+<code num="23" date="2014-10-14 23:05:01 -0700" desc="Remove a large amount of deprecated functionality">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+pub fn main() {
+    let v: Vec&lt;int&gt; = vec!(10, 20);
+    assert_eq!(v[0], 10);
+    assert_eq!(v[1], 20);
+    let mut x: uint = 0;
+    assert_eq!(v[x], 10);
+    assert_eq!(v[x + 1], 20);
+    x = x + 1;
+    assert_eq!(v[x], 20);
+    assert_eq!(v[x - 1], 10);
+}
+</code>
+<code num="24" date="2015-03-22 13:13:15 -0700" desc="rustdoc: Replace no-pretty-expanded with pretty-expanded">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+// pretty-expanded FIXME #23616
+
+pub fn main() {
+    let v: Vec&lt;int&gt; = vec!(10, 20);
+    assert_eq!(v[0], 10);
+    assert_eq!(v[1], 20);
+    let mut x: uint = 0;
+    assert_eq!(v[x], 10);
+    assert_eq!(v[x + 1], 20);
+    x = x + 1;
+    assert_eq!(v[x], 20);
+    assert_eq!(v[x - 1], 10);
+}
+</code>
+<code num="25" date="2015-03-25 17:06:52 -0700" desc="Mass rename uint/int to usize/isize">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+// pretty-expanded FIXME #23616
+
+pub fn main() {
+    let v: Vec&lt;isize&gt; = vec!(10, 20);
+    assert_eq!(v[0], 10);
+    assert_eq!(v[1], 20);
+    let mut x: usize = 0;
+    assert_eq!(v[x], 10);
+    assert_eq!(v[x + 1], 20);
+    x = x + 1;
+    assert_eq!(v[x], 20);
+    assert_eq!(v[x - 1], 10);
+}
+</code>
+<code num="26" date="2015-04-08 16:27:10 -0700" desc="Remove pretty-expanded from failing tests">
+// Copyright 2012 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
+// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license
+// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your
+// option. This file may not be copied, modified, or distributed
+// except according to those terms.
+
+
+
+pub fn main() {
+    let v: Vec&lt;isize&gt; = vec!(10, 20);
+    assert_eq!(v[0], 10);
+    assert_eq!(v[1], 20);
+    let mut x: usize = 0;
     assert_eq!(v[x], 10);
     assert_eq!(v[x + 1], 20);
     x = x + 1;
